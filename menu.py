@@ -220,9 +220,11 @@ class levelsMenu(Menu):
         self.move_cursor()
         if self.game.START_KEY:
             if self.state == "Easy":
-                self.game.playing = True
+                # self.game.playing = True
+                self.game.curr_menu=self.game.gameView
             elif self.state == "Hard":
-                self.game.playing = True
+                # self.game.playing = True
+                self.game.curr_menu=self.game.gameView
             self.run_display = False
         
 ##el molahza elwahida,, eni lama basib el cursor 3and hard w dost backspace w rege3t tani d5lt lel level byfdal 3ala hard idk why 
