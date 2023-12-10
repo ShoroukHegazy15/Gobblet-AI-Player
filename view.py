@@ -53,7 +53,7 @@ class View():
         white_positions = [(57, 107), (57, 274), (57, 447)]
         black_positions = [(898, 274), (898, 447), (898, 617)]
 
-        sizes = ["L", "M", "S", "XS"]
+        sizes = ["XS", "S", "M", "L"]
 
         board_centers = [
             (215, 110), (386, 110), (555, 110), (724, 110),
