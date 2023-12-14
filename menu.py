@@ -226,5 +226,49 @@ class levelsMenu(Menu):
                 # self.game.playing = True
                 self.game.curr_menu=self.game.gameView
             self.run_display = False
+
+class WinScreen(Menu):
+    def __init__(self, game):
+        Menu.__init__(self, game)
         
+    def display_menu(self):
+        while self.run_display:
+            self.game.check_events()
+            self.check_input()
+            self.game.display.fill(self.game.BLACK)
+            self.game.draw_text("You Win!", 48, self.mid_w, self.mid_h + self.offset)
+            self.draw_cursor()
+            self.blit_screen()
+
+    def check_input(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.game.quit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    self.run_display = False        
+                    
+                    
+class LoseScreen(Menu):
+    def __init__(self, game):
+        Menu.__init__(self, game)
+
+    def display_menu(self):
+        while self.run_display:
+            self.game.check_events()
+            self.check_input()
+            self.game.display.fill(self.game.BLACK)
+            self.game.draw_text("You Lose!", 48, self.mid_w, self.mid_h + self.offset)
+            self.draw_cursor()
+            self.blit_screen()
+
+    def check_input(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.game.quit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    self.run_display = False
+                    
+##el molahza elwahida,, eni lama basib el cursor 3and hard w dost backspace w rege3t tani d5lt lel level byfdal 3ala hard idk why         
 ##el molahza elwahida,, eni lama basib el cursor 3and hard w dost backspace w rege3t tani d5lt lel level byfdal 3ala hard idk why 
