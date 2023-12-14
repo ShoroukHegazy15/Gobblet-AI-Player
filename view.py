@@ -31,12 +31,16 @@ class View():
         #         "smallX": pygame.image.load(os.path.join("Assets/blackXS.png")).convert_alpha()
         #     }
         # }
-        self.board_centers = [
+        self.board_positions = [
             (215, 110), (386, 110), (555, 110), (724, 110),
             (215, 280), (386, 280), (555, 280), (724, 280),
             (215, 450), (386, 450), (555, 450), (724, 450),
             (215, 620), (386, 620), (555, 620), (724, 620),
         ]
+        #self.pieces = {pos: [] for pos in self.board_centers}
+        self.piece_positions = [(57, 107), (57, 274), (57, 447),
+                                (898, 274), (898, 447), (898, 617)]
+        self.pieces = {pos: [] for pos in self.piece_positions}
 
         self.chess_pieces = pygame.sprite.Group()  # Group to store all chess pieces
         self.create_pieces()
@@ -46,21 +50,11 @@ class View():
         self.drag_offset = (0, 0)
 
     def create_pieces(self):
-        centers = [
-            (57, 107), (57, 274), (57, 447),
-            (898, 274), (898, 447), (898, 617)
-        ]
         white_positions = [(57, 107), (57, 274), (57, 447)]
         black_positions = [(898, 274), (898, 447), (898, 617)]
 
         sizes = ["XS", "S", "M", "L"]
 
-        board_centers = [
-            (215, 110), (386, 110), (555, 110), (724, 110),
-            (215, 280), (386, 280), (555, 280), (724, 280),
-            (215, 450), (386, 450), (555, 450), (724, 450),
-            (215, 620), (386, 620), (555, 620), (724, 620),
-        ]
 
         white_piece_count = {"L": 0, "M": 0, "S": 0, "XS": 0}
         black_piece_count = {"L": 0, "M": 0, "S": 0, "XS": 0}
@@ -73,10 +67,10 @@ class View():
                     if piece_count[size] < 3:
                         piece = ChessPiece(color, size, piece_id, start_center)
                         self.chess_pieces.add(piece)
-
-                        # Update the count for the current size
+                        self.pieces[start_center].append(piece)
                         piece_count[size] += 1
-
+                        
+ 
     def blit_screen(self):
         self.game.window.blit(self.game.display, (0, 0))
         pygame.display.update()
@@ -99,11 +93,13 @@ class View():
         mouse_x, mouse_y = pygame.mouse.get_pos()
         mouse_pressed = pygame.mouse.get_pressed()[0]
 
-        # Check for piece dragging
-        for piece in self.chess_pieces:
+        # Check for piece dragging in reverse order
+        for piece in reversed(self.chess_pieces.sprites()):
             if piece.rect.collidepoint(mouse_x, mouse_y) and mouse_pressed and not self.dragged_piece:
-                self.dragged_piece = piece
-                self.drag_offset = (piece.rect.centerx - mouse_x, piece.rect.centery - mouse_y)
+                # Only allow dragging if the piece's position is in piece_positions
+                if piece.rect.center in self.piece_positions or self.board_positions:
+                    self.dragged_piece = piece
+                    self.drag_offset = (piece.rect.centerx - mouse_x, piece.rect.centery - mouse_y)
 
         # If a piece is being dragged, update its position
         if self.dragged_piece and mouse_pressed:
@@ -111,13 +107,31 @@ class View():
 
         # If the mouse button is released and a piece is being dragged
         elif self.dragged_piece and not mouse_pressed:
+            old_position = self.dragged_piece.rect.center
+            new_position = None  # Initialize new_position to None
             # Check if the piece is close to a board position, then snap it
-            for board_position in self.board_centers:
+            for board_position in self.board_positions:
                 if self.dragged_piece and self.is_close_to_position(self.dragged_piece.rect.center, board_position):
-                    self.dragged_piece.rect.center = board_position
+                    new_position = board_position
                     break
 
+            # Update the pieces dictionary if the new position is in board_positions
+            if new_position and new_position in self.board_positions:
+                self.dragged_piece.rect.center = new_position
+                if old_position in self.pieces:
+                    self.pieces[old_position].remove(self.dragged_piece)
+                    self.chess_pieces.remove(self.dragged_piece)
+                if new_position and new_position in self.pieces:
+                    self.pieces[new_position].append(self.dragged_piece)
+                    self.chess_pieces.add(self.dragged_piece)
+            else:
+                # If the new position is not in board_positions, keep the piece at its old position
+                self.dragged_piece.rect.center = old_position
+
             self.dragged_piece = None
+
+
+
 
     def is_close_to_position(self, pos1, pos2, threshold=40):
         """Check if two positions are close within a given threshold."""
