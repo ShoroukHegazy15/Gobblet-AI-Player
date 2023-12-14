@@ -104,7 +104,11 @@ class OptionsMenu(Menu):
                 self.cursor_rect.midtop = (self.volx + self.offset, self.voly)
                 self.state = "Volume"
         elif self.game.START_KEY:
-            pass
+            if self.state == "Volume":
+                self.game.curr_menu=self.game.slide
+            elif self.state == "Sounds":
+                self.game.curr_menu=self.game.slide
+            self.run_display = False
 
 class RulesMenu(Menu):
     def __init__(self, game):
@@ -140,7 +144,7 @@ class MoodsMenu(Menu):
             self.game.check_events()
             self.check_input()
             self.game.display.fill(self.game.BACK_COLOR)
-            self.game.draw_text('Choose a Moods:', 20, self.game.DISPLAY_W/2, self.game.DISPLAY_H/2 -20)
+            self.game.draw_text('Choose a Mood:', 20, self.game.DISPLAY_W/2, self.game.DISPLAY_H/2 -20)
             self.game.draw_text('Human VS Human', 20, self.mood1x, self.mood1y)
             self.game.draw_text('Human VS Computer', 20, self.mood2x, self.mood2y)
             self.game.draw_text('Computer VS Computer', 20, self.mood3x,self.mood3y)
