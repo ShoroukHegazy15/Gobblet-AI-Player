@@ -28,7 +28,7 @@ class Game():
         self.bck_music()
 
     def bck_music(self):
-        mixer.music.load("E:\AI GAME PHOTOS\game.mp3")
+        mixer.music.load("Assets/background music.mp3")
         mixer.music.set_volume(0.5)
         mixer.music.play(-1)
     
