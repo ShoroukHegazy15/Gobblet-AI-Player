@@ -40,7 +40,7 @@ class View():
         #self.pieces = {pos: [] for pos in self.board_centers}
         self.piece_positions = [(57, 107), (57, 274), (57, 447),
                                 (898, 274), (898, 447), (898, 617)]
-        self.pieces = {pos: [] for pos in self.piece_positions}
+        self.pieces = {pos: [] for pos in self.piece_positions + self.board_positions}
 
         self.chess_pieces = pygame.sprite.Group()  # Group to store all chess pieces
         self.create_pieces()
@@ -97,44 +97,54 @@ class View():
         for piece in reversed(self.chess_pieces.sprites()):
             if piece.rect.collidepoint(mouse_x, mouse_y) and mouse_pressed and not self.dragged_piece:
                 # Only allow dragging if the piece's position is in piece_positions
-                if piece.rect.center in self.piece_positions or self.board_positions:
+                if piece.rect.center in self.piece_positions or piece.rect.center in self.board_positions:
                     self.dragged_piece = piece
                     self.drag_offset = (piece.rect.centerx - mouse_x, piece.rect.centery - mouse_y)
+                    break
 
         # If a piece is being dragged, update its position
         if self.dragged_piece and mouse_pressed:
-            self.dragged_piece.rect.center = (mouse_x + self.drag_offset[0], mouse_y + self.drag_offset[1])
+            self.dragged_piece.rect.center = (mouse_x , mouse_y )
 
         # If the mouse button is released and a piece is being dragged
         elif self.dragged_piece and not mouse_pressed:
-            old_position = self.dragged_piece.rect.center
-            new_position = None  # Initialize new_position to None
-            # Check if the piece is close to a board position, then snap it
-            for board_position in self.board_positions:
-                if self.dragged_piece and self.is_close_to_position(self.dragged_piece.rect.center, board_position):
-                    new_position = board_position
-                    break
+            self.handle_dropped_piece()
 
-            # Update the pieces dictionary if the new position is in board_positions
-            if new_position and new_position in self.board_positions:
-                self.dragged_piece.rect.center = new_position
-                if old_position in self.pieces:
-                    self.pieces[old_position].remove(self.dragged_piece)
-                    self.chess_pieces.remove(self.dragged_piece)
-                if new_position and new_position in self.pieces:
-                    self.pieces[new_position].append(self.dragged_piece)
-                    self.chess_pieces.add(self.dragged_piece)
-            else:
-                # If the new position is not in board_positions, keep the piece at its old position
-                self.dragged_piece.rect.center = old_position
+    def handle_dropped_piece(self):
+        old_position = self.dragged_piece.rect.center
+        new_position = None  # Initialize new_position to None
 
-            self.dragged_piece = None
+        # Check if the piece is close to a board position, then snap it
+        for board_position in self.board_positions:
+            if self.dragged_piece and self.is_close_to_position(self.dragged_piece.rect.center, board_position):
+                new_position = board_position
+                break
+            # else:
+            #     new_position = old_position
+            #     # break
+
+        # Update the pieces dictionary if the new position is in board_positions
+        if new_position in self.board_positions:
+            self.dragged_piece.rect.center = new_position
+            if old_position in self.pieces:
+                self.pieces[old_position].remove(self.dragged_piece)
+                self.chess_pieces.remove(self.dragged_piece)
+            if new_position in self.pieces:
+                self.pieces[new_position].append(self.dragged_piece)
+                self.chess_pieces.add(self.dragged_piece)
+
+            # Reorder the sprites to ensure the dragged piece is drawn last
+            self.chess_pieces.remove(self.dragged_piece)
+            self.chess_pieces.add(self.dragged_piece)
+        else:
+            # If the new position is not in board_positions, keep the piece at its old position
+            self.dragged_piece.rect.center = old_position
+
+        self.dragged_piece = None
 
 
-
-
-    def is_close_to_position(self, pos1, pos2, threshold=40):
-        """Check if two positions are close within a given threshold."""
+    def is_close_to_position(self, pos1, pos2, threshold=100):
+        # """Check if two positions are close within a given threshold."""
         return abs(pos1[0] - pos2[0]) < threshold and abs(pos1[1] - pos2[1]) < threshold
 
     def check_input(self):

@@ -1,4 +1,5 @@
 import pygame, os
+import sys
 from menu import*
 from view import View
 
@@ -17,6 +18,8 @@ class Game():
         self.levels= levelsMenu(self)
         self.options = OptionsMenu(self)
         self.rules = RulesMenu(self)
+        self.win_screen = WinScreen(self)
+        self.lose_screen = LoseScreen(self)
         self.gameView = View(self)
         self.curr_menu= self.main_menu
     
@@ -56,6 +59,7 @@ class Game():
         text_rect=text_serface.get_rect()
         text_rect.center =(x,y) #make the center of the rectag\ngle the given x and y
         self.display.blit(text_serface,text_rect)
-
-        
-                
+    
+    def quit(self):
+        pygame.quit()
+        sys.exit()
