@@ -2,6 +2,8 @@ import pygame, os
 import sys
 from menu import*
 from view import View
+from slider import Slider
+from pygame import mixer
 
 class Game():
     def __init__(self):
@@ -21,7 +23,14 @@ class Game():
         self.win_screen = WinScreen(self)
         self.lose_screen = LoseScreen(self)
         self.gameView = View(self)
+        self.slide = Slider(self)
         self.curr_menu= self.main_menu
+        self.bck_music()
+
+    def bck_music(self):
+        mixer.music.load("E:\AI GAME PHOTOS\game.mp3")
+        mixer.music.set_volume(0.5)
+        mixer.music.play(-1)
     
     def game_loop(self):
         while self.playing:
