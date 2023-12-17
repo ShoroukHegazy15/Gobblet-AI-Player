@@ -3,6 +3,7 @@ class Move:
         self.start_position = start_position
         self.end_position = end_position
         self.piece_size = piece_size
+        
 
 
     def get_startPosition(self):
@@ -24,6 +25,9 @@ class Board:
         self.board_positions = board_positions
         self.piece_positions = piece_positions
         self.board_state = {}
+        self.move_track = []
+        self.current_player = 1
+
     
     def make_move(self, move):
         # Check if it's an internal move or an external move
@@ -41,3 +45,23 @@ class Board:
     def make_external_move(self, move):
         # Place a piece from the stack onto the board
         print(f"Making external move: {move}")
+
+
+    # undo a move
+    def undo_moves(self):
+        # check if it is not the first move
+        if len(self.move_track) != 0:
+            # Retrieves the last move made 
+            move = self.move_track.pop()
+            # Update the board state 
+
+            # Switch players
+            self.current_player = not self.current_player 
+
+            print(f"undo move Done")
+
+
+            
+        else :
+            print(f"Invalid undo move")
+
