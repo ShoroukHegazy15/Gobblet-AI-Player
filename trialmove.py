@@ -97,6 +97,15 @@ class Board:
 
         return self
 
+    
+    def switchPlayer(self):
+        # Helping method to switch the current player
+        self.current_player = not self.current_player
+
+    
+    def currentPlayer(self):
+        # Returns the player whose turn it is to play on the current board
+        return self.current_player
 
     
 
@@ -109,7 +118,7 @@ class Board:
             # Update the board state 
 
             # Switch players
-            self.current_player = not self.current_player 
+            switchPlayer()
 
             print(f"undo move Done")
 
