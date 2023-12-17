@@ -132,6 +132,11 @@ class View():
                     self.dragged_piece.rect.center = old_position
                     print("Move is invalid, reverting position.")
                 break
+         # If new_position is None, the piece was not dropped near any board position
+        if new_position is None:
+        # Snap the piece back to its original position
+            self.dragged_piece.rect.center = old_position
+             
         self.dragged_piece = None
 
     def is_close_to_position(self, pos1, pos2, threshold=100):
