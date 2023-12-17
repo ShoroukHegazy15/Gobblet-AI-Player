@@ -4,6 +4,21 @@ class Move:
         self.end_position = end_position
         self.piece_size = piece_size
 
+
+    def get_startPosition(self):
+        return self.start_position
+    
+    def set_startPosition(self, start_position):
+        self.start_position = start_position
+
+    def get_endPosition(self):
+        return self.end_position
+    
+    def set_endPosition(self, end_position):
+        self.end_position = end_position
+
+
+
 class Board:
     def __init__(self, board_positions, piece_positions):
         self.board_positions = board_positions
