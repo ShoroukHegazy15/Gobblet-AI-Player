@@ -28,23 +28,18 @@ class View():
         #self.pieces = {pos: [] for pos in self.board_centers}
         self.piece_positions = [(57, 107), (57, 274), (57, 447),
                                 (898, 274), (898, 447), (898, 617)]
-
+        #empty dictionary to associate f kol position fee anhy pieces?
         self.pieces = {pos: [] for pos in self.piece_positions + self.board_positions}
        
-        #white_positions = [(57, 107), (57, 274), (57, 447)]
-        #black_positions = [(898, 274), (898, 447), (898, 617)]
-
         self.Gobblet_pieces = pygame.sprite.Group()  # Group to store all Gobblet pieces
         self.create_pieces()
         
-        self.board = Board(self.board_positions, self.piece_positions)
-
         # Store the currently dragged piece and its offset
         self.dragged_piece = None
         self.drag_offset = (0, 0)
-
-    def create_pieces(self):
+        self.board = Board(self.board_positions, self.piece_positions)
         
+    def create_pieces(self):
         sizes = ["XS", "S", "M", "L"]
         white_piece_count = {"L": 0, "M": 0, "S": 0, "XS": 0}
         black_piece_count = {"L": 0, "M": 0, "S": 0, "XS": 0}
@@ -98,44 +93,47 @@ class View():
         # If the mouse button is released and a piece is being dragged
         elif self.dragged_piece and not mouse_pressed:
             self.handle_dropped_piece()
-
+            
     def handle_dropped_piece(self):
         old_position = self.dragged_piece.original_position
         new_position = None    # Initialize new_position to None
-
-         # Check if the piece is close to a board position, then create a move
+        
+        # Check if the piece is close to a board position, then create a move
         for board_position in self.board_positions:
             if self.dragged_piece and self.is_close_to_position(self.dragged_piece.rect.center, board_position):
-                #old_position = self.dragged_piece.rect.center
                 new_position = board_position
-                print(f"old_position: {old_position}, new_position: {new_position}")
-                move_instance = Move(old_position, new_position, self.dragged_piece.size)
-                self.board.make_move(move_instance)
+                move_instance = Move(old_position, new_position, self.dragged_piece.size,)
+                new_board = self.board.make_move(move_instance)
+
+                if new_board is not None:
+                    # If the move was successful, update the current board
+                    self.board = new_board
+                    # Update the original_position when the piece is moved to the board
+                    if new_position in self.board_positions:
+                        self.dragged_piece.rect.center = new_position
+                        self.dragged_piece.original_position = new_position  # Update the original_position here
+
+                        if old_position in self.pieces:
+                            self.Gobblet_pieces.remove(self.dragged_piece)
+                        if new_position in self.pieces:
+                            self.pieces[new_position].append(self.dragged_piece)
+                            self.Gobblet_pieces.add(self.dragged_piece)
+
+                        # Reorder the sprites to ensure the dragged piece is drawn last
+                        self.Gobblet_pieces.remove(self.dragged_piece)
+                        self.Gobblet_pieces.add(self.dragged_piece)
+
+                    else:
+                        # If the new position is not in board_positions, keep the piece at its old position
+                        self.dragged_piece.rect.center = old_position
+
+                else:
+                    # If the move is invalid, revert the position of the dragged piece
+                    self.dragged_piece.rect.center = old_position
+                    print("Move is invalid, reverting position.")
                 break
-            
-      
-        # Update the original_position when the piece is moved to the board
-        if new_position in self.board_positions:
-            self.dragged_piece.rect.center = new_position
-            self.dragged_piece.original_position = new_position  # Update the original_position here
-
-            if old_position in self.pieces:
-                #self.pieces[old_position].remove(self.dragged_piece)
-                self.Gobblet_pieces.remove(self.dragged_piece)
-            if new_position in self.pieces:
-                self.pieces[new_position].append(self.dragged_piece)
-                self.Gobblet_pieces.add(self.dragged_piece)
-
-            # Reorder the sprites to ensure the dragged piece is drawn last
-            self.Gobblet_pieces.remove(self.dragged_piece)
-            self.Gobblet_pieces.add(self.dragged_piece)
-
-        else:
-            # If the new position is not in board_positions, keep the piece at its old position
-            self.dragged_piece.rect.center = old_position
-            
         self.dragged_piece = None
-        
+
     def is_close_to_position(self, pos1, pos2, threshold=100):
         # """Check if two positions are close within a given threshold."""
         return abs(pos1[0] - pos2[0]) < threshold and abs(pos1[1] - pos2[1]) < threshold
