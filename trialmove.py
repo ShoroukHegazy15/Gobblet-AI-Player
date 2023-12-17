@@ -25,6 +25,9 @@ class Board:
         self.board_positions = board_positions
         self.piece_positions = piece_positions
         #self.dragged_piece=dragged_piece
+        self.move_track = []
+        self.current_player = 1
+        
        
        # self.board_state = {}
         self.board_state = {position: [] for position in board_positions}
@@ -93,3 +96,28 @@ class Board:
         self.board_state[end_position].append(piece_size)
 
         return self
+
+
+    
+
+    # undo a move
+    def undo_moves(self):
+        # check if it is not the first move
+        if len(self.move_track) != 0:
+            # Retrieves the last move made 
+            move = self.move_track.pop()
+            # Update the board state 
+
+            # Switch players
+            self.current_player = not self.current_player 
+
+            print(f"undo move Done")
+
+
+            
+        else :
+            print(f"Invalid undo move")
+
+
+
+
