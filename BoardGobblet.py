@@ -7,9 +7,19 @@ class Gobblet:
         self.board = [[[] for _ in range(4)] for _ in range(4)]
 
         # Initialize player pieces
-        self.white_pieces = [4, 3, 2, 1] * 3  # "extra-large", "large", "medium", "small"
-        self.black_pieces = [4, 3, 2, 1] * 3  # "extra-large", "large", "medium", "small"
+        #(size, stack number)
+        # Initialize player pieces
+        self.white_pieces = {
+            0: [(1, 0), (2, 0), (3, 0), (4, 0)],
+            1: [(1, 1), (2, 1), (3, 1), (4, 1)],
+            2: [(1, 2), (2, 2), (3, 2), (4, 2)]
+        }
 
+        self.black_pieces = {
+            0: [(1, 0), (2, 0), (3, 0), (4, 0)],
+            1: [(1, 1), (2, 1), (3, 1), (4, 1)],
+            2: [(1, 2), (2, 2), (3, 2), (4, 2)]
+        }
         # Current player ('white' or 'black')
         self.current_player = 'white'
 
@@ -44,7 +54,7 @@ class Gobblet:
         if start_stack[-1][1] != size:
             return False
 
-        if end_stack and end_stack[-1][1] <= size:
+        if end_stack and end_stack[-1][1] >= size:
             return False  # Move is invalid if there's a larger or equal-sized piece on the destination stack
 
         # Check if the starting stack is covered by a larger or equal-sized piece
@@ -77,7 +87,7 @@ class Gobblet:
             return True
         return False
 
-    def get_valid_moves(self):
+    def get_valid_moves(self,player):
         """
         Get all valid moves for the current player.
         """
@@ -86,12 +96,22 @@ class Gobblet:
         # Iterate through each cell on the board
         for row in range(4):
             for col in range(4):
-                # Check if placing a piece from the off-the-board pile is valid
-                for size in [1, 2, 3, 4]:
-                    if size in getattr(self, f"{self.current_player}_pieces"):
-                        if self.is_valid_placement(row, col, size):
-                            valid_moves.append(("place", size, (row, col)))
-
+                if(player=='white'):
+                    for stack_number,stack in self.white_pieces.items():
+                        if(len(stack)!=0):
+                            size=stack[-1][0]
+                            if self.is_valid_placement(row, col, size): # Access the first value (size) in the tuple):
+                                valid_moves.append(("place", stack[-1][0], (row, col)))
+                        else:
+                            break
+                elif(player=='black'):
+                    for stack_number,stack in self.black_pieces.items():
+                        if(len(stack)!=0):
+                            size=stack[-1][0]
+                            if self.is_valid_placement(row, col, size): # Access the first value (size) in the tuple):
+                                valid_moves.append(("place", size, (row, col)))
+                        else:
+                            break
                 # Check if moving a piece on the board is valid
                 start_stack = self.board[row][col]
                 if start_stack and start_stack[-1][0] == self.current_player:
@@ -120,8 +140,12 @@ class Gobblet:
 
             # Check if the size is present in the player's pieces before removing it
             player_pieces = getattr(self, f"{self.current_player}_pieces")
-            if size in player_pieces:
-                player_pieces.remove(size)
+            # if size in player_pieces:
+            #     player_pieces.remove(size)
+            #     return True
+        for stack_number, stack in player_pieces.items():
+            if stack and stack[-1][0] == size:
+                stack.pop()  # Remove the top element from the stack
                 return True
         else:
             return False
@@ -152,6 +176,13 @@ class Gobblet:
     def print_board(self):
         for row in self.board:
             print(row)
+    # def print_board(self):
+    #     for row in self.board:
+    #         for col in self.board:
+    #             if(self.board[row][col].top()):
+    #                 print(self.board[row][col].top())
+    #             else:
+    #                 print(self.board[row][col])
     def game_is_over(self):
         # Check for a win horizontally, vertically, or diagonally
         for row in range(4):
@@ -186,8 +217,8 @@ import random
 
 
 # Simple random AI player
-def random_ai_player(game):
-    valid_moves = game.get_valid_moves()
+def random_ai_player(game,player):
+    valid_moves = game.get_valid_moves(player)
     if not valid_moves:
         return  # No valid moves
 
@@ -198,7 +229,7 @@ def random_ai_player(game):
         row, col = coordinates
         game.place_piece(row,col,size)
     elif move_type == "move":
-     # Extracting source and destination coordinates
+    # Extracting source and destination coordinates
         size,src_coordinates, dest_coordinates = move[1],move[2],move[3]
         src_row, src_col = src_coordinates
         dest_row, dest_col = dest_coordinates
@@ -219,7 +250,7 @@ def play_game():
         game.print_board()
 
         # Random AI player 1 makes a move
-        random_ai_player(game)
+        random_ai_player(game,game.current_player)
         
         if(game.current_player=='white'):
             game.current_player='black'
@@ -234,7 +265,11 @@ def play_game():
         game.print_board()
 
         # Random AI player 2 makes a move
-        random_ai_player(game)
+        random_ai_player(game,game.current_player)
+        if(game.current_player=='white'):
+            game.current_player='black'
+        else:
+            game.current_player='white'
 
         # Print the final state of the board
         print("\nFinal Board:")
