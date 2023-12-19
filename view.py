@@ -2,6 +2,7 @@ import pygame
 import os
 from trialmove import Move
 from trialmove import Board
+import random        #random module for AI random moves 
 
 class GobbletPiece(pygame.sprite.Sprite):
      def __init__(self, color, size, piece_id, position):
@@ -97,14 +98,12 @@ class View():
     def handle_dropped_piece(self):
         old_position = self.dragged_piece.original_position
         new_position = None    # Initialize new_position to None
-        
         # Check if the piece is close to a board position, then create a move
         for board_position in self.board_positions:
             if self.dragged_piece and self.is_close_to_position(self.dragged_piece.rect.center, board_position):
                 new_position = board_position
                 move_instance = Move(old_position, new_position, self.dragged_piece.size,)
-                new_board = self.board.make_move(move_instance)
-
+                new_board = self.board.make_move(move_instance,1)
                 if new_board is not None:
                     # If the move was successful, update the current board
                     self.board = new_board
@@ -122,21 +121,27 @@ class View():
                         # Reorder the sprites to ensure the dragged piece is drawn last
                         self.Gobblet_pieces.remove(self.dragged_piece)
                         self.Gobblet_pieces.add(self.dragged_piece)
+                        
+                        self.board.switchPlayer()
+                        self.random_ai_player() 
+                        self.board.switchPlayer()
 
-                    else:
+                    """ else:
                         # If the new position is not in board_positions, keep the piece at its old position
                         self.dragged_piece.rect.center = old_position
-
+ """
                 else:
                     # If the move is invalid, revert the position of the dragged piece
                     self.dragged_piece.rect.center = old_position
                     print("Move is invalid, reverting position.")
+                    print("this is still player: ",self.board.current_player, " turn")
+                    
                 break
          # If new_position is None, the piece was not dropped near any board position
         if new_position is None:
         # Snap the piece back to its original position
             self.dragged_piece.rect.center = old_position
-             
+            print("this is still player: ",self.board.current_player, " turn")
         self.dragged_piece = None
 
     def is_close_to_position(self, pos1, pos2, threshold=100):
@@ -147,5 +152,46 @@ class View():
         if self.game.BACK_KEY:
             self.game.curr_menu = self.game.rules
             self.run_display = False
+            
+    """ def update_display(self):
+        # Clear the screen
+        self.game.display.fill(self.BACK_COLOR)
+        # Redraw the board background
+        self.game.display.blit(self.bg, (0, 0))
+        # Draw Gobblet pieces
+        self.Gobblet_pieces.draw(self.game.display)
+        # Update the display
+        self.blit_screen() """
+        
+    def random_ai_player(self):
+    # Simulate the computer making a random move
+        if self.board.currentPlayer() == 2:  # Player 1 is human, Player 2 is the computer
+            print("this is player: ",self.board.current_player," turn" )
+            valid_moves = self.get_valid_moves_for_current_player()
+            if valid_moves:
+                move = random.choice(valid_moves)
+                new_board = self.board.make_move(move, player=2)  # Pass the computer player as an argument
+                #pygame.time.delay(1000)  # You can adjust the delay time as needed
+                #self.update_display()
+                print(f"Computer made a move")
+        #return 1
 
-    
+    def get_valid_moves_for_current_player(self):
+        # Get a list of valid moves for the current player
+        valid_moves = []
+        for start_position in self.piece_positions:
+            for end_position in self.board_positions:
+                piece_size = self.get_piece_size_at_position(start_position)
+                move = Move(start_position, end_position, piece_size)
+                if self.board.is_valid_move(move):
+                    valid_moves.append(move)
+        return valid_moves
+
+    def get_piece_size_at_position(self, position):
+        # Helper method to get the piece size at a given position
+        if position in self.pieces and self.pieces[position]:
+            return self.pieces[position][-1].size  # Get the size of the top piece
+        else:
+            return None  # No piece at the position   
+
+  
