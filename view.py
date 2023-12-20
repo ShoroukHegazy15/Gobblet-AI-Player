@@ -3,7 +3,6 @@ import os
 from trialmove import Move
 from trialmove import Board
 import random        #random module for AI random moves 
-from menu import Menu
 
 class GobbletPiece(pygame.sprite.Sprite):
      def __init__(self, color, size, piece_id, position):
@@ -15,7 +14,7 @@ class GobbletPiece(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=position)
         self.original_position = position  # Store the original position
 
-class View(Menu):
+class View():
     def __init__(self, game):
         self.game = game
         self.run_display = True
@@ -30,9 +29,7 @@ class View(Menu):
         #self.pieces = {pos: [] for pos in self.board_centers}
         self.piece_positions = [(57, 107), (57, 274), (57, 447),
                                 (898, 274), (898, 447), (898, 617)]
-        self.piece_white_positions = [(57, 107), (57, 274), (57, 447)]
-        self.piece_black_positions = [(898, 274), (898, 447), (898, 617)]
-        #empty dictionary to associate f kol position fee anhy pieces?
+        #empty dictionary to associate f kol position 3l board w 3l sides fee anhy pieces?
         self.pieces = {pos: [] for pos in self.piece_positions + self.board_positions}
        
         self.Gobblet_pieces = pygame.sprite.Group()  # Group to store all Gobblet pieces
@@ -42,17 +39,19 @@ class View(Menu):
         self.dragged_piece = None
         self.drag_offset = (0, 0)
         self.board = Board(self.board_positions, self.piece_positions)
-        self.hour, self.mins, self.sec = 00, 00, 00
-        self.paused=False
-        self.clock = pygame.time.Clock()
+        
+        player_one = True  # if a human is playing white, then this will be True, else False
+        player_two = False
+        human_turn = (self.board.current_player and player_one) or (not self.board.current_player and player_two)
+
         
     def create_pieces(self):
         sizes = ["XS", "S", "M", "L"]
         white_piece_count = {"L": 0, "M": 0, "S": 0, "XS": 0}
         black_piece_count = {"L": 0, "M": 0, "S": 0, "XS": 0}
 
-        for color, positions, piece_count in [("white", self.piece_white_positions, white_piece_count),
-                                            ("black", self.piece_black_positions, black_piece_count)]:
+        for color, positions, piece_count in [("white", self.piece_positions[:3], white_piece_count),
+                                            ("black", self.piece_positions[3:], black_piece_count)]:
 
             for size in sizes:
                 for piece_id, start_center in enumerate(positions):
@@ -62,7 +61,17 @@ class View(Menu):
                         self.Gobblet_pieces.add(piece)
                         self.pieces[start_center].append(piece)
                         piece_count[size] += 1
-    
+                        
+    def update_pieces_dictionary(self, old_position, new_position):
+        # Update the pieces dictionary based on the move
+        if old_position in self.pieces :
+            # Remove the dragged_piece from the list at old_position
+            self.pieces[old_position].remove(self.dragged_piece)
+           
+        if new_position in self.pieces :
+            # Append the dragged_piece to the list at new_position
+            self.pieces[new_position].append(self.dragged_piece)
+
     def blit_screen(self):
         self.game.window.blit(self.game.display, (0, 0))
         pygame.display.update()
@@ -78,13 +87,7 @@ class View(Menu):
             # Draw Gobblet pieces
             self.Gobblet_pieces.draw(self.game.display)
             self.handle_drag_and_drop()
-            #self.timer()
             self.blit_screen()
-    
-    def check_input(self):
-        if self.game.BACK_KEY:
-            self.game.curr_menu = self.game.main_menu
-            self.run_display = False
 
     def handle_drag_and_drop(self):
         mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -94,8 +97,13 @@ class View(Menu):
         for piece in reversed(self.Gobblet_pieces.sprites()):
             if piece.rect.collidepoint(mouse_x, mouse_y) and mouse_pressed and not self.dragged_piece:
                 # Only allow dragging if the piece's position is in piece_positions
-                if piece.rect.center in self.piece_white_positions or piece.rect.center in self.board_positions:
-                    # make only white pieces draggable
+                if piece.rect.center in self.piece_positions:
+                    # Only allow dragging white pieces during human turn
+                    if self.board.currentPlayer() == 1 and piece.color == "white":
+                        self.dragged_piece = piece
+                        self.drag_offset = (piece.rect.centerx - mouse_x, piece.rect.centery - mouse_y)
+                        break
+                elif piece.rect.center in self.board_positions:
                     self.dragged_piece = piece
                     self.drag_offset = (piece.rect.centerx - mouse_x, piece.rect.centery - mouse_y)
                     break
@@ -107,8 +115,20 @@ class View(Menu):
         # If the mouse button is released and a piece is being dragged
         elif self.dragged_piece and not mouse_pressed:
             self.handle_dropped_piece()
+
+
+        # If a piece is being dragged, update its position
+        if self.dragged_piece and mouse_pressed:
+            self.dragged_piece.rect.center = (mouse_x + self.drag_offset[0], mouse_y + self.drag_offset[1])
+
+        # If the mouse button is released and a piece is being dragged
+        elif self.dragged_piece and not mouse_pressed:
+            self.handle_dropped_piece()
             
     def handle_dropped_piece(self):
+        """ print("now im printing the ccontents of pieces dictionary:")
+        for pos, pieces in self.pieces.items():
+            print(f"Position {pos} has pieces: {pieces}") """
         old_position = self.dragged_piece.original_position
         new_position = None    # Initialize new_position to None
         # Check if the piece is close to a board position, then create a move
@@ -125,12 +145,7 @@ class View(Menu):
                         self.dragged_piece.rect.center = new_position
                         self.dragged_piece.original_position = new_position  # Update the original_position here
 
-                        if old_position in self.pieces:
-                            self.Gobblet_pieces.remove(self.dragged_piece)
-                        if new_position in self.pieces:
-                            self.pieces[new_position].append(self.dragged_piece)
-                            self.Gobblet_pieces.add(self.dragged_piece)
-
+                        self.update_pieces_dictionary(old_position, new_position)
                         # Reorder the sprites to ensure the dragged piece is drawn last
                         self.Gobblet_pieces.remove(self.dragged_piece)
                         self.Gobblet_pieces.add(self.dragged_piece)
@@ -156,63 +171,55 @@ class View(Menu):
             self.dragged_piece.rect.center = old_position
             print("this is still player: ",self.board.current_player, " turn")
         self.dragged_piece = None
-
+        
+        # Print the contents of the pieces dictionary after each move
+        print("\n********Contents of the pieces dictionary:**********")
+        for pos, pieces in self.pieces.items():
+            print(f"Position {pos} has pieces:")
+            for piece in pieces:
+                print(f"  - Color: {piece.color}, Size: {piece.size}, Piece ID: {piece.piece_id}")
+            
     def is_close_to_position(self, pos1, pos2, threshold=100):
         # """Check if two positions are close within a given threshold."""
         return abs(pos1[0] - pos2[0]) < threshold and abs(pos1[1] - pos2[1]) < threshold
 
     def check_input(self):
         if self.game.BACK_KEY:
-            self.game.curr_menu = self.game.pause_menu
+            self.game.curr_menu = self.game.rules
             self.run_display = False
-            
-    """ def update_display(self):
-        # Clear the screen
-        self.game.display.fill(self.BACK_COLOR)
-        # Redraw the board background
-        self.game.display.blit(self.bg, (0, 0))
-        # Draw Gobblet pieces
-        self.Gobblet_pieces.draw(self.game.display)
-        # Update the display
-        self.blit_screen() """
-        
+                    
     def random_ai_player(self):
-    # Simulate the computer making a random move
-        if self.board.currentPlayer() == 2:  # Player 1 is human, Player 2 is the computer
-            print("this is player: ",self.board.current_player," turn" )
-            valid_moves = self.get_valid_moves_for_current_player()
+        # Simulate the computer making a random move
+        if self.board.currentPlayer() == 2 :  # Player 1 is human, Player 2 is the computer
+            print("this is player: ", self.board.current_player, " turn")
+            
+            #computer yl3b bel black bsss
+            valid_moves = self.get_valid_moves_for_black_pieces()
             if valid_moves:
                 move = random.choice(valid_moves)
-                old_position, new_position, piece_size = move.start_position, move.end_position, move.piece_size
-
+                old_position = move.start_position
+                new_position = move.end_position
                 new_board = self.board.make_move(move, player=2)  # Pass the computer player as an argument
-                #pygame.time.delay(1000)  # You can adjust the delay time as needed
-                #self.update_display()
-                if new_board is not None:
-                    # If the move was successful, update the current board
-                    self.board = new_board
-                    # Update the original_position when the piece is moved to the board
-                    if new_position in self.board_positions:
-                        self.piece.rect.center = new_position
-                        self.piece.original_position = new_position  # Update the original_position here
-
-                        if old_position in self.pieces:
-                            self.Gobblet_pieces.remove(self.piece)
-                        if new_position in self.pieces:
-                            self.pieces[new_position].append(self.piece)
-                            self.Gobblet_pieces.add(self.piece)
-
-                        # Reorder the sprites to ensure the dragged piece is drawn last
-                        self.Gobblet_pieces.remove(self.piece)
-                        self.Gobblet_pieces.add(self.piece)
+                
+                # Remove the piece from the list at old_position
+                if old_position in self.pieces and self.pieces[old_position]:  # Check if the list is not empty
+                    moved_piece = self.pieces[old_position].pop()
+                    self.pieces[new_position].append(moved_piece)
                         
-                print(f"Computer made a move")
-        #return 1
+                    """ # If the list is now empty, remove the key from the dictionary
+                    if not self.pieces[old_position]:
+                        del self.pieces[old_position] """
+                    # Append the piece to the list at new_position
+                    #print("Move executed successfully")
+                #else:
+                    #print("Old position is not in pieces dictionary. Something went wrong.")
+                    #print(f"Computer made a move")
 
-    def get_valid_moves_for_current_player(self):
-        # Get a list of valid moves for the current player
+
+    # New method to get valid moves for black pieces only
+    def get_valid_moves_for_black_pieces(self):
         valid_moves = []
-        for start_position in self.piece_black_positions:
+        for start_position in self.piece_positions[3:]:  # Consider only black pieces
             for end_position in self.board_positions:
                 piece_size = self.get_piece_size_at_position(start_position)
                 move = Move(start_position, end_position, piece_size)
@@ -226,49 +233,5 @@ class View(Menu):
             return self.pieces[position][-1].size  # Get the size of the top piece
         else:
             return None  # No piece at the position   
-    
-    def draw_timer(self,hr,m,s,size,x,y):
-        font=pygame.font.Font(self.game.font_name,size)
-        text_serface =font.render("{}:{}:{}".format(hr,m,s),True,(250,250,250))
-        text_rect=text_serface.get_rect()
-        text_rect.center =(x,y) #make the center of the rectag\ngle the given x and y
-        self.game.display.blit(text_serface,text_rect)
-
-    #def timer(self):
-    #    if not self.paused:
-     #       self.sec += 1
-      #      time.sleep(1)
-    
-    def timer(self):
-        #clock=pygame.time.Clock()
-        self.clock.tick(1)
-        if not self.paused:
-            self.sec += 1    
-        self.show_timer()
-
-    def show_timer(self):
-        if self.sec == 60:
-            self.sec=0
-            self.mins += 1
-        if self.mins ==  60:
-            self.mins=0
-            self.hour += 1
-        if self.sec<10 and self.mins<10 and self.hour<10:
-            str_sec= "0"+ str(self.sec)
-            str_mins= "0"+ str(self.mins)
-            str_hr= "0"+ str(self.hour)
-        elif self.mins<10 and self.hour<10:
-            str_sec =str(self.sec)
-            str_mins= "0" +  str(self.mins)
-            str_hr= "0"+ str(self.hour)
-        elif self.hour<10:
-            str_sec =str(self.sec)
-            str_mins= str(self.mins)
-            str_hr= "0"+ str(self.hour)
-        else :
-            str_sec =str(self.sec)
-            str_mins= str(self.mins)
-            str_hr= str(self.hour)
-        self.draw_timer(str_hr,str_mins,str_sec,24,877,40)
 
   
