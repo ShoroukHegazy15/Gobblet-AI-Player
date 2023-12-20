@@ -329,6 +329,38 @@ class PauseMenu(Menu): #enherite menu
             elif self.state == "Main menu":
                 self.game.curr_menu = self.game.main_menu
             self.run_display = False
+
+        if self.game.DOWN_KEY:
+            if self.state == "Resume" :
+                self.cursor_rect.midtop = (self.optionsx + self.offset, self.optionsy)
+                self.state = "Options"
+            elif self.state == "Options" :
+                self.cursor_rect.midtop = (self.rulesx + self.offset, self.rulesy)
+                self.state = "Main menu"
+            elif self.state == "Rules" :
+                self.cursor_rect.midtop = (self.startx + self.offset, self.starty)
+                self.state = "Resume"
+        if self.game.UP_KEY:
+            if self.state == "Resume" :
+                self.cursor_rect.midtop = (self.rulesx + self.offset, self.rulesy)
+                self.state = "Main menu"
+            elif self.state == "Main menu" :
+                self.cursor_rect.midtop = (self.optionsx + self.offset, self.optionsy)
+                self.state = "Options"
+            elif self.state == "Options" :
+                self.cursor_rect.midtop = (self.startx + self.offset, self.starty)
+                self.state = "Resume"
+
+    def check_input(self):
+        self.move_cursor()
+        if self.game.START_KEY:
+            if self.state == "Resume":
+                self.game.curr_menu = self.game.gameView
+            elif self.state == "Options":
+                self.game.curr_menu = self.game.options
+            elif self.state == "Main menu":
+                self.game.curr_menu = self.game.main_menu
+            self.run_display = False
             
 ##el molahza elwahida,, eni lama basib el cursor 3and hard w dost backspace w rege3t tani d5lt lel level byfdal 3ala hard idk why         
 ##el molahza elwahida,, eni lama basib el cursor 3and hard w dost backspace w rege3t tani d5lt lel level byfdal 3ala hard idk why 
