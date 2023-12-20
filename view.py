@@ -3,6 +3,7 @@ import os
 from trialmove import Move
 from trialmove import Board
 import random        #random module for AI random moves 
+from menu import Menu
 
 class GobbletPiece(pygame.sprite.Sprite):
      def __init__(self, color, size, piece_id, position):
@@ -14,7 +15,7 @@ class GobbletPiece(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=position)
         self.original_position = position  # Store the original position
 
-class View():
+class View(Menu):
     def __init__(self, game):
         self.game = game
         self.run_display = True
@@ -73,6 +74,11 @@ class View():
             self.Gobblet_pieces.draw(self.game.display)
             self.handle_drag_and_drop()
             self.blit_screen()
+    
+    def check_input(self):
+        if self.game.BACK_KEY:
+            self.game.curr_menu = self.game.main_menu
+            self.run_display = False
 
     def handle_drag_and_drop(self):
         mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -148,10 +154,6 @@ class View():
         # """Check if two positions are close within a given threshold."""
         return abs(pos1[0] - pos2[0]) < threshold and abs(pos1[1] - pos2[1]) < threshold
 
-    def check_input(self):
-        if self.game.BACK_KEY:
-            self.game.curr_menu = self.game.rules
-            self.run_display = False
             
     """ def update_display(self):
         # Clear the screen

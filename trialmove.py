@@ -79,7 +79,7 @@ class Board:
             move = self.move_track.pop()
             # Update the board state 
             # Switch players
-            switchPlayer()
+            self.switchPlayer()
             print(f"undo move Done")
 
             
