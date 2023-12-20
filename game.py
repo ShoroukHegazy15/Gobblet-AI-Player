@@ -24,6 +24,7 @@ class Game():
         self.lose_screen = LoseScreen(self)
         self.gameView = View(self)
         self.slide = Slider(self)
+        self.pause_menu = PauseMenu(self)
         self.curr_menu= self.main_menu
         self.bck_music()
 
