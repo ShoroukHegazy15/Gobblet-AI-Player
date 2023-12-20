@@ -30,6 +30,8 @@ class View(Menu):
         #self.pieces = {pos: [] for pos in self.board_centers}
         self.piece_positions = [(57, 107), (57, 274), (57, 447),
                                 (898, 274), (898, 447), (898, 617)]
+        self.piece_white_positions = [(57, 107), (57, 274), (57, 447)]
+        self.piece_black_positions = [(898, 274), (898, 447), (898, 617)]
         #empty dictionary to associate f kol position fee anhy pieces?
         self.pieces = {pos: [] for pos in self.piece_positions + self.board_positions}
        
@@ -49,8 +51,8 @@ class View(Menu):
         white_piece_count = {"L": 0, "M": 0, "S": 0, "XS": 0}
         black_piece_count = {"L": 0, "M": 0, "S": 0, "XS": 0}
 
-        for color, positions, piece_count in [("white", self.piece_positions[:3], white_piece_count),
-                                            ("black", self.piece_positions[3:], black_piece_count)]:
+        for color, positions, piece_count in [("white", self.piece_white_positions, white_piece_count),
+                                            ("black", self.piece_black_positions, black_piece_count)]:
 
             for size in sizes:
                 for piece_id, start_center in enumerate(positions):
@@ -92,7 +94,8 @@ class View(Menu):
         for piece in reversed(self.Gobblet_pieces.sprites()):
             if piece.rect.collidepoint(mouse_x, mouse_y) and mouse_pressed and not self.dragged_piece:
                 # Only allow dragging if the piece's position is in piece_positions
-                if piece.rect.center in self.piece_positions or piece.rect.center in self.board_positions:
+                if piece.rect.center in self.piece_white_positions or piece.rect.center in self.board_positions:
+                    # make only white pieces draggable
                     self.dragged_piece = piece
                     self.drag_offset = (piece.rect.centerx - mouse_x, piece.rect.centery - mouse_y)
                     break
@@ -160,7 +163,7 @@ class View(Menu):
 
     def check_input(self):
         if self.game.BACK_KEY:
-            self.game.curr_menu = self.game.rules
+            self.game.curr_menu = self.game.pause_menu
             self.run_display = False
             
     """ def update_display(self):
@@ -180,16 +183,36 @@ class View(Menu):
             valid_moves = self.get_valid_moves_for_current_player()
             if valid_moves:
                 move = random.choice(valid_moves)
+                old_position, new_position, piece_size = move.start_position, move.end_position, move.piece_size
+
                 new_board = self.board.make_move(move, player=2)  # Pass the computer player as an argument
                 #pygame.time.delay(1000)  # You can adjust the delay time as needed
                 #self.update_display()
+                if new_board is not None:
+                    # If the move was successful, update the current board
+                    self.board = new_board
+                    # Update the original_position when the piece is moved to the board
+                    if new_position in self.board_positions:
+                        self.piece.rect.center = new_position
+                        self.piece.original_position = new_position  # Update the original_position here
+
+                        if old_position in self.pieces:
+                            self.Gobblet_pieces.remove(self.piece)
+                        if new_position in self.pieces:
+                            self.pieces[new_position].append(self.piece)
+                            self.Gobblet_pieces.add(self.piece)
+
+                        # Reorder the sprites to ensure the dragged piece is drawn last
+                        self.Gobblet_pieces.remove(self.piece)
+                        self.Gobblet_pieces.add(self.piece)
+                        
                 print(f"Computer made a move")
         #return 1
 
     def get_valid_moves_for_current_player(self):
         # Get a list of valid moves for the current player
         valid_moves = []
-        for start_position in self.piece_positions:
+        for start_position in self.piece_black_positions:
             for end_position in self.board_positions:
                 piece_size = self.get_piece_size_at_position(start_position)
                 move = Move(start_position, end_position, piece_size)
