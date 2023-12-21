@@ -182,6 +182,14 @@ class View():
             self.game.curr_menu = self.game.rules
             self.run_display = False
                     
+    def get_piece_at_position(self, position):
+        """Retrieve the top piece at a given position."""
+        if position in self.pieces and self.pieces[position]:
+            return self.pieces[position][-1]  # Get the top piece at the position
+        else:
+            print("\nana el 3mla moshkela\n")
+            return None  # No piece at the position                
+    
     def random_ai_player(self):
         # Simulate the computer making a random move
         if self.board.currentPlayer() == 2 :  # Player 1 is human, Player 2 is the computer
@@ -193,39 +201,79 @@ class View():
                 move = random.choice(valid_moves)
                 old_position = move.start_position
                 new_position = move.end_position
+                
+                # Update the position of the chosen piece as if it's being dragged by the computer
+                chosen_piece = self.get_piece_at_position(old_position)
+                if chosen_piece:
+                    chosen_piece.rect.center = new_position
+                    chosen_piece.original_position = new_position
+                
                 new_board = self.board.make_move(move, player=2)  # Pass the computer player as an argument
                 
                 # Remove the piece from the list at old_position
                 if old_position in self.pieces and self.pieces[old_position]:  # Check if the list is not empty
                     moved_piece = self.pieces[old_position].pop()
                     self.pieces[new_position].append(moved_piece)
-                        
-                    """ # If the list is now empty, remove the key from the dictionary
-                    if not self.pieces[old_position]:
-                        del self.pieces[old_position] """
-                    # Append the piece to the list at new_position
-                    #print("Move executed successfully")
-                #else:
-                    #print("Old position is not in pieces dictionary. Something went wrong.")
-                    #print(f"Computer made a move")
-
-
-    # New method to get valid moves for black pieces only
+                    
+                    # Reorder the sprites to ensure the dragged piece is drawn last (on top)
+                    self.Gobblet_pieces.remove(moved_piece)
+                    self.Gobblet_pieces.add(moved_piece)
+                
+                for position, pieces in self.board.board_state.items():
+                    print(f"Position {position} has pieces: {pieces}")
+                    print("\n")            
+            else:
+                print("\nno valid moves for BLACk!!!\n")
+                
     def get_valid_moves_for_black_pieces(self):
         valid_moves = []
-        for start_position in self.piece_positions[3:]:  # Consider only black pieces
-            for end_position in self.board_positions:
-                piece_size = self.get_piece_size_at_position(start_position)
-                move = Move(start_position, end_position, piece_size)
-                if self.board.is_valid_move(move):
-                    valid_moves.append(move)
+
+        # Check if there is at least one black piece on the board
+        black_piece_on_board = any(self.pieces[pos] and self.pieces[pos][-1].color == "black" for pos in self.board_positions)
+
+        # Consider black pieces on the side for the first move
+        if not black_piece_on_board:
+            print("\nif\n")
+            for start_position in self.piece_positions[3:]:
+                if self.pieces[start_position]:  # Check if the list is not empty
+                    for end_position in self.board_positions:
+                        piece_size = self.get_piece_size_at_position(start_position)
+                        if piece_size is not None:  # Check if the piece size is not None
+                            move = Move(start_position, end_position, piece_size)
+                            if self.board.is_valid_move(move):
+                                valid_moves.append(move)
+                            else:
+                                print("\nexternal move is invalid!!!!\n")
+        else:
+            print("\nelse\n")
+            # If there is at least one black piece on the board, consider internal moves as well
+            for start_position in self.piece_positions[3:]:
+                if self.pieces[start_position]:  # Check if the list is not empty
+                    for end_position in self.board_positions:
+                        piece_size = self.get_piece_size_at_position(start_position)
+                        if piece_size is not None:  # Check if the piece size is not None
+                            move = Move(start_position, end_position, piece_size)
+                            if self.board.is_valid_move(move):
+                                valid_moves.append(move)
+                                
+            for start_position in self.board_positions:
+                if self.pieces[start_position] and self.pieces[start_position][-1].color == "black":  # Check if the list is not empty and the piece is black
+                    for end_position in self.board_positions:
+                        piece_size = self.get_piece_size_at_position(start_position)
+                        if piece_size is not None:  # Check if the piece size is not None
+                            move = Move(start_position, end_position, piece_size)
+                            if self.board.is_valid_move(move):
+                                valid_moves.append(move)
+                            else:
+                                print("\ninternal move is invalid!!!!\n")
+
         return valid_moves
 
     def get_piece_size_at_position(self, position):
-        # Helper method to get the piece size at a given position
+        # method to get the piece size at a given position
         if position in self.pieces and self.pieces[position]:
             return self.pieces[position][-1].size  # Get the size of the top piece
         else:
+            print("\nana el moshkela el tanya\n")
             return None  # No piece at the position   
 
-  
