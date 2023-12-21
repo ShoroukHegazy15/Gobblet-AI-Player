@@ -99,14 +99,15 @@ class View():
                 # Only allow dragging if the piece's position is in piece_positions
                 if piece.rect.center in self.piece_positions:
                     # Only allow dragging white pieces during human turn
-                    if self.board.currentPlayer() == 1 and piece.color == "white":
+                    if self.board.currentPlayer() == 1 and piece.color == "white" and not self.has_black_piece_on_top(piece):
                         self.dragged_piece = piece
                         self.drag_offset = (piece.rect.centerx - mouse_x, piece.rect.centery - mouse_y)
                         break
                 elif piece.rect.center in self.board_positions:
-                    self.dragged_piece = piece
-                    self.drag_offset = (piece.rect.centerx - mouse_x, piece.rect.centery - mouse_y)
-                    break
+                    if self.board.currentPlayer() == 1 and piece.color == "white" and not self.has_black_piece_on_top(piece):
+                        self.dragged_piece = piece
+                        self.drag_offset = (piece.rect.centerx - mouse_x, piece.rect.centery - mouse_y)
+                        break
 
         # If a piece is being dragged, update its position
         if self.dragged_piece and mouse_pressed:
@@ -116,15 +117,15 @@ class View():
         elif self.dragged_piece and not mouse_pressed:
             self.handle_dropped_piece()
 
-
-        # If a piece is being dragged, update its position
-        if self.dragged_piece and mouse_pressed:
-            self.dragged_piece.rect.center = (mouse_x + self.drag_offset[0], mouse_y + self.drag_offset[1])
-
-        # If the mouse button is released and a piece is being dragged
-        elif self.dragged_piece and not mouse_pressed:
-            self.handle_dropped_piece()
-            
+    def has_black_piece_on_top(self, piece):
+         position = piece.rect.center
+         if position in self.pieces and len(self.pieces[position]) > 1:
+             # Check if there is a black piece on top of the dragged white piece
+             top_piece = self.pieces[position][-1]
+             if top_piece.color == "black":
+                 return True
+         return False 
+         
     def handle_dropped_piece(self):
         """ print("now im printing the ccontents of pieces dictionary:")
         for pos, pieces in self.pieces.items():
