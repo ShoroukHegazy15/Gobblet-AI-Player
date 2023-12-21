@@ -118,23 +118,20 @@ class View():
             self.handle_dropped_piece()
 
     def has_black_piece_on_top(self, piece):
-         position = piece.rect.center
-         if position in self.pieces and len(self.pieces[position]) > 1:
-             # Check if there is a black piece on top of the dragged white piece
-             top_piece = self.pieces[position][-1]
-             if top_piece.color == "black":
-                 return True
-         return False 
+        position = piece.rect.center
+        if position in self.pieces and len(self.pieces[position]) > 1:
+            # Check if there is a black piece on top of the dragged white piece
+            top_piece = self.pieces[position][-1]
+            if top_piece.color == "black":
+                return True
+        return False 
          
     def handle_dropped_piece(self):
-        """ print("now im printing the ccontents of pieces dictionary:")
-        for pos, pieces in self.pieces.items():
-            print(f"Position {pos} has pieces: {pieces}") """
         old_position = self.dragged_piece.original_position
         new_position = None    # Initialize new_position to None
         # Check if the piece is close to a board position, then create a move
         for board_position in self.board_positions:
-            if self.dragged_piece and self.is_close_to_position(self.dragged_piece.rect.center, board_position):
+            if self.dragged_piece and self.is_close_to_position(self.dragged_piece.rect.center, board_position) :
                 new_position = board_position
                 move_instance = Move(old_position, new_position, self.dragged_piece.size,)
                 new_board = self.board.make_move(move_instance,1)
@@ -147,18 +144,13 @@ class View():
                         self.dragged_piece.original_position = new_position  # Update the original_position here
 
                         self.update_pieces_dictionary(old_position, new_position)
-                        # Reorder the sprites to ensure the dragged piece is drawn last
-                        self.Gobblet_pieces.remove(self.dragged_piece)
-                        self.Gobblet_pieces.add(self.dragged_piece)
+                        # Reorder the sprites to ensure the dragged piece is drawn last; on top y3ny
+                        self.Gobblet_pieces.remove(self.dragged_piece)  
+                        self.Gobblet_pieces.add(self.dragged_piece)   #bn7otaha on top of stack 3l board
                         
                         self.board.switchPlayer()
                         self.random_ai_player() 
                         self.board.switchPlayer()
-
-                    """ else:
-                        # If the new position is not in board_positions, keep the piece at its old position
-                        self.dragged_piece.rect.center = old_position
- """
                 else:
                     # If the move is invalid, revert the position of the dragged piece
                     self.dragged_piece.rect.center = old_position
@@ -174,11 +166,12 @@ class View():
         self.dragged_piece = None
         
         # Print the contents of the pieces dictionary after each move
-        print("\n********Contents of the pieces dictionary:**********")
+        """ print("\n********Contents of the pieces dictionary:**********")
         for pos, pieces in self.pieces.items():
             print(f"Position {pos} has pieces:")
             for piece in pieces:
                 print(f"  - Color: {piece.color}, Size: {piece.size}, Piece ID: {piece.piece_id}")
+             """
             
     def is_close_to_position(self, pos1, pos2, threshold=100):
         # """Check if two positions are close within a given threshold."""
