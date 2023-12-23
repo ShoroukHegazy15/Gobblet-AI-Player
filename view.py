@@ -20,18 +20,20 @@ class View():
         self.run_display = True
         self.bg = pygame.image.load(os.path.join("Assets/board.png")).convert()
         self.BACK_COLOR = (30, 54, 45)
-        self.board_positions = [
-            (215, 110), (386, 110), (555, 110), (724, 110),
-            (215, 280), (386, 280), (555, 280), (724, 280),
-            (215, 450), (386, 450), (555, 450), (724, 450),
-            (215, 620), (386, 620), (555, 620), (724, 620),
+        self.board_positions = [#8irt hna shwit arkam 386->385,724->725
+            (215, 110), (385, 110), (555, 110), (725, 110),
+            (215, 280), (385, 280), (555, 280), (725, 280),
+            (215, 450), (385, 450), (555, 450), (725, 450),
+            (215, 620), (385, 620), (555, 620), (725, 620),
         ]
         #self.pieces = {pos: [] for pos in self.board_centers}
         self.piece_positions = [(57, 107), (57, 274), (57, 447),
                                 (898, 274), (898, 447), (898, 617)]
         #empty dictionary to associate f kol position 3l board w 3l sides fee anhy pieces?
         self.pieces = {pos: [] for pos in self.piece_positions + self.board_positions}
-       
+        self.piecesBoard = {pos: [] for pos in  self.board_positions}
+        
+    
         self.Gobblet_pieces = pygame.sprite.Group()  # Group to store all Gobblet pieces
         self.create_pieces()
         
@@ -39,11 +41,8 @@ class View():
         self.dragged_piece = None
         self.drag_offset = (0, 0)
         self.board = Board(self.board_positions, self.piece_positions)
+        self
         
-        player_one = True  # if a human is playing white, then this will be True, else False
-        player_two = False
-        human_turn = (self.board.current_player and player_one) or (not self.board.current_player and player_two)
-
         
     def create_pieces(self):
         sizes = ["XS", "S", "M", "L"]
@@ -67,10 +66,13 @@ class View():
         if old_position in self.pieces :
             # Remove the dragged_piece from the list at old_position
             self.pieces[old_position].remove(self.dragged_piece)
-           
+        if old_position in self.piecesBoard:
+            # Remove the dragged_piece from the list at old_position
+            self.piecesBoard[old_position].remove(self.dragged_piece)
         if new_position in self.pieces :
             # Append the dragged_piece to the list at new_position
             self.pieces[new_position].append(self.dragged_piece)
+            self.piecesBoard[new_position].append(self.dragged_piece)
 
     def blit_screen(self):
         self.game.window.blit(self.game.display, (0, 0))
@@ -86,7 +88,7 @@ class View():
             self.game.display.blit(self.bg, (0, 0))
             # Draw Gobblet pieces
             self.Gobblet_pieces.draw(self.game.display)
-            self.handle_drag_and_drop()
+            self.handle_drag_and_drop()#end of program 
             self.blit_screen()
 
     def handle_drag_and_drop(self):
@@ -125,8 +127,8 @@ class View():
             if top_piece.color == "black":
                 return True
         return False 
-         
-    def handle_dropped_piece(self):
+        
+    def handle_dropped_piece(self): #this function must take arguments of which play random ai or hard ai or what
         old_position = self.dragged_piece.original_position
         new_position = None    # Initialize new_position to None
         # Check if the piece is close to a board position, then create a move
@@ -147,7 +149,11 @@ class View():
                         # Reorder the sprites to ensure the dragged piece is drawn last; on top y3ny
                         self.Gobblet_pieces.remove(self.dragged_piece)  
                         self.Gobblet_pieces.add(self.dragged_piece)   #bn7otaha on top of stack 3l board
-                        
+                        if(self.board.current_player==1 and self.game_is_over()):
+                            return 1
+                        elif(self.board.current_player==2 and self.game_is_over()):
+                            return 2
+                            
                         self.board.switchPlayer()
                         self.random_ai_player() 
                         self.board.switchPlayer()
@@ -158,7 +164,7 @@ class View():
                     print("this is still player: ",self.board.current_player, " turn")
                     
                 break
-         # If new_position is None, the piece was not dropped near any board position
+        # If new_position is None, the piece was not dropped near any board position
         if new_position is None:
         # Snap the piece back to its original position
             self.dragged_piece.rect.center = old_position
@@ -166,12 +172,24 @@ class View():
         self.dragged_piece = None
         
         # Print the contents of the pieces dictionary after each move
-        """ print("\n********Contents of the pieces dictionary:**********")
-        for pos, pieces in self.pieces.items():
-            print(f"Position {pos} has pieces:")
-            for piece in pieces:
-                print(f"  - Color: {piece.color}, Size: {piece.size}, Piece ID: {piece.piece_id}")
-             """
+        print("\n********Contents of the pieces dictionary:**********")
+        # for pos, pieces in self.pieces.items():
+        #     print(f"Position {pos} has pieces:")
+        #     # x,y=pos
+        #     # print(x,y)
+        #     # print("Top Piece: ",self.pieces.items()[pos][-1])
+        #     i=0
+        #     if(pos in self.board_positions):
+        #         for piece in pieces:
+        #             print(i)
+        #             i+=1
+        #             print(f"  - Color: {piece.color}, Size: {piece.size}, Piece ID: {piece.piece_id}")
+        #     # for piece in pieces:
+        #     #     print(f"  - Color: {piece.color}, Size: {piece.size}, Piece ID: {piece.piece_id}")
+        board= self.getSimplifiedBoard()
+        for row in board:
+            print(row)
+
             
     def is_close_to_position(self, pos1, pos2, threshold=100):
         # """Check if two positions are close within a given threshold."""
@@ -218,7 +236,10 @@ class View():
                     # Reorder the sprites to ensure the dragged piece is drawn last (on top)
                     self.Gobblet_pieces.remove(moved_piece)
                     self.Gobblet_pieces.add(moved_piece)
-                
+                if old_position in self.piecesBoard and self.pieces[old_position]:
+                    self.piecesBoard[old_position].pop()
+                    self.piecesBoard[new_position].append(moved_piece)
+                    
                 for position, pieces in self.board.board_state.items():
                     print(f"Position {position} has pieces: {pieces}")
                     print("\n")            
@@ -239,7 +260,7 @@ class View():
                     for end_position in self.board_positions:
                         piece_size = self.get_piece_size_at_position(start_position)
                         if piece_size is not None:  # Check if the piece size is not None
-                            move = Move(start_position, end_position, piece_size)
+                            move = Move(start_position, end_position, piece_size,)
                             if self.board.is_valid_move(move):
                                 valid_moves.append(move)
                             else:
@@ -268,7 +289,85 @@ class View():
                                 print("\ninternal move is invalid!!!!\n")
 
         return valid_moves
+    
 
+    def game_is_over(self):
+        board=self.getSimplifiedBoard()
+        # Check for a win horizontally, vertically, or diagonally
+        for row in range(4):
+            if self._check_row_win(board,row):
+                return True
+
+        for col in range(4):
+            if self._check_col_win(board,col):
+                return True
+
+        if self._check_diag_win(board):
+            return True
+
+        return False
+
+    def _check_row_win(self,board, row):
+        pieces = [board[row][col][0] for col in range(4) if board[row][col]]
+        counterOfTruth=0
+        for piece in pieces:
+            if(piece[0]==pieces[0][0]):
+                counterOfTruth+=1
+            else:
+                return False
+        if(counterOfTruth==4):
+            return True
+        # return len(pieces) == 4 and all(piece == pieces[0] for piece in pieces)
+
+
+    def _check_col_win(self,board, col):
+        pieces = [board[row][col][0] for row in range(4) if board[row][col] ]
+        counterOfTruth=0
+        for piece in pieces:
+            if(piece[0]==pieces[0][0]):
+                counterOfTruth+=1
+            else:
+                return False
+        if(counterOfTruth==4):
+            return True
+
+    def _check_diag_win(self,board):
+        pieces = [board[i][i][0] for i in range(4) if board[i][i]]
+        counterOfTruth=0
+        for piece in pieces:
+            if(piece[0]==pieces[0][0]):
+                counterOfTruth+=1
+            else:
+                return False
+        if(counterOfTruth==4):
+            return True
+        counterOfTruth=0
+        for piece in reversed(pieces):
+            if(piece[0]==pieces[0][0]):
+                counterOfTruth+=1
+            else:
+                return False
+        if(counterOfTruth==4):
+            return True
+        
+    #simple 2d array with only 0-4 and 2d array
+    def getSimplifiedBoard(self):
+        board = [[[] for _ in range(4)] for _ in range(4)]
+        i=0
+        j=0
+        for pos, pieces in self.pieces.items():
+            if(pos in self.board_positions):
+                for piece in pieces:
+                    if(piece.color=="white"):
+                        board[j][i].append(("white",piece.size))
+                    elif(piece.color=="black"):
+                        board[j][i].append(("black",piece.size))
+                i+=1
+            if(i>3):
+                i=0
+                j+=1
+        return board
+        
     def get_piece_size_at_position(self, position):
         # method to get the piece size at a given position
         if position in self.pieces and self.pieces[position]:
