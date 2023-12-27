@@ -212,9 +212,12 @@ class View():
         # Simulate the computer making a random move
         if self.board.currentPlayer() == 2 :  # Player 1 is human, Player 2 is the computer
             print("this is player: ", self.board.current_player, " turn")
+
+             valid_moves = self.get_valid_moves_for_pieces("black")   #can be called b2a anywhere with the color parameter
             
-            #computer yl3b bel black bsss
-            valid_moves = self.get_valid_moves_for_black_pieces()
+             #computer yl3b bel black bsss
+            #valid_moves = self.get_valid_moves_for_black_pieces()
+             
             if valid_moves:
                 move = random.choice(valid_moves)
                 old_position = move.start_position
@@ -246,6 +249,82 @@ class View():
             else:
                 print("\nno valid moves for BLACk!!!\n")
                 
+    def get_valid_moves_for_pieces(self,Color):
+        valid_moves = []
+
+        # Check if there is at least one black piece on the board
+        piece_on_board = any(self.pieces[pos] and self.pieces[pos][-1].color == Color for pos in self.board_positions)
+        if(Color=="black"):
+            # Consider black pieces on the side for the first move
+            if not piece_on_board:
+                for start_position in self.piece_positions[3:]:
+                    if self.pieces[start_position]:  # Check if the list is not empty
+                        for end_position in self.board_positions:
+                            piece_size = self.get_piece_size_at_position(start_position)
+                            if piece_size is not None:  # Check if the piece size is not None
+                                move = Move(start_position, end_position, piece_size)
+                                if self.board.is_valid_move(move):
+                                    valid_moves.append(move)
+                                else:
+                                    print("\nexternal move is invalid!!!!\n")
+            else:
+                # If there is at least one black piece on the board, consider internal moves as well
+                for start_position in self.piece_positions[3:]:
+                    if self.pieces[start_position]:  # Check if the list is not empty
+                        for end_position in self.board_positions:
+                            piece_size = self.get_piece_size_at_position(start_position)
+                            if piece_size is not None:  # Check if the piece size is not None
+                                move = Move(start_position, end_position, piece_size)
+                                if self.board.is_valid_move(move):
+                                    valid_moves.append(move)
+                                    
+                for start_position in self.board_positions:
+                    if self.pieces[start_position] and self.pieces[start_position][-1].color == Color:  # Check if the list is not empty and the piece is black
+                        for end_position in self.board_positions:
+                            piece_size = self.get_piece_size_at_position(start_position)
+                            if piece_size is not None:  # Check if the piece size is not None
+                                move = Move(start_position, end_position, piece_size)
+                                if self.board.is_valid_move(move):
+                                    valid_moves.append(move)
+                                else:
+                                    print("\ninternal move is invalid!!!!\n")
+        else:
+            # Consider white pieces on the side for the first move
+            if not piece_on_board:
+                for start_position in self.piece_positions[:3]:
+                    if self.pieces[start_position]:  # Check if the list is not empty
+                        for end_position in self.board_positions:
+                            piece_size = self.get_piece_size_at_position(start_position)
+                            if piece_size is not None:  # Check if the piece size is not None
+                                move = Move(start_position, end_position, piece_size)
+                                if self.board.is_valid_move(move):
+                                    valid_moves.append(move)
+                                else:
+                                    print("\nexternal move is invalid!!!!\n")
+            else:
+                # If there is at least one black piece on the board, consider internal moves as well
+                for start_position in self.piece_positions[:3]:
+                    if self.pieces[start_position]:  # Check if the list is not empty
+                        for end_position in self.board_positions:
+                            piece_size = self.get_piece_size_at_position(start_position)
+                            if piece_size is not None:  # Check if the piece size is not None
+                                move = Move(start_position, end_position, piece_size)
+                                if self.board.is_valid_move(move):
+                                    valid_moves.append(move)
+                                    
+                for start_position in self.board_positions:
+                    if self.pieces[start_position] and self.pieces[start_position][-1].color == Color:  # Check if the list is not empty and the piece is black
+                        for end_position in self.board_positions:
+                            piece_size = self.get_piece_size_at_position(start_position)
+                            if piece_size is not None:  # Check if the piece size is not None
+                                move = Move(start_position, end_position, piece_size)
+                                if self.board.is_valid_move(move):
+                                    valid_moves.append(move)
+                                else:
+                                    print("\ninternal move is invalid!!!!\n")
+    
+        return valid_moves
+         
     def get_valid_moves_for_black_pieces(self):
         valid_moves = []
 
