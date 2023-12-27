@@ -180,7 +180,7 @@ class MoodsMenu(Menu):
         self.move_cursor()
         if self.game.START_KEY:
             if self.state == "mood1":
-                self.game.curr_menu=self.game.levels
+                self.game.curr_menu=self.game.gameView
             elif self.state == "mood2":
                 self.game.curr_menu=self.game.levels
             elif self.state == "mood3":
@@ -193,7 +193,9 @@ class levelsMenu(Menu):
         Menu.__init__(self,game)
         self.state = "Easy"
         self.easx, self.easy = self.mid_w,self.mid_h + 20
-        self.hardx,self.hardy = self.mid_w, self.mid_h + 50
+        self.medx,self.medy = self.mid_w, self.mid_h + 50
+        self.hardx,self.hardy = self.mid_w, self.mid_h + 80
+
         self.cursor_rect.midtop = (self.easx +self.offset, self.easy)
 
     def display_menu(self):
@@ -204,6 +206,7 @@ class levelsMenu(Menu):
             self.game.display.fill(self.game.BACK_COLOR)
             self.game.draw_text('Choose difficulty:',20, self.game.DISPLAY_W/2, self.game.DISPLAY_H/2 -20)
             self.game.draw_text('Easy',20, self.easx, self.easy)
+            self.game.draw_text('Medium',20, self.medx, self.medy)
             self.game.draw_text('Hard',20, self.hardx,self.hardy)
             self.draw_cursor()
             self.blit_screen()
@@ -214,6 +217,9 @@ class levelsMenu(Menu):
             self.run_display = False
         elif self.game.DOWN_KEY or self.game.UP_KEY:
             if self.state == "Easy" :
+                self.cursor_rect.midtop = (self.medx + self.offset, self.medy)
+                self.state = "Medum"
+            elif self.state == "Medium" :
                 self.cursor_rect.midtop = (self.hardx + self.offset, self.hardy)
                 self.state = "Hard"
             elif self.state == "Hard" :
@@ -224,6 +230,9 @@ class levelsMenu(Menu):
         self.move_cursor()
         if self.game.START_KEY:
             if self.state == "Easy":
+                # self.game.playing = True
+                self.game.curr_menu=self.game.gameView
+            elif self.state == "Medium":
                 # self.game.playing = True
                 self.game.curr_menu=self.game.gameView
             elif self.state == "Hard":
