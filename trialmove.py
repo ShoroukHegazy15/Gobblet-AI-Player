@@ -23,7 +23,7 @@ class Board:
         #self.white_to_move = not self.white_to_move  # switch players
         if player == 1:  # Human player
             if self.is_valid_move(move):
-                new_board = self.make_internal_move(move) if move.start_position in self.board_positions else self.make_external_move(move)
+                new_board = self.make_internal_move(move)if move.start_position in self.board_positions else self.make_external_move(move)
                 """ for position, pieces in self.board_state.items():
                     print(f"Position {position} has pieces: {pieces}") """
                 return new_board
