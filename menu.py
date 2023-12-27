@@ -180,11 +180,11 @@ class MoodsMenu(Menu):
         self.move_cursor()
         if self.game.START_KEY:
             if self.state == "mood1":
-                self.game.curr_menu=self.game.gameView
+                self.game.curr_menu=self.game.gameViewHVH
             elif self.state == "mood2":
                 self.game.curr_menu=self.game.levels
             elif self.state == "mood3":
-                self.game.curr_menu=self.game.gameView
+                self.game.curr_menu=self.game.gameViewCVC
                 #self.game.playing = True
             self.run_display = False
 

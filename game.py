@@ -2,6 +2,8 @@ import pygame, os
 import sys
 from menu import*
 from view import View
+from hvh import ViewHVH
+from cvc import ViewCVC
 from slider import Slider
 from pygame import mixer
 
@@ -23,6 +25,8 @@ class Game():
         self.win_screen = WinScreen(self)
         self.lose_screen = LoseScreen(self)
         self.gameView = View(self)
+        self.gameViewHVH = ViewHVH(self)   #human vs human view
+        self.gameViewHVC = ViewCVC(self)   #human vs computer view
         self.slide = Slider(self)
         self.pause_menu = PauseMenu(self)
         self.curr_menu= self.main_menu
