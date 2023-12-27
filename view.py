@@ -2,7 +2,7 @@ import pygame
 import os
 from trialmove import Move
 from trialmove import Board
-import random        #random module for AI random moves 
+import random               #random module for AI random moves 
 
 class GobbletPiece(pygame.sprite.Sprite):
      def __init__(self, color, size, piece_id, position):
@@ -150,8 +150,10 @@ class View():
                         self.Gobblet_pieces.remove(self.dragged_piece)  
                         self.Gobblet_pieces.add(self.dragged_piece)   #bn7otaha on top of stack 3l board
                         if(self.board.current_player==1 and self.game_is_over()):
+                            print("White winSSSSSSSSSSSSSSSSSSSSSSSSSs")
                             return 1
                         elif(self.board.current_player==2 and self.game_is_over()):
+                            print("Black winsSSSSSSSSSSS")
                             return 2
                             
                         self.board.switchPlayer()
@@ -308,7 +310,7 @@ class View():
         return False
 
     def _check_row_win(self,board, row):
-        pieces = [board[row][col][0] for col in range(4) if board[row][col]]
+        pieces = [board[row][col][-1] for col in range(4) if board[row][col]]
         counterOfTruth=0
         for piece in pieces:
             if(piece[0]==pieces[0][0]):
@@ -321,7 +323,7 @@ class View():
 
 
     def _check_col_win(self,board, col):
-        pieces = [board[row][col][0] for row in range(4) if board[row][col] ]
+        pieces = [board[row][col][-1] for row in range(4) if board[row][col] ]
         counterOfTruth=0
         for piece in pieces:
             if(piece[0]==pieces[0][0]):
@@ -332,7 +334,7 @@ class View():
             return True
 
     def _check_diag_win(self,board):
-        pieces = [board[i][i][0] for i in range(4) if board[i][i]]
+        pieces = [board[i][i][-1] for i in range(4) if board[i][i]]
         counterOfTruth=0
         for piece in pieces:
             if(piece[0]==pieces[0][0]):

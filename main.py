@@ -17,7 +17,7 @@ g.quit()
 # Generate and display possible moves for a player
 #possible_moves = board.generate_possible_moves(Board.WHITE_PLAYER)
 #for move in possible_moves:
- #   print(move)
+# #   print(move)
 
 # Make a move and display the updated board state
 #move = Move(0, 0, 1, 1, 1, 0)  # Example move
