@@ -213,7 +213,7 @@ class View():
         if self.board.currentPlayer() == 2 :  # Player 1 is human, Player 2 is the computer
             print("this is player: ", self.board.current_player, " turn")
 
-             valid_moves = self.get_valid_moves_for_pieces("black")   #can be called b2a anywhere with the color parameter
+            valid_moves = self.get_valid_moves_for_pieces("black")   #can be called b2a anywhere with the color parameter
             
              #computer yl3b bel black bsss
             #valid_moves = self.get_valid_moves_for_black_pieces()
