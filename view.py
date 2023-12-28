@@ -100,7 +100,7 @@ class View():
             # Draw Gobblet pieces
             self.Gobblet_pieces.draw(self.game.display)
             self.handle_drag_and_drop()#end of program 
-            self.timer()
+            # self.timer()
             self.blit_screen()
     
     def check_input(self):
@@ -390,13 +390,22 @@ class View():
         # Check for a win horizontally, vertically, or diagonally
         for row in range(4):
             if self._check_row_win(board,row):
+                self.game.curr_menu=self.game.win_screen   #win screen appears
+                # self.game.curr_menu=self.game.lose_screen   #lose screen appears
+                self.run_display = False
                 return True
 
         for col in range(4):
             if self._check_col_win(board,col):
+                self.game.curr_menu=self.game.win_screen    #win screen appears
+                # self.game.curr_menu=self.game.lose_screen   #lose screen appears
+                self.run_display = False
                 return True
 
         if self._check_diag_win(board):
+            self.game.curr_menu=self.game.win_screen      #win screen appears
+            # self.game.curr_menu=self.game.lose_screen   #lose screen appears
+            self.run_display = False
             return True
 
         return False

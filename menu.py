@@ -276,26 +276,30 @@ class levelsMenu(Menu):
         if self.game.DOWN_KEY:
             if self.state == "Easy":
                 self.cursor_rect.midtop = (self.medx + self.offset, self.medy)
-                self.state = "Medum"
+                self.state = "Medium"
             elif self.state == "Medium" :
                 self.cursor_rect.midtop = (self.hardx + self.offset, self.hardy)
                 self.state = "Hard"
             elif self.state == "Hard":
-                self.cursor_rect.midtop = (self.easx + self.offset, self.easy)  # Move to Back
-                self.state = "Easy"
-            elif self.state == "Back":
-                self.cursor_rect.midtop = (self.backx + self.offset, self.backy+70)  # Move to Easy
+                self.cursor_rect.midtop = (self.backx + self.offset, self.backy+70)  # Move to Back
                 self.state = "Back"
+            elif self.state == "Back":
+                self.cursor_rect.midtop = (self.easx + self.offset, self.easy)  # Move to Easy
+                self.state = "Easy"
         elif self.game.UP_KEY:
             if self.state == "Easy":
                 self.cursor_rect.midtop = (self.backx + self.offset, self.backy+70)  # Move to Back
                 self.state = "Back"
-            elif self.state == "Hard":
-                self.cursor_rect.midtop = (self.easx + self.offset, self.easy)  # Move to Easy
-                self.state = "Easy"
             elif self.state == "Back":
                 self.cursor_rect.midtop = (self.hardx + self.offset, self.hardy)  # Move to Hard
                 self.state = "Hard"
+            elif self.state == "Hard":
+                self.cursor_rect.midtop = (self.medx + self.offset, self.medy)  # Move to Easy
+                self.state = "Medium"
+            elif self.state == "Medium":
+                self.cursor_rect.midtop = (self.easx + self.offset, self.easy)  # Move to Easy
+                self.state = "Easy"
+            
         elif pygame.mouse.get_pressed()[1]:  # Middle mouse button is clicked
             mouse_x, mouse_y = pygame.mouse.get_pos()
             if self.backx < mouse_x < self.backx + 100 and self.backy < mouse_y < self.backy + 20:
@@ -320,43 +324,39 @@ class WinScreen(Menu):
         Menu.__init__(self, game)
         
     def display_menu(self):
+        self.run_display =True
         while self.run_display:
             self.game.check_events()
             self.check_input()
-            self.game.display.fill(self.game.BLACK)
-            self.game.draw_text("You Win!", 48, self.mid_w, self.mid_h + self.offset)
+            self.game.display.fill(self.game.BACK_COLOR)
+            self.game.draw_text("You Win!", 40, self.game.DISPLAY_W/2, self.game.DISPLAY_H/2 -20)
             self.draw_cursor()
             self.blit_screen()
 
     def check_input(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.game.quit()
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
-                    self.run_display = False        
+        if self.game.BACK_KEY or self.game.START_KEY:
+            self.game.curr_menu = self.game.main_menu
+            self.run_display = False        
                     
                     
 class LoseScreen(Menu):
     def __init__(self, game):
         Menu.__init__(self, game)
-
+        
     def display_menu(self):
+        self.run_display =True
         while self.run_display:
             self.game.check_events()
             self.check_input()
-            self.game.display.fill(self.game.BLACK)
-            self.game.draw_text("You Lose!", 48, self.mid_w, self.mid_h + self.offset)
+            self.game.display.fill(self.game.BACK_COLOR)
+            self.game.draw_text("You Lose!", 40, self.game.DISPLAY_W/2, self.game.DISPLAY_H/2 -20)
             self.draw_cursor()
             self.blit_screen()
 
     def check_input(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.game.quit()
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
-                    self.run_display = False
+        if self.game.BACK_KEY or self.game.START_KEY:
+            self.game.curr_menu = self.game.main_menu
+            self.run_display = False        
                     
 
 class PauseMenu(Menu): #enherite menu
