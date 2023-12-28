@@ -11,7 +11,6 @@ class Board:
         self.move_track = []   #move log
         self.current_player = 1
         self.board_state = {position: [] for position in board_positions}
-        #self.white_to_move = True
         
         #key(board_positions)
         #value (lists of stack of pieces on each tile in that position)
@@ -57,7 +56,7 @@ class Board:
 
     def make_internal_move(self, move):
         start_position, end_position, piece_size = move.start_position, move.end_position, move.piece_size
-        # Remove the piece from the start position  el heya wa7da mn el board_positions
+        # Remove the piece from the start position el heya wa7da mn el board_positions
         self.board_state[start_position].pop()  
         # Add the piece to the end position
         self.board_state[end_position].append(piece_size)
@@ -68,11 +67,6 @@ class Board:
         # Add the piece to the end position
         self.board_state[end_position].append(piece_size)
         return self
-    
-#class player:  
-    #def __init__(self,color):
-        #self.color = color
-        #self.current_player = 1
 
     def switchPlayer(self):
         self.current_player = 3 - self.current_player  # Toggle between 1 and 2
@@ -82,7 +76,7 @@ class Board:
         # Returns the player whose turn it is to play on the current board
         return self.current_player
 
-    # undo a move
+    """ # undo a move
     def undo_moves(self):
         # check if it is not the first move
         if len(self.move_track) != 0:
@@ -94,7 +88,7 @@ class Board:
             print(f"undo move Done")
             
         else :
-            print(f"Invalid undo move")
+            print(f"Invalid undo move") """
 
 
 
