@@ -34,7 +34,7 @@ class Game():
 
     def bck_music(self):
         mixer.music.load("Assets/background music.mp3")
-        mixer.music.set_volume(0.5)
+        mixer.music.set_volume(0.1)
         mixer.music.play(-1)
     
     def game_loop(self):

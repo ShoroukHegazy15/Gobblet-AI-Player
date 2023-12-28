@@ -169,9 +169,12 @@ class View():
                         self.Gobblet_pieces.add(self.dragged_piece)   #bn7otaha on top of stack 3l board
                         if(self.board.current_player==1 and self.game_is_over()):
                             print("White winSSSSSSSSSSSSSSSSSSSSSSSSSs")
+                            self.game.curr_menu=self.game.win_screen
+
                             return 1
                         elif(self.board.current_player==2 and self.game_is_over()):
                             print("Black winsSSSSSSSSSSS")
+                            self.game.curr_menu=self.game.lose_screen
                             return 2
                             
                         self.board.switchPlayer()
@@ -359,6 +362,7 @@ class View():
                                 valid_moves.append(move)
                             else:
                                 print("\nexternal move is invalid!!!!\n")
+
         else:
             print("\nelse\n")
             # If there is at least one black piece on the board, consider internal moves as well
@@ -390,20 +394,20 @@ class View():
         # Check for a win horizontally, vertically, or diagonally
         for row in range(4):
             if self._check_row_win(board,row):
-                self.game.curr_menu=self.game.win_screen   #win screen appears
+                # self.game.curr_menu=self.game.win_screen   #win screen appears
                 # self.game.curr_menu=self.game.lose_screen   #lose screen appears
                 self.run_display = False
                 return True
 
         for col in range(4):
             if self._check_col_win(board,col):
-                self.game.curr_menu=self.game.win_screen    #win screen appears
+                # self.game.curr_menu=self.game.win_screen    #win screen appears
                 # self.game.curr_menu=self.game.lose_screen   #lose screen appears
                 self.run_display = False
                 return True
 
         if self._check_diag_win(board):
-            self.game.curr_menu=self.game.win_screen      #win screen appears
+            # self.game.curr_menu=self.game.win_screen      #win screen appears
             # self.game.curr_menu=self.game.lose_screen   #lose screen appears
             self.run_display = False
             return True
