@@ -30,6 +30,8 @@ class Game():
         self.slide = Slider(self)
         self.pause_menu = PauseMenu(self)
         self.curr_menu= self.main_menu
+        self.total_paused_mseconds=0
+        
         self.bck_music()
 
     def bck_music(self):

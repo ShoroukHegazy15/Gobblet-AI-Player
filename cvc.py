@@ -41,9 +41,14 @@ class ViewCVC():
         self.dragged_piece = None
         self.drag_offset = (0, 0)
         self.board = Board(self.board_positions, self.piece_positions)
-        self.hour, self.mins, self.sec = 00, 00, 00
-        self.paused=False
-        self.clock = pygame.time.Clock()
+
+        #timer
+        self.time_when_paused =0 
+        self.paused_flag=0
+        self.fixed_start_time=0
+        self.elapsed_seconds = 0
+        self.mins=0
+
 
         if self.board.currentPlayer() == 1:  # Player 1's turn
             self.handle_drag_and_drop()  # Allow the human player to make a move
@@ -92,6 +97,13 @@ class ViewCVC():
 
     def display_menu(self):
         self.run_display = True
+        self.clock = pygame.time.Clock()
+        if self.paused_flag == 0:
+            self.start_time = pygame.time.get_ticks()
+            self.fixed_start_time=self.start_time
+        else:
+            self.start_time = self.fixed_start_time
+            self.time_when_paused = 0
         while self.run_display:
             self.game.check_events()
             self.check_input()
@@ -100,13 +112,15 @@ class ViewCVC():
             # Draw Gobblet pieces
             self.Gobblet_pieces.draw(self.game.display)
             self.handle_drag_and_drop()#end of program 
-            # self.timer()
+            self.game.paused=False
+            self.timer()
             self.blit_screen()
     
     def check_input(self):
         if self.game.BACK_KEY:
             self.game.curr_menu = self.game.pause_menu
-            self.paused= not self.paused
+            self.time_when_paused = self.elapsed_milliseconds
+            self.paused_flag =1
             self.run_display = False
 
     def handle_drag_and_drop(self):
@@ -471,47 +485,34 @@ class ViewCVC():
             return None  # No piece at the position   
         
 
-     
-    def draw_timer(self,hr,m,s,size,x,y):
+    def draw_timer(self,m,s,size,x,y):
         font=pygame.font.Font(self.game.font_name,size)
-        text_serface =font.render("{}:{}:{}".format(hr,m,s),True,(250,250,250))
+        text_serface =font.render("{}:{}".format(m,s),True,(250,250,250))
         text_rect=text_serface.get_rect()
         text_rect.center =(x,y) #make the center of the rectag\ngle the given x and y
         self.game.display.blit(text_serface,text_rect)
 
-    #def timer(self):
-    #    if not self.paused:
-     #       self.sec += 1
-      #      time.sleep(1)
-    
     def timer(self):
-        #clock=pygame.time.Clock()
-        self.clock.tick(1)
-        if not self.paused:
-            self.sec += 1    
+        self.current_time = pygame.time.get_ticks()
+        self.elapsed_milliseconds = self.current_time - self.start_time - self.game.total_paused_mseconds
+        self.elapsed_seconds = self.elapsed_milliseconds // 1000
+        self.clock.tick(60)
         self.show_timer()
 
     def show_timer(self):
-        if self.sec == 60:
-            self.sec=0
+        if self.elapsed_seconds == 60:
+            self.start_time = pygame.time.get_ticks()
             self.mins += 1
         if self.mins ==  60:
-            self.mins=0
-            self.hour += 1
-        if self.sec<10 and self.mins<10 and self.hour<10:
-            str_sec= "0"+ str(self.sec)
+            pass
+        if self.elapsed_seconds <10 and self.mins<10:
+            str_sec= "0"+ str(self.elapsed_seconds)
             str_mins= "0"+ str(self.mins)
-            str_hr= "0"+ str(self.hour)
-        elif self.mins<10 and self.hour<10:
-            str_sec =str(self.sec)
+        elif self.mins<10 :
+            str_sec =str(self.elapsed_seconds)
             str_mins= "0" +  str(self.mins)
-            str_hr= "0"+ str(self.hour)
-        elif self.hour<10:
-            str_sec =str(self.sec)
-            str_mins= str(self.mins)
-            str_hr= "0"+ str(self.hour)
         else :
-            str_sec =str(self.sec)
+            str_sec =str(self.elapsed_seconds)
             str_mins= str(self.mins)
-            str_hr= str(self.hour)
-        self.draw_timer(str_hr,str_mins,str_sec,24,877,40)
+        #print("start:",self.start_time,"current:",self.current_time,"at pause:",self.elapsed_seconds,"hvh")
+        self.draw_timer(str_mins,str_sec,24,877,40)

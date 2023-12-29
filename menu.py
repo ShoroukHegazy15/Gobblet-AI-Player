@@ -7,6 +7,8 @@ class Menu():
         self.run_display = True
         self.cursor_rect = pygame.Rect(0, 0, 20, 20) #left top width height
         self.offset = -100 #to avoid cursur to be on the menu 
+        self.mouse_pos =pygame.mouse.get_pos()
+        self.mouse = pygame.mouse.get_pressed()
 
     def draw_cursor(self,addDist=0):
         self.game.draw_text('»',20 ,self.cursor_rect.x ,self.cursor_rect.y+addDist)
@@ -367,9 +369,17 @@ class PauseMenu(Menu): #enherite menu
         self.optionsx, self.optionsy = self.mid_w, self.mid_h + 50
         self.rulesx,self.rulesy = self.mid_w, self.mid_h + 70
         self.cursor_rect.midtop = (self.startx + self.offset,self.starty)
+        
+        #pause timer
+        self.elapsed_seconds = 0
+        self.mins=0
 
     def display_menu(self):
         self.run_display =True
+        self.clock = pygame.time.Clock()
+        self.start_pause_time = pygame.time.get_ticks()
+        self.paused_mseconds =0
+        
         while self.run_display:
             self.game.check_events()
             self.check_input()
@@ -378,73 +388,55 @@ class PauseMenu(Menu): #enherite menu
             self.game.draw_text('Resume',20, self.startx,self.starty)
             self.game.draw_text('Options',20, self.optionsx, self.optionsy)
             self.game.draw_text('Main menu',20, self.rulesx,self.rulesy)
+            self.timer()
             self.draw_cursor()
             self.blit_screen()
-
-    def move_cursor(self):
-        if self.game.DOWN_KEY:
-            if self.state == "Resume" :
-                self.cursor_rect.midtop = (self.optionsx + self.offset, self.optionsy)
-                self.state = "Options"
-            elif self.state == "Options" :
-                self.cursor_rect.midtop = (self.rulesx + self.offset, self.rulesy)
-                self.state = "Main menu"
-            elif self.state == "Rules" :
-                self.cursor_rect.midtop = (self.startx + self.offset, self.starty)
-                self.state = "Resume"
-        if self.game.UP_KEY:
-            if self.state == "Resume" :
-                self.cursor_rect.midtop = (self.rulesx + self.offset, self.rulesy)
-                self.state = "Main menu"
-            elif self.state == "Main menu" :
-                self.cursor_rect.midtop = (self.optionsx + self.offset, self.optionsy)
-                self.state = "Options"
-            elif self.state == "Options" :
-                self.cursor_rect.midtop = (self.startx + self.offset, self.starty)
-                self.state = "Resume"
-
-    def check_input(self):
-        self.move_cursor()
-        if self.game.START_KEY:
-            if self.state == "Resume":
-                self.game.curr_menu = self.game.gameView
-            elif self.state == "Options":
-                self.game.curr_menu = self.game.options
-            elif self.state == "Main menu":
-                self.game.curr_menu = self.game.main_menu
-            self.run_display = False
-
-        if self.game.DOWN_KEY:
-            if self.state == "Resume" :
-                self.cursor_rect.midtop = (self.optionsx + self.offset, self.optionsy)
-                self.state = "Options"
-            elif self.state == "Options" :
-                self.cursor_rect.midtop = (self.rulesx + self.offset, self.rulesy)
-                self.state = "Main menu"
-            elif self.state == "Rules" :
-                self.cursor_rect.midtop = (self.startx + self.offset, self.starty)
-                self.state = "Resume"
-        if self.game.UP_KEY:
-            if self.state == "Resume" :
-                self.cursor_rect.midtop = (self.rulesx + self.offset, self.rulesy)
-                self.state = "Main menu"
-            elif self.state == "Main menu" :
-                self.cursor_rect.midtop = (self.optionsx + self.offset, self.optionsy)
-                self.state = "Options"
-            elif self.state == "Options" :
-                self.cursor_rect.midtop = (self.startx + self.offset, self.starty)
-                self.state = "Resume"
-
-    def check_input(self):
-        self.move_cursor()
-        if self.game.START_KEY:
-            if self.state == "Resume":
-                self.game.curr_menu = self.game.gameView
-            elif self.state == "Options":
-                self.game.curr_menu = self.game.options
-            elif self.state == "Main menu":
-                self.game.curr_menu = self.game.main_menu
-            self.run_display = False
             
+    def move_cursor(self):
+        if self.game.BACK_KEY:
+            self.game.curr_menu = self.game.main_menu
+            self.run_display = False
+        if self.game.DOWN_KEY:
+            if self.state == "Resume" :
+                self.cursor_rect.midtop = (self.optionsx + self.offset, self.optionsy)
+                self.state = "Options"
+            elif self.state == "Options" :
+                self.cursor_rect.midtop = (self.rulesx + self.offset, self.rulesy)
+                self.state = "Main menu"
+            elif self.state == "Rules" :
+                self.cursor_rect.midtop = (self.startx + self.offset, self.starty)
+                self.state = "Resume"
+        if self.game.UP_KEY:
+            if self.state == "Resume" :
+                self.cursor_rect.midtop = (self.rulesx + self.offset, self.rulesy)
+                self.state = "Main menu"
+            elif self.state == "Main menu" :
+                self.cursor_rect.midtop = (self.optionsx + self.offset, self.optionsy)
+                self.state = "Options"
+            elif self.state == "Options" :
+                self.cursor_rect.midtop = (self.startx + self.offset, self.starty)
+                self.state = "Resume"
+
+
+    def check_input(self):
+        self.move_cursor()
+        if self.game.START_KEY:
+            if self.state == "Resume":
+                self.game.total_paused_mseconds += self.paused_mseconds
+                self.game.curr_menu = self.game.gameViewHVH
+            elif self.state == "Options":
+                self.game.curr_menu = self.game.options
+            elif self.state == "Main menu":
+                self.game.curr_menu = self.game.main_menu
+            self.run_display = False
+    
+    def timer(self):
+        self.current_time = pygame.time.get_ticks()
+        self.paused_mseconds = self.current_time - self.start_pause_time
+        self.paused_seconds = self.paused_mseconds // 1000
+        self.clock.tick(60)
+        print("pasued seconds",self.paused_seconds) 
+    
+
 ##el molahza elwahida,, eni lama basib el cursor 3and hard w dost backspace w rege3t tani d5lt lel level byfdal 3ala hard idk why         
 ##el molahza elwahida,, eni lama basib el cursor 3and hard w dost backspace w rege3t tani d5lt lel level byfdal 3ala hard idk why 
