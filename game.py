@@ -26,7 +26,7 @@ class Game():
         self.lose_screen = LoseScreen(self)
         self.gameView = View(self)
         self.gameViewHVH = ViewHVH(self)   #human vs human view
-        self.gameViewHVC = ViewCVC(self)   #human vs computer view
+        self.gameViewCVC = ViewCVC(self)   #human vs computer view
         self.slide = Slider(self)
         self.pause_menu = PauseMenu(self)
         self.curr_menu= self.main_menu
