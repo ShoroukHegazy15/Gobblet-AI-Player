@@ -395,6 +395,7 @@ class PauseMenu(Menu): #enherite menu
     def move_cursor(self):
         if self.game.BACK_KEY:
             self.game.curr_menu = self.game.main_menu
+            self.total_paused_mseconds=0
             self.run_display = False
         if self.game.DOWN_KEY:
             if self.state == "Resume" :
