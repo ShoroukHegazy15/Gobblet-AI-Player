@@ -6,6 +6,7 @@ from hvh import ViewHVH
 from cvc import ViewCVC
 from slider import Slider
 from pygame import mixer
+from hvc import ViewHVC
 
 class Game():
     def __init__(self):
@@ -26,7 +27,8 @@ class Game():
         self.lose_screen = LoseScreen(self)
         self.gameView = View(self)
         self.gameViewHVH = ViewHVH(self)   #human vs human view
-        self.gameViewCVC = ViewCVC(self)   #human vs computer view
+        self.gameViewCVC = ViewCVC(self)   #computer vs computer view
+        self.gameViewHVC=ViewHVC(self)
         self.slide = Slider(self)
         self.pause_menu = PauseMenu(self)
         self.curr_menu= self.main_menu

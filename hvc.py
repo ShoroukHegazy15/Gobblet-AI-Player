@@ -5,7 +5,7 @@ from trialmove import Board
 import random               #random module for AI random moves 
 
 class GobbletPiece(pygame.sprite.Sprite):
-     def __init__(self, color, size, piece_id, position):
+    def __init__(self, color, size, piece_id, position):
         super().__init__()
         self.color = color
         self.size = size
@@ -14,7 +14,7 @@ class GobbletPiece(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=position)
         self.original_position = position  # Store the original position
 
-class ViewCVC():
+class ViewHVC():
     def __init__(self, game):
         self.game = game
         self.run_display = True
@@ -50,7 +50,7 @@ class ViewCVC():
 
 
         if self.board.currentPlayer() == 1:  # Player 1's turn
-            self.random_ai_player()  # Allow the human player to make a move
+            self.handle_drag_and_drop()  # Allow the human player to make a move
         elif self.board.currentPlayer() == 2:  # Player 2's turn
             self.random_ai_player()
         
