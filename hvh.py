@@ -2,7 +2,6 @@ import pygame
 import os
 from trialmove import Move
 from trialmove import Board
-import random               #random module for AI random moves 
 
 class GobbletPiece(pygame.sprite.Sprite):
      def __init__(self, color, size, piece_id, position):
@@ -33,7 +32,6 @@ class ViewHVH():
         self.pieces = {pos: [] for pos in self.piece_positions + self.board_positions}
         self.piecesBoard = {pos: [] for pos in  self.board_positions}
         
-    
         self.Gobblet_pieces = pygame.sprite.Group()  # Group to store all Gobblet pieces
         self.create_pieces()
         
@@ -47,17 +45,6 @@ class ViewHVH():
         self.elapsed_seconds = 0
         self.mins=0
 
-
-        if self.board.currentPlayer() == 1:  # Player 1's turn
-            self.handle_drag_and_drop()  # Allow the human player to make a move
-        elif self.board.currentPlayer() == 2:  # Player 2's turn
-            self.random_ai_player()
-        
-        # player_one = True  # if a human is playing white, then this will be True, else False
-        # player_two = False
-        # human_turn = (self.board.current_player and player_one) or (not self.board.current_player and player_two)
-
-        
     def create_pieces(self):
         sizes = ["XS", "S", "M", "L"]
         white_piece_count = {"L": 0, "M": 0, "S": 0, "XS": 0}
@@ -129,13 +116,22 @@ class ViewHVH():
             if piece.rect.collidepoint(mouse_x, mouse_y) and mouse_pressed and not self.dragged_piece:
                 # Only allow dragging if the piece's position is in piece_positions
                 if piece.rect.center in self.piece_positions:
-                    # Only allow dragging white pieces during human turn
-                    if self.board.currentPlayer() == 1 and piece.color == "white" and not self.has_black_piece_on_top(piece):
+                    # Only allow dragging white pieces during human1 turn
+                    if self.board.currentPlayer() == 1 and piece.color == "white" and not self.has_piece_on_top(piece,"black"):
+                        self.dragged_piece = piece
+                        self.drag_offset = (piece.rect.centerx - mouse_x, piece.rect.centery - mouse_y)
+                        break
+                    #human2
+                    elif self.board.currentPlayer() == 2 and piece.color == "black" and not self.has_piece_on_top(piece,"white"):
                         self.dragged_piece = piece
                         self.drag_offset = (piece.rect.centerx - mouse_x, piece.rect.centery - mouse_y)
                         break
                 elif piece.rect.center in self.board_positions:
-                    if self.board.currentPlayer() == 1 and piece.color == "white" and not self.has_black_piece_on_top(piece):
+                    if self.board.currentPlayer() == 1 and piece.color == "white" and not self.has_piece_on_top(piece,"black"):
+                        self.dragged_piece = piece
+                        self.drag_offset = (piece.rect.centerx - mouse_x, piece.rect.centery - mouse_y)
+                        break
+                    elif self.board.currentPlayer() == 2 and piece.color == "black" and not self.has_piece_on_top(piece,"white"):
                         self.dragged_piece = piece
                         self.drag_offset = (piece.rect.centerx - mouse_x, piece.rect.centery - mouse_y)
                         break
