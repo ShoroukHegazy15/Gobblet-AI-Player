@@ -175,13 +175,15 @@ class ViewHVH():
                         self.Gobblet_pieces.remove(self.dragged_piece)  
                         self.Gobblet_pieces.add(self.dragged_piece)   #bn7otaha on top of stack 3l board
                         if(self.board.current_player==1 and self.game_is_over()):
-                            print("White winSSSSSSSSSSSSSSSSSSSSSSSSSs")
+                            # print("White winSSSSSSSSSSSSSSSSSSSSSSSSSs")
                             self.game.curr_menu=self.game.win_screen
+                            self.game.curr_menu.setMsg("White Wins")
                             self.run_display=False
                             return 1
                         elif(self.board.current_player==2 and self.game_is_over()):
-                            print("Black winsSSSSSSSSSSS")
-                            self.game.curr_menu=self.game.lose_screen
+                            # print("Black winsSSSSSSSSSSS")
+                            self.game.curr_menu=self.game.win_screen
+                            self.game.curr_menu.setMsg("Black Wins")
                             self.run_display=False
                             return 2
                             

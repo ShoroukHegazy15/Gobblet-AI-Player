@@ -322,8 +322,9 @@ class levelsMenu(Menu):
             self.run_display = False
 
 class WinScreen(Menu):
-    def __init__(self, game):
-        Menu.__init__(self, game)
+    def __init__(self, game,msg):
+        self.msg=msg
+        Menu.__init__(self, game,)
         
     def display_menu(self):
         self.run_display =True
@@ -331,10 +332,12 @@ class WinScreen(Menu):
             self.game.check_events()
             self.check_input()
             self.game.display.fill(self.game.BACK_COLOR)
-            self.game.draw_text("You Win!", 40, self.game.DISPLAY_W/2, self.game.DISPLAY_H/2 -20)
+            self.game.draw_text(self.msg, 40, self.game.DISPLAY_W/2, self.game.DISPLAY_H/2 -20)
             self.draw_cursor()
             self.blit_screen()
-
+    def setMsg(self,msg):
+        self.msg=msg
+        
     def check_input(self):
         if self.game.BACK_KEY or self.game.START_KEY:
             self.game.curr_menu = self.game.main_menu

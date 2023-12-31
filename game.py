@@ -22,7 +22,7 @@ class Game():
         self.levels= levelsMenu(self)
         self.options = OptionsMenu(self)
         self.rules = RulesMenu(self)
-        self.win_screen = WinScreen(self)
+        self.win_screen = WinScreen(self,"Nothing")
         self.lose_screen = LoseScreen(self)
         self.gameView = View(self)
         self.gameViewHVH = ViewHVH(self)   #human vs human view

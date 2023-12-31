@@ -181,11 +181,13 @@ class ViewCVC():
                         if(self.board.current_player==1 and self.game_is_over()):
                             print("White winSSSSSSSSSSSSSSSSSSSSSSSSSs")
                             self.game.curr_menu=self.game.win_screen
+                            self.game.curr_menu.setMsg("White Wins")
                             self.run_display=False
                             return 1
                         elif(self.board.current_player==2 and self.game_is_over()):
                             print("Black winsSSSSSSSSSSS")
-                            self.game.curr_menu=self.game.lose_screen
+                            self.game.curr_menu=self.game.win_screen
+                            self.game.curr_menu.setMsg("Black Wins")
                             self.run_display=False
                             return 2
                             
