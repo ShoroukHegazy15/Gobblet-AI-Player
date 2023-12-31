@@ -241,15 +241,15 @@ class ViewCVC():
             return None  # No piece at the position                
     
     def random_ai_player(self):
-        # Simulate the computer making a random move
-        if self.board.currentPlayer() == 2 :  # Player 1 is human, Player 2 is the computer
+        # Simulate the computer  making a random move
+        if self.board.currentPlayer() == 2:  # Player 1 is human, Player 2 is the computer
             print("this is player: ", self.board.current_player, " turn")
 
             valid_moves = self.get_valid_moves_for_pieces("black")   #can be called b2a anywhere with the color parameter
             
-             #computer yl3b bel black bsss
+            #computer yl3b bel black bsss
             #valid_moves = self.get_valid_moves_for_black_pieces()
-             
+            
             if valid_moves:
                 move = random.choice(valid_moves)
                 old_position = move.start_position
@@ -274,12 +274,67 @@ class ViewCVC():
                 if old_position in self.piecesBoard and self.pieces[old_position]:
                     self.piecesBoard[old_position].pop()
                     self.piecesBoard[new_position].append(moved_piece)
-                    
+                
                 for position, pieces in self.board.board_state.items():
                     print(f"Position {position} has pieces: {pieces}")
                     print("\n")            
             else:
                 print("\nno valid moves for BLACk!!!\n")
+        elif  self.board.currentPlayer()==1:
+            print("this is player: ", self.board.current_player, " turn")
+
+            valid_moves = self.get_valid_moves_for_pieces("white")   #can be called b2a anywhere with the color parameter
+            
+            #Computer momken yl3b white w black
+            #valid_moves = self.get_valid_moves_for_black_pieces()
+            
+            if valid_moves:
+                move = random.choice(valid_moves)
+                old_position = move.start_position
+                new_position = move.end_position
+                
+                # Update the position of the chosen piece as if it's being dragged by the computer
+                chosen_piece = self.get_piece_at_position(old_position)
+                if chosen_piece:
+                    chosen_piece.rect.center = new_position
+                    chosen_piece.original_position = new_position
+                
+                new_board = self.board.make_move(move, player=1)  # Pass the computer player as an argument
+                
+                # Remove the piece from the list at old_position
+                if old_position in self.pieces and self.pieces[old_position]:  # Check if the list is not empty
+                    moved_piece = self.pieces[old_position].pop()
+                    self.pieces[new_position].append(moved_piece)
+                    
+                    # Reorder the sprites to ensure the dragged piece is drawn last (on top)
+                    self.Gobblet_pieces.remove(moved_piece)
+                    self.Gobblet_pieces.add(moved_piece)
+                if old_position in self.piecesBoard and self.pieces[old_position]:
+                    
+                    self.piecesBoard[old_position].pop()
+                    self.piecesBoard[new_position].append(moved_piece)
+                    
+                for position, pieces in self.board.board_state.items():
+                    print(f"Position {position} has pieces: {pieces}")
+                    print("\n")            
+            else:
+                print("\nno valid moves for White!!!\n")
+        
+        if(self.board.current_player==1 and self.game_is_over()):
+            print("White winSSSSSSSSSSSSSSSSSSSSSSSSSs")
+            self.game.curr_menu=self.game.win_screen
+            self.game.curr_menu.setMsg("White Wins")
+            self.run_display=False
+            return 1
+        elif(self.board.current_player==2 and self.game_is_over()):
+            print("Black winsSSSSSSSSSSS")
+            self.game.curr_menu=self.game.win_screen
+            self.game.curr_menu.setMsg("Black Wins")
+            self.run_display=False
+            return 2
+                            
+        self.board.switchPlayer()
+        self.random_ai_player()
                 
     def MediumLevelAI(self):
         # Simulate the computer making a random move

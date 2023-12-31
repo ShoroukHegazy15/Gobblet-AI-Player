@@ -20,7 +20,7 @@ class Game():
         self.BACK_COLOR, self.WHITE, self.BLACK = (30, 54, 45), (255,255,255), (0, 0, 0)
         self.main_menu = MainMenu(self)
         self.moods= MoodsMenu(self)
-        self.levels= levelsMenu(self)
+        self.levels= levelsMenu(self,"Nothing")
         self.options = OptionsMenu(self)
         self.rules = RulesMenu(self)
         self.win_screen = WinScreen(self,"Nothing")
