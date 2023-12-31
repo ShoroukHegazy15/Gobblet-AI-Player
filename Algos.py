@@ -32,6 +32,18 @@ class Algos:
 
         return bestScore, bestMove
 
+
+
+  def getBestMoveMinimax(self, board, player, maxDepth):
+
+    # Get best move for minmax algo
+    score, move = self.minimax(board, player, maxDepth, 0)
+
+    # return move
+    return move
+
+
+
   def alphaBeta(self, board, maxDepth, currentDepth, alpha, beta):
         # Check if we’re done recursing
         if board.game_is_over() or currentDepth == maxDepth:
@@ -59,3 +71,26 @@ class Algos:
             if bestScore >= beta:
                 return bestScore, bestMove
         return bestScore, bestMove
+
+
+  def getBestMoveAlphaBeta(self,board, maxDepth):
+
+      # Get best move for alpha beta algo
+      score, move = self.alphaBeta(board, maxDepth, 0, -INFINITY, INFINITY)
+
+      # return move
+      return move
+
+
+  def getBestMoveAlphaBetaID(self, board, maxDepth):
+  
+      # Get best move for Alpha Beta Iterative Deepening algo
+      bestMove = None
+      for depth in range(1, maxDepth + 1):
+          score, move = self.alphaBeta(board, depth, -float('inf'), float('inf'))
+          bestMove = move
+      
+      # return move
+      return bestMove
+  
+  
