@@ -2,7 +2,6 @@ import pygame
 import os
 from trialmove import Move
 from trialmove import Board
-import random               #random module for AI random moves 
 
 class GobbletPiece(pygame.sprite.Sprite):
      def __init__(self, color, size, piece_id, position):
@@ -33,7 +32,6 @@ class ViewHVH():
         self.pieces = {pos: [] for pos in self.piece_positions + self.board_positions}
         self.piecesBoard = {pos: [] for pos in  self.board_positions}
         
-    
         self.Gobblet_pieces = pygame.sprite.Group()  # Group to store all Gobblet pieces
         self.create_pieces()
         
@@ -47,17 +45,6 @@ class ViewHVH():
         self.elapsed_seconds = 0
         self.mins=0
 
-
-        if self.board.currentPlayer() == 1:  # Player 1's turn
-            self.handle_drag_and_drop()  # Allow the human player to make a move
-        elif self.board.currentPlayer() == 2:  # Player 2's turn
-            self.random_ai_player()
-        
-        # player_one = True  # if a human is playing white, then this will be True, else False
-        # player_two = False
-        # human_turn = (self.board.current_player and player_one) or (not self.board.current_player and player_two)
-
-        
     def create_pieces(self):
         sizes = ["XS", "S", "M", "L"]
         white_piece_count = {"L": 0, "M": 0, "S": 0, "XS": 0}
@@ -129,13 +116,22 @@ class ViewHVH():
             if piece.rect.collidepoint(mouse_x, mouse_y) and mouse_pressed and not self.dragged_piece:
                 # Only allow dragging if the piece's position is in piece_positions
                 if piece.rect.center in self.piece_positions:
-                    # Only allow dragging white pieces during human turn
-                    if self.board.currentPlayer() == 1 and piece.color == "white" and not self.has_black_piece_on_top(piece):
+                    # Only allow dragging white pieces during human1 turn
+                    if self.board.currentPlayer() == 1 and piece.color == "white" and not self.has_piece_on_top(piece,"black"):
+                        self.dragged_piece = piece
+                        self.drag_offset = (piece.rect.centerx - mouse_x, piece.rect.centery - mouse_y)
+                        break
+                    #human2
+                    elif self.board.currentPlayer() == 2 and piece.color == "black" and not self.has_piece_on_top(piece,"white"):
                         self.dragged_piece = piece
                         self.drag_offset = (piece.rect.centerx - mouse_x, piece.rect.centery - mouse_y)
                         break
                 elif piece.rect.center in self.board_positions:
-                    if self.board.currentPlayer() == 1 and piece.color == "white" and not self.has_black_piece_on_top(piece):
+                    if self.board.currentPlayer() == 1 and piece.color == "white" and not self.has_piece_on_top(piece,"black"):
+                        self.dragged_piece = piece
+                        self.drag_offset = (piece.rect.centerx - mouse_x, piece.rect.centery - mouse_y)
+                        break
+                    elif self.board.currentPlayer() == 2 and piece.color == "black" and not self.has_piece_on_top(piece,"white"):
                         self.dragged_piece = piece
                         self.drag_offset = (piece.rect.centerx - mouse_x, piece.rect.centery - mouse_y)
                         break
@@ -148,12 +144,12 @@ class ViewHVH():
         elif self.dragged_piece and not mouse_pressed:
             self.handle_dropped_piece()
 
-    def has_black_piece_on_top(self, piece):
+    def has_piece_on_top(self, piece, Color):
         position = piece.rect.center
         if position in self.pieces and len(self.pieces[position]) > 1:
             # Check if there is a black piece on top of the dragged white piece
             top_piece = self.pieces[position][-1]
-            if top_piece.color == "black":
+            if top_piece.color == Color:
                 return True
         return False 
         
@@ -179,18 +175,18 @@ class ViewHVH():
                         self.Gobblet_pieces.remove(self.dragged_piece)  
                         self.Gobblet_pieces.add(self.dragged_piece)   #bn7otaha on top of stack 3l board
                         if(self.board.current_player==1 and self.game_is_over()):
-                            print("White winSSSSSSSSSSSSSSSSSSSSSSSSSs")
+                            # print("White winSSSSSSSSSSSSSSSSSSSSSSSSSs")
                             self.game.curr_menu=self.game.win_screen
+                            self.game.curr_menu.setMsg("White Wins")
                             self.run_display=False
                             return 1
                         elif(self.board.current_player==2 and self.game_is_over()):
-                            print("Black winsSSSSSSSSSSS")
-                            self.game.curr_menu=self.game.lose_screen
+                            # print("Black winsSSSSSSSSSSS")
+                            self.game.curr_menu=self.game.win_screen
+                            self.game.curr_menu.setMsg("Black Wins")
                             self.run_display=False
                             return 2
                             
-                        self.board.switchPlayer()
-                        self.random_ai_player() 
                         self.board.switchPlayer()
                 else:
                     # If the move is invalid, revert the position of the dragged piece
@@ -238,168 +234,6 @@ class ViewHVH():
             print("\nana el 3mla moshkela\n")
             return None  # No piece at the position                
     
-    def random_ai_player(self):
-        # Simulate the computer making a random move
-        if self.board.currentPlayer() == 2 :  # Player 1 is human, Player 2 is the computer
-            print("this is player: ", self.board.current_player, " turn")
-
-            valid_moves = self.get_valid_moves_for_pieces("black")   #can be called b2a anywhere with the color parameter
-            
-             #computer yl3b bel black bsss
-            #valid_moves = self.get_valid_moves_for_black_pieces()
-             
-            if valid_moves:
-                move = random.choice(valid_moves)
-                old_position = move.start_position
-                new_position = move.end_position
-                
-                # Update the position of the chosen piece as if it's being dragged by the computer
-                chosen_piece = self.get_piece_at_position(old_position)
-                if chosen_piece:
-                    chosen_piece.rect.center = new_position
-                    chosen_piece.original_position = new_position
-                
-                new_board = self.board.make_move(move, player=2)  # Pass the computer player as an argument
-                
-                # Remove the piece from the list at old_position
-                if old_position in self.pieces and self.pieces[old_position]:  # Check if the list is not empty
-                    moved_piece = self.pieces[old_position].pop()
-                    self.pieces[new_position].append(moved_piece)
-                    
-                    # Reorder the sprites to ensure the dragged piece is drawn last (on top)
-                    self.Gobblet_pieces.remove(moved_piece)
-                    self.Gobblet_pieces.add(moved_piece)
-                if old_position in self.piecesBoard and self.pieces[old_position]:
-                    self.piecesBoard[old_position].pop()
-                    self.piecesBoard[new_position].append(moved_piece)
-                    
-                for position, pieces in self.board.board_state.items():
-                    print(f"Position {position} has pieces: {pieces}")
-                    print("\n")            
-            else:
-                print("\nno valid moves for BLACk!!!\n")
-                
-    def get_valid_moves_for_pieces(self,Color):
-        valid_moves = []
-
-        # Check if there is at least one black piece on the board
-        piece_on_board = any(self.pieces[pos] and self.pieces[pos][-1].color == Color for pos in self.board_positions)
-        if(Color=="black"):
-            # Consider black pieces on the side for the first move
-            if not piece_on_board:
-                for start_position in self.piece_positions[3:]:
-                    if self.pieces[start_position]:  # Check if the list is not empty
-                        for end_position in self.board_positions:
-                            piece_size = self.get_piece_size_at_position(start_position)
-                            if piece_size is not None:  # Check if the piece size is not None
-                                move = Move(start_position, end_position, piece_size)
-                                if self.board.is_valid_move(move):
-                                    valid_moves.append(move)
-                                else:
-                                    print("\nexternal move is invalid!!!!\n")
-            else:
-                # If there is at least one black piece on the board, consider internal moves as well
-                for start_position in self.piece_positions[3:]:
-                    if self.pieces[start_position]:  # Check if the list is not empty
-                        for end_position in self.board_positions:
-                            piece_size = self.get_piece_size_at_position(start_position)
-                            if piece_size is not None:  # Check if the piece size is not None
-                                move = Move(start_position, end_position, piece_size)
-                                if self.board.is_valid_move(move):
-                                    valid_moves.append(move)
-                                    
-                for start_position in self.board_positions:
-                    if self.pieces[start_position] and self.pieces[start_position][-1].color == Color:  # Check if the list is not empty and the piece is black
-                        for end_position in self.board_positions:
-                            piece_size = self.get_piece_size_at_position(start_position)
-                            if piece_size is not None:  # Check if the piece size is not None
-                                move = Move(start_position, end_position, piece_size)
-                                if self.board.is_valid_move(move):
-                                    valid_moves.append(move)
-                                else:
-                                    print("\ninternal move is invalid!!!!\n")
-        else:
-            # Consider white pieces on the side for the first move
-            if not piece_on_board:
-                for start_position in self.piece_positions[:3]:
-                    if self.pieces[start_position]:  # Check if the list is not empty
-                        for end_position in self.board_positions:
-                            piece_size = self.get_piece_size_at_position(start_position)
-                            if piece_size is not None:  # Check if the piece size is not None
-                                move = Move(start_position, end_position, piece_size)
-                                if self.board.is_valid_move(move):
-                                    valid_moves.append(move)
-                                else:
-                                    print("\nexternal move is invalid!!!!\n")
-            else:
-                # If there is at least one black piece on the board, consider internal moves as well
-                for start_position in self.piece_positions[:3]:
-                    if self.pieces[start_position]:  # Check if the list is not empty
-                        for end_position in self.board_positions:
-                            piece_size = self.get_piece_size_at_position(start_position)
-                            if piece_size is not None:  # Check if the piece size is not None
-                                move = Move(start_position, end_position, piece_size)
-                                if self.board.is_valid_move(move):
-                                    valid_moves.append(move)
-                                    
-                for start_position in self.board_positions:
-                    if self.pieces[start_position] and self.pieces[start_position][-1].color == Color:  # Check if the list is not empty and the piece is black
-                        for end_position in self.board_positions:
-                            piece_size = self.get_piece_size_at_position(start_position)
-                            if piece_size is not None:  # Check if the piece size is not None
-                                move = Move(start_position, end_position, piece_size)
-                                if self.board.is_valid_move(move):
-                                    valid_moves.append(move)
-                                else:
-                                    print("\ninternal move is invalid!!!!\n")
-    
-        return valid_moves
-         
-    def get_valid_moves_for_black_pieces(self):
-        valid_moves = []
-
-        # Check if there is at least one black piece on the board
-        black_piece_on_board = any(self.pieces[pos] and self.pieces[pos][-1].color == "black" for pos in self.board_positions)
-
-        # Consider black pieces on the side for the first move
-        if not black_piece_on_board:
-            print("\nif\n")
-            for start_position in self.piece_positions[3:]:
-                if self.pieces[start_position]:  # Check if the list is not empty
-                    for end_position in self.board_positions:
-                        piece_size = self.get_piece_size_at_position(start_position)
-                        if piece_size is not None:  # Check if the piece size is not None
-                            move = Move(start_position, end_position, piece_size,)
-                            if self.board.is_valid_move(move):
-                                valid_moves.append(move)
-                            else:
-                                print("\nexternal move is invalid!!!!\n")
-        else:
-            print("\nelse\n")
-            # If there is at least one black piece on the board, consider internal moves as well
-            for start_position in self.piece_positions[3:]:
-                if self.pieces[start_position]:  # Check if the list is not empty
-                    for end_position in self.board_positions:
-                        piece_size = self.get_piece_size_at_position(start_position)
-                        if piece_size is not None:  # Check if the piece size is not None
-                            move = Move(start_position, end_position, piece_size)
-                            if self.board.is_valid_move(move):
-                                valid_moves.append(move)
-                                
-            for start_position in self.board_positions:
-                if self.pieces[start_position] and self.pieces[start_position][-1].color == "black":  # Check if the list is not empty and the piece is black
-                    for end_position in self.board_positions:
-                        piece_size = self.get_piece_size_at_position(start_position)
-                        if piece_size is not None:  # Check if the piece size is not None
-                            move = Move(start_position, end_position, piece_size)
-                            if self.board.is_valid_move(move):
-                                valid_moves.append(move)
-                            else:
-                                print("\ninternal move is invalid!!!!\n")
-
-        return valid_moves
-    
-
     def game_is_over(self):
         board=self.getSimplifiedBoard()
         # Check for a win horizontally, vertically, or diagonally

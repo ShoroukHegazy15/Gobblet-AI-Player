@@ -6,6 +6,7 @@ from hvh import ViewHVH
 from cvc import ViewCVC
 from slider import Slider
 from pygame import mixer
+from hvc import ViewHVC
 
 class Game():
     def __init__(self):
@@ -19,14 +20,15 @@ class Game():
         self.BACK_COLOR, self.WHITE, self.BLACK = (30, 54, 45), (255,255,255), (0, 0, 0)
         self.main_menu = MainMenu(self)
         self.moods= MoodsMenu(self)
-        self.levels= levelsMenu(self)
+        self.levels= levelsMenu(self,"Nothing")
         self.options = OptionsMenu(self)
         self.rules = RulesMenu(self)
-        self.win_screen = WinScreen(self)
+        self.win_screen = WinScreen(self,"Nothing")
         self.lose_screen = LoseScreen(self)
         self.gameView = View(self)
         self.gameViewHVH = ViewHVH(self)   #human vs human view
-        self.gameViewCVC = ViewCVC(self)   #human vs computer view
+        self.gameViewCVC = ViewCVC(self)   #computer vs computer view
+        self.gameViewHVC=ViewHVC(self)
         self.slide = Slider(self)
         self.pause_menu = PauseMenu(self)
         self.curr_menu= self.main_menu

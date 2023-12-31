@@ -255,16 +255,20 @@ class MoodsMenu(Menu):
                 self.game.curr_menu=self.game.gameViewHVH
             elif self.state == "mood2":
                 self.game.curr_menu=self.game.levels
+                self.game.curr_menu.setInput("hvc")
             elif self.state == "mood3":
-                self.game.curr_menu=self.game.gameViewCVC
+                # self.game.curr_menu=self.game.gameViewCVC
+                self.game.curr_menu=self.game.levels
+                self.game.curr_menu.setInput("cvc")
                 #self.game.playing = True
             elif(self.state=="back"):
                 self.game.curr_menu=self.game.main_menu
             self.run_display = False
 
 class levelsMenu(Menu):
-    def __init__(self, game):
+    def __init__(self, game,FromInput):
         Menu.__init__(self, game)
+        self.FromInput=FromInput
         self.state = "Easy"
         self.easx, self.easy = self.mid_w, self.mid_h + 20
         self.medx,self.medy = self.mid_w, self.mid_h + 50
@@ -272,7 +276,8 @@ class levelsMenu(Menu):
 
         self.cursor_rect.midtop = (self.easx + self.offset, self.easy)
         self.backx, self.backy = self.mid_w, self.mid_h + 60  # Add back button
-
+    def setInput(self,FromInput):
+        self.FromInput=FromInput
     def display_menu(self):
         self.run_display = True
         while self.run_display:
@@ -323,23 +328,42 @@ class levelsMenu(Menu):
             if self.backx < mouse_x < self.backx + 100 and self.backy < mouse_y < self.backy + 20:
                 self.state = "Back"
 
+
+    #Here we can add the level of hardness to know what level of hardness
     def check_input(self):
         self.move_cursor()
         if self.game.START_KEY :  # Left mouse button is clicked
             if self.state == "Easy":
                 # self.game.playing = True
-                self.game.curr_menu=self.game.gameView
+                if(self.FromInput=="cvc"):
+                    self.game.curr_menu=self.game.gameViewCVC
+                    self.game.curr_menu.startGame("Easy")
+                elif(self.FromInput=="hvc"):
+                    self.game.curr_menu=self.game.gameViewHVC
+                # self.game.curr_menu=self.game.gameView
+                # self.game.curr_menu=self.game.gameViewHVC
             elif self.state == "Medium":
-                self.game.curr_menu = self.game.gameView
+                # self.game.curr_menu = self.game.gameView
+                if(self.FromInput=="cvc"):
+                    self.game.curr_menu=self.game.gameViewCVC
+                    self.game.curr_menu.startGame("Medium")
+                elif(self.FromInput=="hvc"):
+                    self.game.curr_menu=self.game.gameViewHVC
             elif self.state == "Hard":
-                self.game.curr_menu = self.game.gameView
+                # self.game.curr_menu = self.game.gameView
+                if(self.FromInput=="cvc"):
+                    self.game.curr_menu=self.game.gameViewCVC
+                    self.game.curr_menu.startGame("Hard")
+                elif(self.FromInput=="hvc"):
+                    self.game.curr_menu=self.game.gameViewHVC
             elif self.state == "Back":
                 self.game.curr_menu = self.game.main_menu
             self.run_display = False
 
 class WinScreen(Menu):
-    def __init__(self, game):
-        Menu.__init__(self, game)
+    def __init__(self, game,msg):
+        self.msg=msg
+        Menu.__init__(self, game,)
         
     def display_menu(self):
         self.run_display =True
@@ -347,10 +371,12 @@ class WinScreen(Menu):
             self.game.check_events()
             self.check_input()
             self.game.display.fill(self.game.BACK_COLOR)
-            self.game.draw_text("You Win!", 40, self.game.DISPLAY_W/2, self.game.DISPLAY_H/2 -20)
+            self.game.draw_text(self.msg, 40, self.game.DISPLAY_W/2, self.game.DISPLAY_H/2 -20)
             self.draw_cursor()
             self.blit_screen()
-
+    def setMsg(self,msg):
+        self.msg=msg
+        
     def check_input(self):
         if self.game.BACK_KEY or self.game.START_KEY:
             self.game.curr_menu = self.game.main_menu
