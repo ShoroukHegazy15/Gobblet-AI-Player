@@ -75,18 +75,22 @@ class MainMenu(Menu):
     def check_input(self):
         self.move_cursor()
         # Handle mouse click events
-        mouse_x, mouse_y = pygame.mouse.get_pos()
         if pygame.mouse.get_pressed()[0]:  # Left mouse button is clicked
-            if self.startx < mouse_x < self.startx + 100 and self.starty < mouse_y < self.starty+20 :
-                self.state = "Start"
-            elif self.optionsx < mouse_x < self.optionsx + 100 and self.optionsy < mouse_y < self.optionsy + 20:
-                self.state = "Options"
-            elif self.rulesx < mouse_x < self.rulesx + 100 and self.rulesy < mouse_y < self.rulesy + 20:
-                self.state = "Rules"
-            elif self.quitx < mouse_x < self.quitx + 100 and self.quity < mouse_y < self.quity + 20:
-                self.state = "Quit"
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+            print(mouse_x,mouse_y,self.optionsx,self.optionsy)
+            if self.startx-100 < mouse_x < self.startx + 100 and self.starty-10 < mouse_y < self.starty+10 :
+                self.game.curr_menu = self.game.moods
+                self.run_display = False
+            elif self.optionsx-100 < mouse_x < self.optionsx + 100 and self.optionsy-10 < mouse_y < self.optionsy + 10:
+                self.game.curr_menu = self.game.options
+                self.run_display = False
+            elif self.rulesx -100 < mouse_x < self.rulesx + 100 and self.rulesy-10 < mouse_y < self.rulesy + 10:
+                self.game.curr_menu = self.game.rules
+                self.run_display = False
+            elif self.quitx -100 < mouse_x < self.quitx + 100 and self.quity-10 < mouse_y < self.quity + 10:
+                self.game.quit()
 
-        if self.game.START_KEY or pygame.mouse.get_pressed()[0]:
+        if self.game.START_KEY :
             if self.state == "Start":
                 self.game.curr_menu = self.game.moods
             elif self.state == "Options":
@@ -105,7 +109,7 @@ class OptionsMenu(Menu):
         self.volx, self.voly = self.mid_w,self.mid_h + 20
         self.soundx,self.soundy = self.mid_w, self.mid_h + 50
         self.cursor_rect.midtop = (self.volx +self.offset, self.voly)
-        self.backx, self.backy = self.mid_w, self.mid_h + 60  # Add back button
+        self.backx, self.backy = self.mid_w, self.mid_h + 80  # Add back button
 
     def display_menu(self):
         self.run_display = True
@@ -116,11 +120,20 @@ class OptionsMenu(Menu):
             self.game.draw_text('Options',20, self.game.DISPLAY_W/2, self.game.DISPLAY_H/2 -20)
             self.game.draw_text('Volume',20, self.volx, self.voly)
             self.game.draw_text('Sounds',20, self.soundx,self.soundy)
-            self.game.draw_text('Back', 20, self.backx, self.backy+20)  # Back button
+            self.game.draw_text('Back', 20, self.backx, self.backy)  # Back button
             self.draw_cursor()
             self.blit_screen()
 
     def check_input(self):
+        if pygame.mouse.get_pressed()[0]:  # Left mouse button is clicked
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+            if self.volx-100 < mouse_x < self.volx + 100 and self.voly-10 < mouse_y < self.voly + 10 :
+                self.game.curr_menu = self.game.slide
+                self.run_display = False
+            if self.backx-100 < mouse_x < self.backx + 100 and self.backy-10 < mouse_y < self.backy + 10 :
+                self.game.curr_menu = self.game.main_menu
+                self.run_display = False
+
         if self.game.BACK_KEY:
             self.game.curr_menu = self.game.main_menu
             self.run_display = False
@@ -147,7 +160,8 @@ class OptionsMenu(Menu):
 class RulesMenu(Menu):
     def __init__(self, game):
         Menu.__init__(self, game)
-        self.backx, self.backy = self.mid_w, self.mid_h + 60  # Add back button
+        self.backx, self.backy = self.mid_w, self.mid_h + 160  # Add back button
+        self.cursor_rect.midtop = (self.backx + self.offset, self.backy)
     
     def display_menu(self):
         self.run_display =True
@@ -159,17 +173,15 @@ class RulesMenu(Menu):
             self.game.draw_text('The first player to align 4 gobblets in a row wins .', 18, self.mid_w, self.mid_h + 20)
             self.game.draw_text(' The gobblets forming the line do not have to be the same size', 18, self.mid_w, self.mid_h + 20+20)
             self.game.draw_text('it can be lined up vertically,  horizontally or diagonally.', 18, self.mid_w, self.mid_h + 20+20+20)
-            self.game.draw_text('Back', 20, self.backx, self.backy+40)  # Back button
+            self.game.draw_text('Back', 20, self.backx, self.backy)  # Back button
             self.draw_cursor()
             self.blit_screen()
 
 
     def check_input(self):
-        mouse_x, mouse_y = pygame.mouse.get_pos()
-
-    # Check for mouse click
-        if self.backx < mouse_x < self.backx + 100 and self.backy < mouse_y < self.backy + 20:
-            if pygame.mouse.get_pressed()[0]:  # Left mouse button is clicked
+        if pygame.mouse.get_pressed()[0]:  # Left mouse button is clicked
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+            if self.backx-100 < mouse_x < self.backx + 100 and self.backy-10 < mouse_y < self.backy + 10 :
                 self.game.curr_menu = self.game.main_menu
                 self.run_display = False
 
@@ -177,7 +189,11 @@ class RulesMenu(Menu):
         if self.game.BACK_KEY:
             self.game.curr_menu = self.game.main_menu
             self.run_display = False
-        
+
+        if self.game.START_KEY:
+            self.game.curr_menu = self.game.main_menu
+            self.run_display = False
+    
 class MoodsMenu(Menu):
     def __init__(self, game):
         Menu.__init__(self, game)
@@ -309,7 +325,7 @@ class levelsMenu(Menu):
 
     def check_input(self):
         self.move_cursor()
-        if self.game.START_KEY or pygame.mouse.get_pressed()[0]:  # Left mouse button is clicked
+        if self.game.START_KEY :  # Left mouse button is clicked
             if self.state == "Easy":
                 # self.game.playing = True
                 self.game.curr_menu=self.game.gameView
@@ -366,8 +382,8 @@ class PauseMenu(Menu): #enherite menu
         Menu.__init__(self, game)
         self.state = "Resume" #want to the cursor to be placed at start at first
         self.startx, self.starty = self.mid_w, self.mid_h + 30
-        self.optionsx, self.optionsy = self.mid_w, self.mid_h + 50
-        self.rulesx,self.rulesy = self.mid_w, self.mid_h + 70
+        self.optionsx, self.optionsy = self.mid_w, self.mid_h + 60
+        self.rulesx,self.rulesy = self.mid_w, self.mid_h + 90
         self.cursor_rect.midtop = (self.startx + self.offset,self.starty)
         
         #pause timer

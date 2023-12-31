@@ -78,6 +78,14 @@ class Game():
         text_rect.center =(x,y) #make the center of the rectag\ngle the given x and y
         self.display.blit(text_serface,text_rect)
     
+    def draw_textreturn(self, text, size, x, y):
+        font=pygame.font.Font(self.font_name,size)
+        text_serface = font.render(text, True, self.WHITE)
+        text_rect=text_serface.get_rect()
+        text_rect.center =(x,y) #make the center of the rectag\ngle the given x and y
+        self.display.blit(text_serface,text_rect)
+        return text_rect.center
+
     def quit(self):
         pygame.quit()
         sys.exit()
