@@ -31,6 +31,8 @@ class Game():
         self.pause_menu = PauseMenu(self)
         self.curr_menu= self.main_menu
         self.total_paused_mseconds=0
+        self.paused_flag = 0
+        self.game_mood=""
         
         self.bck_music()
 

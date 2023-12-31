@@ -43,8 +43,6 @@ class ViewHVH():
         self.board = Board(self.board_positions, self.piece_positions)
 
         #timer
-        self.time_when_paused =0 
-        self.paused_flag=0
         self.fixed_start_time=0
         self.elapsed_seconds = 0
         self.mins=0
@@ -98,12 +96,11 @@ class ViewHVH():
     def display_menu(self):
         self.run_display = True
         self.clock = pygame.time.Clock()
-        if self.paused_flag == 0:
+        if self.game.paused_flag == 0:
             self.start_time = pygame.time.get_ticks()
             self.fixed_start_time=self.start_time
         else:
             self.start_time = self.fixed_start_time
-            self.time_when_paused = 0
         while self.run_display:
             self.game.check_events()
             self.check_input()
@@ -119,8 +116,8 @@ class ViewHVH():
     def check_input(self):
         if self.game.BACK_KEY:
             self.game.curr_menu = self.game.pause_menu
-            self.time_when_paused = self.elapsed_milliseconds
-            self.paused_flag =1
+            self.game.paused_flag =1
+            self.game.game_mood="hvh"
             self.run_display = False
 
     def handle_drag_and_drop(self):
@@ -518,5 +515,5 @@ class ViewHVH():
         else :
             str_sec =str(self.elapsed_seconds)
             str_mins= str(self.mins)
-        #print("start:",self.start_time,"current:",self.current_time,"at pause:",self.elapsed_seconds,"hvh")
+        print("start:",self.start_time,"current:",self.current_time,"at pause:",self.elapsed_seconds,"hvh")
         self.draw_timer(str_mins,str_sec,24,877,40)
