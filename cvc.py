@@ -2,10 +2,12 @@ import pygame
 import os
 from trialmove import Move
 from trialmove import Board
-import random               #random module for AI random moves 
+import random              
+import time
+#random module for AI random moves 
 
 class GobbletPiece(pygame.sprite.Sprite):
-     def __init__(self, color, size, piece_id, position):
+    def __init__(self, color, size, piece_id, position):
         super().__init__()
         self.color = color
         self.size = size
@@ -49,16 +51,25 @@ class ViewCVC():
         self.mins=0
 
 
-        if self.board.currentPlayer() == 1:  # Player 1's turn
-            self.random_ai_player()  # Allow the human player to make a move
-        elif self.board.currentPlayer() == 2:  # Player 2's turn
-            self.random_ai_player()
+        # if self.board.currentPlayer() == 1:  # Player 1's turn
+        #     self.random_ai_player()  # Allow the human player to make a move
+        # elif self.board.currentPlayer() == 2:  # Player 2's turn
+        #     self.random_ai_player()
         
         # player_one = True  # if a human is playing white, then this will be True, else False
         # player_two = False
         # human_turn = (self.board.current_player and player_one) or (not self.board.current_player and player_two)
-
         
+    def startGame(self,level):
+        self.display_menu(level)
+        # # time.sleep(5)
+        # if(level=="Easy"):
+        #     self.random_ai_player()
+        # elif(level=="Meduim"):
+        #     self.MediumLevelAI()
+        # elif(level=="Hard"):
+        #     self.HardAI()
+
     def create_pieces(self):
         sizes = ["XS", "S", "M", "L"]
         white_piece_count = {"L": 0, "M": 0, "S": 0, "XS": 0}
@@ -94,7 +105,7 @@ class ViewCVC():
         pygame.display.update()
         self.game.reset_keys()
 
-    def display_menu(self):
+    def display_menu(self,level):
         self.run_display = True
         self.clock = pygame.time.Clock()
         if self.game.paused_flag == 0:
@@ -109,7 +120,15 @@ class ViewCVC():
             self.game.display.blit(self.bg, (0, 0))
             # Draw Gobblet pieces
             self.Gobblet_pieces.draw(self.game.display)
-            self.handle_drag_and_drop()#end of program 
+            # self.handle_drag_and_drop()#end of program 
+            # time.sleep(5)
+            if(level=="Easy"):
+                self.random_ai_player()
+            elif(level=="Meduim"):
+                self.MediumLevelAI()
+            elif(level=="Hard"):
+                self.HardAI()
+            # self.random_ai_player()
             self.game.paused=False
             self.timer()
             self.blit_screen()
@@ -241,6 +260,7 @@ class ViewCVC():
             return None  # No piece at the position                
     
     def random_ai_player(self):
+        time.sleep(1)
         # Simulate the computer  making a random move
         if self.board.currentPlayer() == 2:  # Player 1 is human, Player 2 is the computer
             print("this is player: ", self.board.current_player, " turn")
@@ -272,7 +292,10 @@ class ViewCVC():
                     self.Gobblet_pieces.remove(moved_piece)
                     self.Gobblet_pieces.add(moved_piece)
                 if old_position in self.piecesBoard and self.pieces[old_position]:
-                    self.piecesBoard[old_position].pop()
+                    if(len(self.piecesBoard[old_position])==0):
+                        self.piecesBoard[old_position].clear()
+                    else:
+                        self.piecesBoard[old_position].pop()
                     self.piecesBoard[new_position].append(moved_piece)
                 
                 for position, pieces in self.board.board_state.items():
@@ -310,8 +333,12 @@ class ViewCVC():
                     self.Gobblet_pieces.remove(moved_piece)
                     self.Gobblet_pieces.add(moved_piece)
                 if old_position in self.piecesBoard and self.pieces[old_position]:
-                    
-                    self.piecesBoard[old_position].pop()
+                    # self.piecesBoard[old_position].pop()
+                    # self.piecesBoard[new_position].append(moved_piece)
+                    if(len(self.piecesBoard[old_position])==0):
+                        self.piecesBoard[old_position].clear()
+                    else:
+                        self.piecesBoard[old_position].pop()
                     self.piecesBoard[new_position].append(moved_piece)
                     
                 for position, pieces in self.board.board_state.items():
@@ -321,20 +348,21 @@ class ViewCVC():
                 print("\nno valid moves for White!!!\n")
         
         if(self.board.current_player==1 and self.game_is_over()):
-            print("White winSSSSSSSSSSSSSSSSSSSSSSSSSs")
+            # print("White winSSSSSSSSSSSSSSSSSSSSSSSSSs")
             self.game.curr_menu=self.game.win_screen
             self.game.curr_menu.setMsg("White Wins")
             self.run_display=False
             return 1
         elif(self.board.current_player==2 and self.game_is_over()):
-            print("Black winsSSSSSSSSSSS")
+            # print("Black winsSSSSSSSSSSS")
             self.game.curr_menu=self.game.win_screen
             self.game.curr_menu.setMsg("Black Wins")
             self.run_display=False
             return 2
                             
         self.board.switchPlayer()
-        self.random_ai_player()
+        # time.sleep(5)
+        # self.random_ai_player()
                 
     def MediumLevelAI(self):
         # Simulate the computer making a random move
@@ -343,9 +371,9 @@ class ViewCVC():
 
             valid_moves = self.get_valid_moves_for_pieces("black")   #can be called b2a anywhere with the color parameter
             
-             #computer yl3b bel black bsss
+            #computer yl3b bel black bsss
             #valid_moves = self.get_valid_moves_for_black_pieces()
-             
+            
             if valid_moves:
                 move = random.choice(valid_moves)
                 old_position = move.start_position
