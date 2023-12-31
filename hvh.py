@@ -144,12 +144,12 @@ class ViewHVH():
         elif self.dragged_piece and not mouse_pressed:
             self.handle_dropped_piece()
 
-    def has_black_piece_on_top(self, piece):
+    def has_piece_on_top(self, piece, Color):
         position = piece.rect.center
         if position in self.pieces and len(self.pieces[position]) > 1:
             # Check if there is a black piece on top of the dragged white piece
             top_piece = self.pieces[position][-1]
-            if top_piece.color == "black":
+            if top_piece.color == Color:
                 return True
         return False 
         
