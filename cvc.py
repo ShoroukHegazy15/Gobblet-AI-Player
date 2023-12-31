@@ -138,115 +138,7 @@ class ViewCVC():
             self.game.curr_menu = self.game.pause_menu
             self.game.paused_flag =1
             self.run_display = False
-
-    def handle_drag_and_drop(self):
-        mouse_x, mouse_y = pygame.mouse.get_pos()
-        mouse_pressed = pygame.mouse.get_pressed()[0]
-
-        # Check for piece dragging in reverse order
-        for piece in reversed(self.Gobblet_pieces.sprites()):
-            if piece.rect.collidepoint(mouse_x, mouse_y) and mouse_pressed and not self.dragged_piece:
-                # Only allow dragging if the piece's position is in piece_positions
-                if piece.rect.center in self.piece_positions:
-                    # Only allow dragging white pieces during human turn
-                    if self.board.currentPlayer() == 1 and piece.color == "white" and not self.has_black_piece_on_top(piece):
-                        self.dragged_piece = piece
-                        self.drag_offset = (piece.rect.centerx - mouse_x, piece.rect.centery - mouse_y)
-                        break
-                elif piece.rect.center in self.board_positions:
-                    if self.board.currentPlayer() == 1 and piece.color == "white" and not self.has_black_piece_on_top(piece):
-                        self.dragged_piece = piece
-                        self.drag_offset = (piece.rect.centerx - mouse_x, piece.rect.centery - mouse_y)
-                        break
-
-        # If a piece is being dragged, update its position
-        if self.dragged_piece and mouse_pressed:
-            self.dragged_piece.rect.center = (mouse_x + self.drag_offset[0], mouse_y + self.drag_offset[1])
-
-        # If the mouse button is released and a piece is being dragged
-        elif self.dragged_piece and not mouse_pressed:
-            self.handle_dropped_piece()
-
-    def has_black_piece_on_top(self, piece):
-        position = piece.rect.center
-        if position in self.pieces and len(self.pieces[position]) > 1:
-            # Check if there is a black piece on top of the dragged white piece
-            top_piece = self.pieces[position][-1]
-            if top_piece.color == "black":
-                return True
-        return False 
         
-    def handle_dropped_piece(self): #this function must take arguments of which play random ai or hard ai or what
-        old_position = self.dragged_piece.original_position
-        new_position = None    # Initialize new_position to None
-        # Check if the piece is close to a board position, then create a move
-        for board_position in self.board_positions:
-            if self.dragged_piece and self.is_close_to_position(self.dragged_piece.rect.center, board_position) :
-                new_position = board_position
-                move_instance = Move(old_position, new_position, self.dragged_piece.size,)
-                new_board = self.board.make_move(move_instance,1)
-                if new_board is not None:
-                    # If the move was successful, update the current board
-                    self.board = new_board
-                    # Update the original_position when the piece is moved to the board
-                    if new_position in self.board_positions:
-                        self.dragged_piece.rect.center = new_position
-                        self.dragged_piece.original_position = new_position  # Update the original_position here
-
-                        self.update_pieces_dictionary(old_position, new_position)
-                        # Reorder the sprites to ensure the dragged piece is drawn last; on top y3ny
-                        self.Gobblet_pieces.remove(self.dragged_piece)  
-                        self.Gobblet_pieces.add(self.dragged_piece)   #bn7otaha on top of stack 3l board
-                        if(self.board.current_player==1 and self.game_is_over()):
-                            print("White winSSSSSSSSSSSSSSSSSSSSSSSSSs")
-                            self.game.curr_menu=self.game.win_screen
-                            self.game.curr_menu.setMsg("White Wins")
-                            self.run_display=False
-                            return 1
-                        elif(self.board.current_player==2 and self.game_is_over()):
-                            print("Black winsSSSSSSSSSSS")
-                            self.game.curr_menu=self.game.win_screen
-                            self.game.curr_menu.setMsg("Black Wins")
-                            self.run_display=False
-                            return 2
-                            
-                        self.board.switchPlayer()
-                        self.random_ai_player() 
-                        self.board.switchPlayer()
-                else:
-                    # If the move is invalid, revert the position of the dragged piece
-                    self.dragged_piece.rect.center = old_position
-                    print("Move is invalid, reverting position.")
-                    print("this is still player: ",self.board.current_player, " turn")
-                    
-                break
-        # If new_position is None, the piece was not dropped near any board position
-        if new_position is None:
-        # Snap the piece back to its original position
-            self.dragged_piece.rect.center = old_position
-            print("this is still player: ",self.board.current_player, " turn")
-        self.dragged_piece = None
-        
-        # Print the contents of the pieces dictionary after each move
-        print("\n********Contents of the pieces dictionary:**********")
-        # for pos, pieces in self.pieces.items():
-        #     print(f"Position {pos} has pieces:")
-        #     # x,y=pos
-        #     # print(x,y)
-        #     # print("Top Piece: ",self.pieces.items()[pos][-1])
-        #     i=0
-        #     if(pos in self.board_positions):
-        #         for piece in pieces:
-        #             print(i)
-        #             i+=1
-        #             print(f"  - Color: {piece.color}, Size: {piece.size}, Piece ID: {piece.piece_id}")
-        #     # for piece in pieces:
-        #     #     print(f"  - Color: {piece.color}, Size: {piece.size}, Piece ID: {piece.piece_id}")
-        board= self.getSimplifiedBoard()
-        for row in board:
-            print(row)
-
-            
     def is_close_to_position(self, pos1, pos2, threshold=100):
         # """Check if two positions are close within a given threshold."""
         return abs(pos1[0] - pos2[0]) < threshold and abs(pos1[1] - pos2[1]) < threshold
@@ -341,28 +233,38 @@ class ViewCVC():
                         self.piecesBoard[old_position].pop()
                     self.piecesBoard[new_position].append(moved_piece)
                     
-                for position, pieces in self.board.board_state.items():
-                    print(f"Position {position} has pieces: {pieces}")
-                    print("\n")            
+                # for position, pieces in self.board.board_state.items():
+                #     print(f"Position {position} has pieces: {pieces}")
+                #     print("\n")            
             else:
                 print("\nno valid moves for White!!!\n")
         
         if(self.board.current_player==1 and self.game_is_over()):
             # print("White winSSSSSSSSSSSSSSSSSSSSSSSSSs")
+            self.board.switchPlayer()
+            board= self.getSimplifiedBoard()
+            for row in board:
+                print(row)
+            # time.sleep(3)
             self.game.curr_menu=self.game.win_screen
             self.game.curr_menu.setMsg("White Wins")
             self.run_display=False
             return 1
         elif(self.board.current_player==2 and self.game_is_over()):
             # print("Black winsSSSSSSSSSSS")
+            self.board.switchPlayer()
+            board= self.getSimplifiedBoard()
+            for row in board:
+                print(row)
             self.game.curr_menu=self.game.win_screen
             self.game.curr_menu.setMsg("Black Wins")
             self.run_display=False
             return 2
                             
-        self.board.switchPlayer()
-        # time.sleep(5)
-        # self.random_ai_player()
+        # self.board.switchPlayer()
+        # board= self.getSimplifiedBoard()
+        # for row in board:
+        #     print(row)
                 
     def MediumLevelAI(self):
         # Simulate the computer making a random move
@@ -399,9 +301,9 @@ class ViewCVC():
                     self.piecesBoard[old_position].pop()
                     self.piecesBoard[new_position].append(moved_piece)
                     
-                for position, pieces in self.board.board_state.items():
-                    print(f"Position {position} has pieces: {pieces}")
-                    print("\n")            
+                # for position, pieces in self.board.board_state.items():
+                #     print(f"Position {position} has pieces: {pieces}")
+                #     print("\n")            
             else:
                 print("\nno valid moves for BLACk!!!\n")
     def HardAI(self):
@@ -439,9 +341,9 @@ class ViewCVC():
                     self.piecesBoard[old_position].pop()
                     self.piecesBoard[new_position].append(moved_piece)
                     
-                for position, pieces in self.board.board_state.items():
-                    print(f"Position {position} has pieces: {pieces}")
-                    print("\n")            
+                # for position, pieces in self.board.board_state.items():
+                #     print(f"Position {position} has pieces: {pieces}")
+                #     print("\n")            
             else:
                 print("\nno valid moves for BLACk!!!\n")
     
@@ -571,13 +473,16 @@ class ViewCVC():
         # Check for a win horizontally, vertically, or diagonally
         for row in range(4):
             if self._check_row_win(board,row):
+                print("Ana row")
                 return True
 
         for col in range(4):
             if self._check_col_win(board,col):
+                print("Ana col")
                 return True
 
         if self._check_diag_win(board):
+            print("Ana diag")
             return True
 
         return False
