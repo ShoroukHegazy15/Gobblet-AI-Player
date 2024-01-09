@@ -4,6 +4,7 @@ from trialmove import Move
 from trialmove import Board
 import random              
 import time
+from algos import Algos 
 #random module for AI random moves 
 
 class GobbletPiece(pygame.sprite.Sprite):
@@ -19,6 +20,7 @@ class GobbletPiece(pygame.sprite.Sprite):
 class ViewCVC():
     def __init__(self, game):
         self.game = game
+        self.AlgosInstance=Algos()
         self.run_display = True
         self.bg = pygame.image.load(os.path.join("Assets/board.png")).convert()
         self.BACK_COLOR = (30, 54, 45)
@@ -124,7 +126,7 @@ class ViewCVC():
             # time.sleep(5)
             if(level=="Easy"):
                 self.random_ai_player()
-            elif(level=="Meduim"):
+            elif(level=="Medium"):
                 self.MediumLevelAI()
             elif(level=="Hard"):
                 self.HardAI()
@@ -195,6 +197,7 @@ class ViewCVC():
                     print("\n")            
             else:
                 print("\nno valid moves for BLACk!!!\n")
+            self.board.switchPlayer()
         elif  self.board.currentPlayer()==1:
             print("this is player: ", self.board.current_player, " turn")
 
@@ -238,6 +241,7 @@ class ViewCVC():
                 #     print("\n")            
             else:
                 print("\nno valid moves for White!!!\n")
+            self.board.switchPlayer()
         
         if(self.board.current_player==1 and self.game_is_over()):
             # print("White winSSSSSSSSSSSSSSSSSSSSSSSSSs")
@@ -271,15 +275,14 @@ class ViewCVC():
         if self.board.currentPlayer() == 2 :  # Player 1 is human, Player 2 is the computer
             print("this is player: ", self.board.current_player, " turn")
 
-            valid_moves = self.get_valid_moves_for_pieces("black")   #can be called b2a anywhere with the color parameter
+            moveMinMax = self.AlgosInstance.getBestMoveMinimax(self.board,self.board.current_player,3)  #can be called b2a anywhere with the color parameter
             
             #computer yl3b bel black bsss
             #valid_moves = self.get_valid_moves_for_black_pieces()
             
-            if valid_moves:
-                move = random.choice(valid_moves)
-                old_position = move.start_position
-                new_position = move.end_position
+            if moveMinMax:
+                old_position = moveMinMax.start_position
+                new_position = moveMinMax.end_position
                 
                 # Update the position of the chosen piece as if it's being dragged by the computer
                 chosen_piece = self.get_piece_at_position(old_position)
@@ -287,7 +290,7 @@ class ViewCVC():
                     chosen_piece.rect.center = new_position
                     chosen_piece.original_position = new_position
                 
-                new_board = self.board.make_move(move, player=2)  # Pass the computer player as an argument
+                new_board = self.board.make_move(moveMinMax, player=2)  # Pass the computer player as an argument
                 
                 # Remove the piece from the list at old_position
                 if old_position in self.pieces and self.pieces[old_position]:  # Check if the list is not empty
@@ -306,20 +309,18 @@ class ViewCVC():
                 #     print("\n")            
             else:
                 print("\nno valid moves for BLACk!!!\n")
-    def HardAI(self):
-        # Simulate the computer making a random move
-        if self.board.currentPlayer() == 2 :  # Player 1 is human, Player 2 is the computer
+            self.board.switchPlayer()
+        elif  self.board.currentPlayer()==1:
             print("this is player: ", self.board.current_player, " turn")
 
-            #Your Function Goes Here 
-            valid_moves = self.get_valid_moves_for_pieces("black")   #can be called b2a anywhere with the color parameter
             
-            #computer yl3b bel black bsss
+            moveMinMax = self.AlgosInstance.getBestMoveMinimax(self,self.board,self.board.current_player,3)  #can be called b2a anywhere with the color parameter
+            #Computer momken yl3b white w black
             #valid_moves = self.get_valid_moves_for_black_pieces()
-            if valid_moves:
-                move = random.choice(valid_moves)
-                old_position = move.start_position
-                new_position = move.end_position
+            
+            if moveMinMax:
+                old_position = moveMinMax.start_position
+                new_position = moveMinMax.end_position
                 
                 # Update the position of the chosen piece as if it's being dragged by the computer
                 chosen_piece = self.get_piece_at_position(old_position)
@@ -327,7 +328,80 @@ class ViewCVC():
                     chosen_piece.rect.center = new_position
                     chosen_piece.original_position = new_position
                 
-                new_board = self.board.make_move(move, player=2)  # Pass the computer player as an argument
+                new_board = self.board.make_move(moveMinMax, player=1)  # Pass the computer player as an argument
+                
+                # Remove the piece from the list at old_position
+                if old_position in self.pieces and self.pieces[old_position]:  # Check if the list is not empty
+                    moved_piece = self.pieces[old_position].pop()
+                    self.pieces[new_position].append(moved_piece)
+                    
+                    # Reorder the sprites to ensure the dragged piece is drawn last (on top)
+                    self.Gobblet_pieces.remove(moved_piece)
+                    self.Gobblet_pieces.add(moved_piece)
+                if old_position in self.piecesBoard and self.pieces[old_position]:
+                    # self.piecesBoard[old_position].pop()
+                    # self.piecesBoard[new_position].append(moved_piece)
+                    if(len(self.piecesBoard[old_position])==0):
+                        self.piecesBoard[old_position].clear()
+                    else:
+                        self.piecesBoard[old_position].pop()
+                    self.piecesBoard[new_position].append(moved_piece)
+                    
+                # for position, pieces in self.board.board_state.items():
+                #     print(f"Position {position} has pieces: {pieces}")
+                #     print("\n")            
+            else:
+                print("\nno valid moves for White!!!\n")
+            self.board.switchPlayer()
+        
+        if(self.board.current_player==1 and self.game_is_over()):
+            # print("White winSSSSSSSSSSSSSSSSSSSSSSSSSs")
+            self.board.switchPlayer()
+            board= self.getSimplifiedBoard()
+            for row in board:
+                print(row)
+            # time.sleep(3)
+            self.game.curr_menu=self.game.win_screen
+            self.game.curr_menu.setMsg("White Wins")
+            self.run_display=False
+            return 1
+        elif(self.board.current_player==2 and self.game_is_over()):
+            # print("Black winsSSSSSSSSSSS")
+            self.board.switchPlayer()
+            board= self.getSimplifiedBoard()
+            for row in board:
+                print(row)
+            self.game.curr_menu=self.game.win_screen
+            self.game.curr_menu.setMsg("Black Wins")
+            self.run_display=False
+            return 2
+                            
+        # self.board.switchPlayer()
+        # board= self.getSimplifiedBoard()
+        # for row in board:
+        #     print(row)
+                
+    def HardAI(self):
+        # Simulate the computer making a random move
+        if self.board.currentPlayer() == 2 :  # Player 1 is human, Player 2 is the computer
+            print("this is player: ", self.board.current_player, " turn")
+
+            #Your Function Goes Here 
+            moveMinMax = self.AlgosInstance.getBestMoveAlphaBetaID(self,self.board,self.board.current_player,3)   #can be called b2a anywhere with the color parameter
+            
+            #computer yl3b bel black bsss
+            #valid_moves = self.get_valid_moves_for_black_pieces()
+            if moveMinMax:
+                old_position = moveMinMax.start_position
+                new_position = moveMinMax.end_position
+                
+                # Update the position of the chosen piece as if it's being dragged by the computer
+                chosen_piece = self.get_piece_at_position(old_position)
+                if chosen_piece:
+                    chosen_piece.rect.center = new_position
+                    chosen_piece.original_position = new_position
+                
+                new_board = self.board.make_move(moveMinMax, player=2)  # Pass the computer player as an argument
                 
                 # Remove the piece from the list at old_position
                 if old_position in self.pieces and self.pieces[old_position]:  # Check if the list is not empty
