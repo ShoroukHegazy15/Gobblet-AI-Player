@@ -13,14 +13,16 @@ class Algos:
         self.view=ViewCVC(game)
         
     
-    def getBestMoveMinimax(self, board, player, maxDepth):
+    def getBestMoveMinimax(self, board,pieces, player, maxDepth):
         if(player==2 and self.view.board.currentPlayer()==1):
             self.view.board.switchPlayer()
         elif(player==1 and self.view.board.currentPlayer()==2):
             self.view.board.switchPlayer()
         self.view.board=board
+        self.view.pieces=pieces
+        
         # Get best move for minmax algo
-        score, move = self.minimax(board, player, maxDepth, 0)
+        score, move = self.minimax(board, self.view.board.currentPlayer(), maxDepth, 0)
         # return move
         return move
 
@@ -71,7 +73,7 @@ class Algos:
                 if currentScore < bestScore:
                     bestScore = currentScore
                     bestMove = move
-            if move.end_position in self.view.pieces and self.view.pieces[move.end_position]:  # Check if the list is not empty
+            if move.end_position in self.view.pieces and self.view.pieces[move.end_position]: #undo piece
                 undoedPiece = self.view.pieces[move.end_position].pop()
                 self.view.pieces[move.start_position].append(undoedPiece)
                 

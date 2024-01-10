@@ -196,7 +196,7 @@ class ViewCVC():
                     print("\n")            
             else:
                 print("\nno valid moves for BLACk!!!\n")
-            self.board.switchPlayer()
+            # self.board.switchPlayer()
         elif  self.board.currentPlayer()==1:
             print("this is player: ", self.board.current_player, " turn")
 
@@ -240,14 +240,14 @@ class ViewCVC():
                 #     print("\n")            
             else:
                 print("\nno valid moves for White!!!\n")
-            self.board.switchPlayer()
+            # self.board.switchPlayer()
         
         if(self.board.current_player==1 and self.game_is_over()):
             # print("White winSSSSSSSSSSSSSSSSSSSSSSSSSs")
-            self.board.switchPlayer()
-            board= self.getSimplifiedBoard()
-            for row in board:
-                print(row)
+            # self.board.switchPlayer()
+            # board= self.getSimplifiedBoard()
+            # for row in board:
+            #     print(row)
             # time.sleep(3)
             self.game.curr_menu=self.game.win_screen
             self.game.curr_menu.setMsg("White Wins")
@@ -255,29 +255,29 @@ class ViewCVC():
             return 1
         elif(self.board.current_player==2 and self.game_is_over()):
             # print("Black winsSSSSSSSSSSS")
-            self.board.switchPlayer()
-            board= self.getSimplifiedBoard()
-            for row in board:
-                print(row)
+            # self.board.switchPlayer()
+            # board= self.getSimplifiedBoard()
+            # for row in board:
+            #     print(row)
             self.game.curr_menu=self.game.win_screen
             self.game.curr_menu.setMsg("Black Wins")
             self.run_display=False
             return 2
                             
-        # self.board.switchPlayer()
+        self.board.switchPlayer()
         board= self.getSimplifiedBoard()
         for row in board:
             print(row)
                 
     def MediumLevelAI(self):
         from algos import Algos 
+        AlgosInstance=Algos(self.game)
         # Simulate the computer making a random move
         if self.board.currentPlayer() == 2 :  # Player 1 is human, Player 2 is the computer
             print("this is player: ", self.board.current_player, " turn")
             
-            AlgosInstance=Algos(self.game)
             # moveMinMax = self.AlgosInstance.getBestMoveMinimax(self.board,self.board.current_player,3)  #can be called b2a anywhere with the color parameter
-            moveMinMax = AlgosInstance.getBestMoveMinimax(self.board,self.board.current_player,2)  #can be called b2a anywhere with the color parameter
+            moveMinMax = AlgosInstance.getBestMoveMinimax(self.board,self.pieces,self.board.current_player,2)  #can be called b2a anywhere with the color parameter
             
             #computer yl3b bel black bsss
             #valid_moves = self.get_valid_moves_for_black_pieces()
@@ -311,12 +311,11 @@ class ViewCVC():
                 #     print("\n")            
             else:
                 print("\nno valid moves for BLACk!!!\n")
-            self.board.switchPlayer()
+            # self.board.switchPlayer()
         elif  self.board.currentPlayer()==1:
             print("this is player: ", self.board.current_player, " turn")
 
-            AlgosInstance=Algos(self.game)
-            moveMinMax = AlgosInstance.getBestMoveMinimax(self.board,self.board.current_player,2)  #can be called b2a anywhere with the color parameter
+            moveMinMax = AlgosInstance.getBestMoveMinimax(self.board,self.pieces,self.board.current_player,2)  #can be called b2a anywhere with the color parameter
             #Computer momken yl3b white w black
             #valid_moves = self.get_valid_moves_for_black_pieces()
             
@@ -344,7 +343,7 @@ class ViewCVC():
                     # self.piecesBoard[old_position].pop()
                     # self.piecesBoard[new_position].append(moved_piece)
                     if(len(self.pieces[old_position])==0):
-                        self.piecesBoard[old_position].clear()
+                        self.pieces[old_position].clear()
                     else:
                         self.pieces[old_position].pop()
                     self.pieces[new_position].append(moved_piece)
@@ -354,31 +353,32 @@ class ViewCVC():
                 #     print("\n")            
             else:
                 print("\nno valid moves for White!!!\n")
-            self.board.switchPlayer()
+            # self.board.switchPlayer()
         
         if(self.board.current_player==1 and self.game_is_over()):
             # print("White winSSSSSSSSSSSSSSSSSSSSSSSSSs")
-            self.board.switchPlayer()
-            board= self.getSimplifiedBoard()
-            for row in board:
-                print(row)
+            # self.board.switchPlayer()
+            # board= self.getSimplifiedBoard()
+            # for row in board:
+            #     print(row)
             # time.sleep(3)
+            # self.blit_screen()
             self.game.curr_menu=self.game.win_screen
             self.game.curr_menu.setMsg("White Wins")
             self.run_display=False
             return 1
         elif(self.board.current_player==2 and self.game_is_over()):
             # print("Black winsSSSSSSSSSSS")
-            self.board.switchPlayer()
-            board= self.getSimplifiedBoard()
-            for row in board:
-                print(row)
+            # self.board.switchPlayer()
+            # board= self.getSimplifiedBoard()
+            # for row in board:
+            #     print(row)
             self.game.curr_menu=self.game.win_screen
             self.game.curr_menu.setMsg("Black Wins")
             self.run_display=False
             return 2
                             
-        # self.board.switchPlayer()
+        self.board.switchPlayer()
         self.printBoard()
     
     def printBoard(self):
