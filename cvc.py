@@ -4,7 +4,6 @@ from trialmove import Move
 from trialmove import Board
 import random              
 import time
-from algos import Algos 
 #random module for AI random moves 
 
 class GobbletPiece(pygame.sprite.Sprite):
@@ -20,7 +19,7 @@ class GobbletPiece(pygame.sprite.Sprite):
 class ViewCVC():
     def __init__(self, game):
         self.game = game
-        self.AlgosInstance=Algos()
+        # self.AlgosInstance=Algos()
         self.run_display = True
         self.bg = pygame.image.load(os.path.join("Assets/board.png")).convert()
         self.BACK_COLOR = (30, 54, 45)
@@ -271,11 +270,14 @@ class ViewCVC():
         #     print(row)
                 
     def MediumLevelAI(self):
+        from algos import Algos 
         # Simulate the computer making a random move
         if self.board.currentPlayer() == 2 :  # Player 1 is human, Player 2 is the computer
             print("this is player: ", self.board.current_player, " turn")
-
-            moveMinMax = self.AlgosInstance.getBestMoveMinimax(self.board,self.board.current_player,3)  #can be called b2a anywhere with the color parameter
+            
+            AlgosInstance=Algos(self.game)
+            # moveMinMax = self.AlgosInstance.getBestMoveMinimax(self.board,self.board.current_player,3)  #can be called b2a anywhere with the color parameter
+            moveMinMax = AlgosInstance.getBestMoveMinimax(self.board,self.board.current_player,3)  #can be called b2a anywhere with the color parameter
             
             #computer yl3b bel black bsss
             #valid_moves = self.get_valid_moves_for_black_pieces()
@@ -313,8 +315,8 @@ class ViewCVC():
         elif  self.board.currentPlayer()==1:
             print("this is player: ", self.board.current_player, " turn")
 
-            
-            moveMinMax = self.AlgosInstance.getBestMoveMinimax(self,self.board,self.board.current_player,3)  #can be called b2a anywhere with the color parameter
+            AlgosInstance=Algos(self.game)
+            moveMinMax = AlgosInstance.getBestMoveMinimax(self.board,self.board.current_player,3)  #can be called b2a anywhere with the color parameter
             #Computer momken yl3b white w black
             #valid_moves = self.get_valid_moves_for_black_pieces()
             
@@ -421,6 +423,7 @@ class ViewCVC():
             else:
                 print("\nno valid moves for BLACk!!!\n")
     
+    #al fakra an al valid moves lazm tan2s al pieces al adima
     def get_valid_moves_for_pieces(self,Color):
         valid_moves = []
 
@@ -460,7 +463,7 @@ class ViewCVC():
                                     valid_moves.append(move)
                                 else:
                                     print("\ninternal move is invalid!!!!\n")
-        else:
+        elif(Color=="white"):
             # Consider white pieces on the side for the first move
             if not piece_on_board:
                 for start_position in self.piece_positions[:3]:
@@ -496,7 +499,7 @@ class ViewCVC():
                                     print("\ninternal move is invalid!!!!\n")
     
         return valid_moves
-         
+    
     def get_valid_moves_for_black_pieces(self):
         valid_moves = []
 

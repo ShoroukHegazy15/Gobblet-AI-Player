@@ -1,25 +1,32 @@
+from cvc import *
 from trialmove import Move, Board
 from view import View
-from evaluationFunction import Evaluation
-from cvc import *
+from evaluationFunction import *
+import importlib
 # from cvc import *
 INFINITY = float('inf')
 
 class Algos:
-    def getBestMoveMinimax(self,ViewCVC, board, player, maxDepth):
+    
+    def __init__(self,game):
+        from cvc import ViewCVC
+        self.view=ViewCVC(game)
+        
+    
+    def getBestMoveMinimax(self, board, player, maxDepth):
         # Get best move for minmax algo
-        score, move = self.minimax(ViewCVC,board, player, maxDepth, 0)
+        score, move = self.minimax(board, player, maxDepth, 0)
         # return move
         return move
 
-    def minimax(self,ViewCVC, board, player, maxDepth, currentDepth):
+    def minimax(self, board, player, maxDepth, currentDepth):
         # check if we're done recursing
-        if ViewCVC.game_is_over() or currentDepth == maxDepth:
-            return Evaluation.evaluate(ViewCVC,board), None
+        if self.view.game_is_over() or currentDepth == maxDepth:
+            return Evaluation.evaluate(self.view,board), None
 
         # otherwise get values from below
         bestMove = None
-        if board.currentPlayer() == player:
+        if self.view.board.currentPlayer() == player:
             bestScore = -INFINITY
         else:
             bestScore = INFINITY
@@ -27,18 +34,35 @@ class Algos:
         # go through each valid move
         #ta2riban hia validmoves l boarda di kol mara bigib nafs al vaildmoves
         #kol mara bit3aml 3al aol board
-        for move in ViewCVC.get_valid_moves_for_pieces(board.currentPlayer()):
+        if(player==1):
+            playerColor="white"
+        elif(player==2):
+            playerColor="black"
+        for i in range(len(self.view.get_valid_moves_for_pieces(playerColor))):
             #hna al valid moves btt3ml azai 
-            newBoard = board.make_move(move, player)
+            move=self.view.get_valid_moves_for_pieces(playerColor)[i]
+            newBoard = self.view.board.make_move(move, player)
             #al moshkla an al lazam tat3ml m3 al board ali complicated awi homa mfrod tat3ml m3 code ali board w tal3i al state
             #al board state lo fiha color yab2a al modo3 at7l al code sha8l tmm
+            # Remove the piece from the list at old_position
+            
+            if move.start_position in self.view.pieces and self.view.pieces[move.start_position]:  # Check if the list is not empty
+                moved_piece = self.view.pieces[move.start_position].pop()
+                self.view.pieces[move.end_position].append(moved_piece)
+                    
+                #     # Reorder the sprites to ensure the dragged piece is drawn last (on top)
+                # self.view.Gobblet_pieces.remove(moved_piece)
+                # self.view.Gobblet_pieces.add(moved_piece)
+            if move.start_position in self.view.piecesBoard and self.view.pieces[move.start_position]:
+                self.view.piecesBoard[move.start_position].pop()
+                self.view.piecesBoard[move.end_position].append(moved_piece)
             nowPlayer=0
             if(player==1):
                 nowPlayer=2
             else:
                 nowPlayer=1
-            currentScore, currentMove = self.minimax(ViewCVC,newBoard,nowPlayer, maxDepth, currentDepth + 1)
-
+            currentScore, currentMove = self.minimax(newBoard,nowPlayer, maxDepth, currentDepth + 1)
+            #mfrod n3ml undo l move
             if board.currentPlayer() == player:
                 if currentScore > bestScore:
                     bestScore = currentScore

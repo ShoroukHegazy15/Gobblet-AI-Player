@@ -3,7 +3,7 @@ from cvc import *
 
 class Evaluation:
 
-    def evaluate(ViewCVC,board):
+    def evaluate(view,board):
         """
         Evaluate the given Goblet Game board state.
 
@@ -18,11 +18,11 @@ class Evaluation:
         opponent_team_pieces = []  # Array for opponent team
         current_player_pieces = []  # Array for current player team
                 
-        for pos, pieces in board.board_state.items():
+        for pos, pieces in view.board.board_state.items():
             if(len(pieces)!=0):
                 if(pieces[-1]):
                     topitem=pieces[-1]
-                    if(topitem[1]==board.currentPlayer()):
+                    if(topitem[1]==view.board.currentPlayer()):
                         if(topitem[0]=="L"):
                             current_player_pieces.append(4)
                         elif(topitem[0]=="M"):
