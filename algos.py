@@ -54,7 +54,7 @@ class Algos:
                 # self.view.Gobblet_pieces.remove(moved_piece)
                 # self.view.Gobblet_pieces.add(moved_piece)
             if move.start_position in self.view.piecesBoard and self.view.pieces[move.start_position]:
-                self.view.piecesBoard[move.start_position].pop()
+                moved_piece=self.view.piecesBoard[move.start_position].pop()
                 self.view.piecesBoard[move.end_position].append(moved_piece)
             nowPlayer=0
             if(player==1):
@@ -71,6 +71,9 @@ class Algos:
                 if currentScore < bestScore:
                     bestScore = currentScore
                     bestMove = move
+            if move.end_position in self.view.pieces and self.view.pieces[move.end_position]:  # Check if the list is not empty
+                undoedPiece = self.view.pieces[move.end_position].pop()
+                self.view.pieces[move.start_position].append(undoedPiece)
 
         return bestScore, bestMove
 
