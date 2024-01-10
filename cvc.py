@@ -265,9 +265,9 @@ class ViewCVC():
             return 2
                             
         # self.board.switchPlayer()
-        # board= self.getSimplifiedBoard()
-        # for row in board:
-        #     print(row)
+        board= self.getSimplifiedBoard()
+        for row in board:
+            print(row)
                 
     def MediumLevelAI(self):
         from algos import Algos 
@@ -277,7 +277,7 @@ class ViewCVC():
             
             AlgosInstance=Algos(self.game)
             # moveMinMax = self.AlgosInstance.getBestMoveMinimax(self.board,self.board.current_player,3)  #can be called b2a anywhere with the color parameter
-            moveMinMax = AlgosInstance.getBestMoveMinimax(self.board,self.board.current_player,3)  #can be called b2a anywhere with the color parameter
+            moveMinMax = AlgosInstance.getBestMoveMinimax(self.board,self.board.current_player,4)  #can be called b2a anywhere with the color parameter
             
             #computer yl3b bel black bsss
             #valid_moves = self.get_valid_moves_for_black_pieces()
@@ -316,7 +316,7 @@ class ViewCVC():
             print("this is player: ", self.board.current_player, " turn")
 
             AlgosInstance=Algos(self.game)
-            moveMinMax = AlgosInstance.getBestMoveMinimax(self.board,self.board.current_player,3)  #can be called b2a anywhere with the color parameter
+            moveMinMax = AlgosInstance.getBestMoveMinimax(self.board,self.board.current_player,2)  #can be called b2a anywhere with the color parameter
             #Computer momken yl3b white w black
             #valid_moves = self.get_valid_moves_for_black_pieces()
             
@@ -378,10 +378,10 @@ class ViewCVC():
             self.run_display=False
             return 2
                             
-        # self.board.switchPlayer()
-        # board= self.getSimplifiedBoard()
-        # for row in board:
-        #     print(row)
+        self.board.switchPlayer()
+        board= self.getSimplifiedBoard()
+        for row in board:
+            print(row)
                 
     def HardAI(self):
         # Simulate the computer making a random move

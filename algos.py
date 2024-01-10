@@ -74,6 +74,9 @@ class Algos:
             if move.end_position in self.view.pieces and self.view.pieces[move.end_position]:  # Check if the list is not empty
                 undoedPiece = self.view.pieces[move.end_position].pop()
                 self.view.pieces[move.start_position].append(undoedPiece)
+                
+            undoedMove=Move(move.end_position,move.start_position,move.piece_size)
+            self.view.board.undo_moves(undoedMove,player)
 
         return bestScore, bestMove
 

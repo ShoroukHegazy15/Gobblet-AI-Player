@@ -76,19 +76,15 @@ class Board:
         # Returns the player whose turn it is to play on the current board
         return self.current_player
 
-    """ # undo a move
-    def undo_moves(self):
-        # check if it is not the first move
-        if len(self.move_track) != 0:
-            # Retrieves the last move made 
-            move = self.move_track.pop()
-            # Update the board state 
-            # Switch players
-            self.switchPlayer()
-            print(f"undo move Done")
-            
-        else :
-            print(f"Invalid undo move") """
+     # undo a move
+    #revert the positions in move
+    def undo_moves(self,move,player):
+        start_position, end_position, piece_size = move.start_position, move.end_position, move.piece_size
+        if(start_position in self.board_positions and end_position in self.board_positions):
+            self.make_move(Move(start_position,end_position,piece_size),player)
+        else:
+            self.board_state[start_position].pop()
+        
 
 
 
