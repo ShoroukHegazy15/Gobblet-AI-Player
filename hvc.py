@@ -275,9 +275,9 @@ class ViewHVC():
                     self.piecesBoard[old_position].pop()
                     self.piecesBoard[new_position].append(moved_piece)
                     
-                for position, pieces in self.board.board_state.items():
-                    print(f"Position {position} has pieces: {pieces}")
-                    print("\n")            
+                # for position, pieces in self.board.board_state.items():
+                #     print(f"Position {position} has pieces: {pieces}")
+                #     print("\n")            
             else:
                 print("\nno valid moves for BLACk!!!\n")
                 

@@ -22,7 +22,7 @@ class Board:
         #self.white_to_move = not self.white_to_move  # switch players
         if player == 1:  # Human player
             if self.is_valid_move(move):
-                new_board = self.make_internal_move(move)if move.start_position in self.board_positions else self.make_external_move(move)
+                new_board = self.make_internal_move(move,player)if move.start_position in self.board_positions else self.make_external_move(move,player)
                 """ for position, pieces in self.board_state.items():
                     print(f"Position {position} has pieces: {pieces}") """
                 return new_board
@@ -32,7 +32,7 @@ class Board:
             
         elif player == 2:  # Computer player
             #if self.is_valid_move(move):
-            new_board = self.make_internal_move(move) if move.start_position in self.board_positions else self.make_external_move(move)
+            new_board = self.make_internal_move(move,player) if move.start_position in self.board_positions else self.make_external_move(move,player)
             """ for position, pieces in self.board_state.items():
                 print(f"Position {position} has pieces: {pieces}")
              """
@@ -46,7 +46,7 @@ class Board:
             return False
         # Check if the end position is empty or the piece being placed is larger than the piece on top
         if self.board_state[end_position]:
-            top_piece_size = self.board_state[end_position][-1]   # extract top piece size on the end position
+            top_piece_size = self.board_state[end_position][-1][0]   # extract top piece size on the end position
             if piece_size is not None and top_piece_size is not None:
                 if piece_size >= top_piece_size:
                     return False
@@ -54,18 +54,18 @@ class Board:
                 return False
         return True
 
-    def make_internal_move(self, move):
+    def make_internal_move(self, move,player):
         start_position, end_position, piece_size = move.start_position, move.end_position, move.piece_size
         # Remove the piece from the start position el heya wa7da mn el board_positions
         self.board_state[start_position].pop()  
         # Add the piece to the end position
-        self.board_state[end_position].append(piece_size)
+        self.board_state[end_position].append((piece_size,player))
         return self  #Return the new board state after the internal move
 
-    def make_external_move(self, move):
+    def make_external_move(self, move,player):
         start_position, end_position, piece_size = move.start_position, move.end_position, move.piece_size
         # Add the piece to the end position
-        self.board_state[end_position].append(piece_size)
+        self.board_state[end_position].append((piece_size,player))
         return self
 
     def switchPlayer(self):

@@ -1,6 +1,7 @@
 from trialmove import Move, Board
 from view import View
 from evaluationFunction import Evaluation
+from cvc import *
 # from cvc import *
 INFINITY = float('inf')
 
@@ -14,7 +15,7 @@ class Algos:
     def minimax(self,ViewCVC, board, player, maxDepth, currentDepth):
         # check if we're done recursing
         if ViewCVC.game_is_over() or currentDepth == maxDepth:
-            return Evaluation.evaluate(board.board_state), None
+            return Evaluation.evaluate(ViewCVC,board), None
 
         # otherwise get values from below
         bestMove = None
@@ -24,9 +25,19 @@ class Algos:
             bestScore = INFINITY
 
         # go through each valid move
+        #ta2riban hia validmoves l boarda di kol mara bigib nafs al vaildmoves
+        #kol mara bit3aml 3al aol board
         for move in ViewCVC.get_valid_moves_for_pieces(board.currentPlayer()):
+            #hna al valid moves btt3ml azai 
             newBoard = board.make_move(move, player)
-            currentScore, currentMove = self.minimax(ViewCVC,newBoard, player, maxDepth, currentDepth + 1)
+            #al moshkla an al lazam tat3ml m3 al board ali complicated awi homa mfrod tat3ml m3 code ali board w tal3i al state
+            #al board state lo fiha color yab2a al modo3 at7l al code sha8l tmm
+            nowPlayer=0
+            if(player==1):
+                nowPlayer=2
+            else:
+                nowPlayer=1
+            currentScore, currentMove = self.minimax(ViewCVC,newBoard,nowPlayer, maxDepth, currentDepth + 1)
 
             if board.currentPlayer() == player:
                 if currentScore > bestScore:
@@ -44,7 +55,7 @@ class Algos:
         if board.game_is_over() or currentDepth == maxDepth:
             # check if player is same as current_player attribute of board
             player = board.currentPlayer()
-            return Evaluation.evaluate(board.board_state), None
+            return Evaluation.evaluate(board), None
 
         # Otherwise get values from below
         bestMove = None
