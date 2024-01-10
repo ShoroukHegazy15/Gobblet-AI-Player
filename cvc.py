@@ -277,7 +277,7 @@ class ViewCVC():
             
             AlgosInstance=Algos(self.game)
             # moveMinMax = self.AlgosInstance.getBestMoveMinimax(self.board,self.board.current_player,3)  #can be called b2a anywhere with the color parameter
-            moveMinMax = AlgosInstance.getBestMoveMinimax(self.board,self.board.current_player,4)  #can be called b2a anywhere with the color parameter
+            moveMinMax = AlgosInstance.getBestMoveMinimax(self.board,self.board.current_player,2)  #can be called b2a anywhere with the color parameter
             
             #computer yl3b bel black bsss
             #valid_moves = self.get_valid_moves_for_black_pieces()
@@ -343,11 +343,11 @@ class ViewCVC():
                 if old_position in self.piecesBoard and self.pieces[old_position]:
                     # self.piecesBoard[old_position].pop()
                     # self.piecesBoard[new_position].append(moved_piece)
-                    if(len(self.piecesBoard[old_position])==0):
+                    if(len(self.pieces[old_position])==0):
                         self.piecesBoard[old_position].clear()
                     else:
-                        self.piecesBoard[old_position].pop()
-                    self.piecesBoard[new_position].append(moved_piece)
+                        self.pieces[old_position].pop()
+                    self.pieces[new_position].append(moved_piece)
                     
                 # for position, pieces in self.board.board_state.items():
                 #     print(f"Position {position} has pieces: {pieces}")
@@ -378,10 +378,13 @@ class ViewCVC():
             self.run_display=False
             return 2
                             
-        self.board.switchPlayer()
+        # self.board.switchPlayer()
+        self.printBoard()
+    
+    def printBoard(self):
         board= self.getSimplifiedBoard()
         for row in board:
-            print(row)
+            print(row)     
                 
     def HardAI(self):
         # Simulate the computer making a random move
@@ -440,8 +443,8 @@ class ViewCVC():
                                 move = Move(start_position, end_position, piece_size)
                                 if self.board.is_valid_move(move):
                                     valid_moves.append(move)
-                                else:
-                                    print("\nexternal move is invalid!!!!\n")
+                                # else:
+                                    # print("\nexternal move is invalid!!!!\n")
             else:
                 # If there is at least one black piece on the board, consider internal moves as well
                 for start_position in self.piece_positions[3:]:
@@ -461,8 +464,8 @@ class ViewCVC():
                                 move = Move(start_position, end_position, piece_size)
                                 if self.board.is_valid_move(move):
                                     valid_moves.append(move)
-                                else:
-                                    print("\ninternal move is invalid!!!!\n")
+                                # else:
+                                    # print("\ninternal move is invalid!!!!\n")
         elif(Color=="white"):
             # Consider white pieces on the side for the first move
             if not piece_on_board:
@@ -474,8 +477,8 @@ class ViewCVC():
                                 move = Move(start_position, end_position, piece_size)
                                 if self.board.is_valid_move(move):
                                     valid_moves.append(move)
-                                else:
-                                    print("\nexternal move is invalid!!!!\n")
+                                # else:
+                                #     print("\nexternal move is invalid!!!!\n")
             else:
                 # If there is at least one black piece on the board, consider internal moves as well
                 for start_position in self.piece_positions[:3]:
@@ -495,8 +498,8 @@ class ViewCVC():
                                 move = Move(start_position, end_position, piece_size)
                                 if self.board.is_valid_move(move):
                                     valid_moves.append(move)
-                                else:
-                                    print("\ninternal move is invalid!!!!\n")
+                                # else:
+                                #     print("\ninternal move is invalid!!!!\n")
     
         return valid_moves
     
@@ -517,8 +520,8 @@ class ViewCVC():
                             move = Move(start_position, end_position, piece_size,)
                             if self.board.is_valid_move(move):
                                 valid_moves.append(move)
-                            else:
-                                print("\nexternal move is invalid!!!!\n")
+                            # else:
+                            #     print("\nexternal move is invalid!!!!\n")
         else:
             print("\nelse\n")
             # If there is at least one black piece on the board, consider internal moves as well
@@ -539,8 +542,8 @@ class ViewCVC():
                             move = Move(start_position, end_position, piece_size)
                             if self.board.is_valid_move(move):
                                 valid_moves.append(move)
-                            else:
-                                print("\ninternal move is invalid!!!!\n")
+                            # else:
+                            #     print("\ninternal move is invalid!!!!\n")
 
         return valid_moves
     

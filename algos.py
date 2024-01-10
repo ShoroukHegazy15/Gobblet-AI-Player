@@ -14,6 +14,11 @@ class Algos:
         
     
     def getBestMoveMinimax(self, board, player, maxDepth):
+        if(player==2 and self.view.board.currentPlayer()==1):
+            self.view.board.switchPlayer()
+        elif(player==1 and self.view.board.currentPlayer()==2):
+            self.view.board.switchPlayer()
+        self.view.board=board
         # Get best move for minmax algo
         score, move = self.minimax(board, player, maxDepth, 0)
         # return move
@@ -45,17 +50,12 @@ class Algos:
             #al moshkla an al lazam tat3ml m3 al board ali complicated awi homa mfrod tat3ml m3 code ali board w tal3i al state
             #al board state lo fiha color yab2a al modo3 at7l al code sha8l tmm
             # Remove the piece from the list at old_position
-            
             if move.start_position in self.view.pieces and self.view.pieces[move.start_position]:  # Check if the list is not empty
                 moved_piece = self.view.pieces[move.start_position].pop()
                 self.view.pieces[move.end_position].append(moved_piece)
-                    
                 #     # Reorder the sprites to ensure the dragged piece is drawn last (on top)
                 # self.view.Gobblet_pieces.remove(moved_piece)
                 # self.view.Gobblet_pieces.add(moved_piece)
-            if move.start_position in self.view.piecesBoard and self.view.pieces[move.start_position]:
-                moved_piece=self.view.piecesBoard[move.start_position].pop()
-                self.view.piecesBoard[move.end_position].append(moved_piece)
             nowPlayer=0
             if(player==1):
                 nowPlayer=2
