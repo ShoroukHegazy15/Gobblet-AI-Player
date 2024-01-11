@@ -53,12 +53,7 @@ class ViewHVC():
             self.handle_drag_and_drop()  # Allow the human player to make a move
         elif self.board.currentPlayer() == 2:  # Player 2's turn
             self.random_ai_player()
-        
-        # player_one = True  # if a human is playing white, then this will be True, else False
-        # player_two = False
-        # human_turn = (self.board.current_player and player_one) or (not self.board.current_player and player_two)
-
-        
+                
     def create_pieces(self):
         sizes = ["XS", "S", "M", "L"]
         white_piece_count = {"L": 0, "M": 0, "S": 0, "XS": 0}
@@ -178,6 +173,10 @@ class ViewHVC():
                         # Reorder the sprites to ensure the dragged piece is drawn last; on top y3ny
                         self.Gobblet_pieces.remove(self.dragged_piece)  
                         self.Gobblet_pieces.add(self.dragged_piece)   #bn7otaha on top of stack 3l board
+                                                    
+                        self.board.switchPlayer()
+                        #self.random_ai_player() 
+                        self.MediumLevelAI()
                         if(self.board.current_player==1 and self.game_is_over()):
                             print("White winSSSSSSSSSSSSSSSSSSSSSSSSSs")
                             self.game.curr_menu=self.game.win_screen
@@ -190,9 +189,6 @@ class ViewHVC():
                             self.game.curr_menu.setMsg("Black Wins")
                             self.run_display=False
                             return 2
-                            
-                        self.board.switchPlayer()
-                        self.random_ai_player() 
                         self.board.switchPlayer()
                 else:
                     # If the move is invalid, revert the position of the dragged piece
