@@ -11,32 +11,25 @@ class Board:
         self.move_track = []   #move log
         self.current_player = 1
         self.board_state = {position: [] for position in board_positions}
-        
         #key(board_positions)
         #value (lists of stack of pieces on each tile in that position)
         #initial value for each key (position) is an empty list [], y3ny there are no pieces on that position initially.
         
     def make_move(self, move,player):
-        
-        self.move_track.append(move)  # log the move so we can undo it later
-        #self.white_to_move = not self.white_to_move  # switch players
         if player == 1:  # Human player
             if self.is_valid_move(move):
                 new_board = self.make_internal_move(move,player)if move.start_position in self.board_positions else self.make_external_move(move,player)
-                """ for position, pieces in self.board_state.items():
-                    print(f"Position {position} has pieces: {pieces}") """
+                self.move_track.append(move)  # log the move so we can undo it later
                 return new_board
             else:
                 print("Invalid move!")
                 return None  # Return the current board if the move is invalid
             
         elif player == 2:  # Computer player
-            #if self.is_valid_move(move):
-            new_board = self.make_internal_move(move,player) if move.start_position in self.board_positions else self.make_external_move(move,player)
-            """ for position, pieces in self.board_state.items():
-                print(f"Position {position} has pieces: {pieces}")
-             """
-            return new_board
+            if self.is_valid_move(move):
+                new_board = self.make_internal_move(move,player) if move.start_position in self.board_positions else self.make_external_move(move,player)
+                self.move_track.append(move)  # Add the move to move_history
+                return new_board
             
     def is_valid_move(self, move):
         #print("Checking valid move...")
@@ -67,7 +60,29 @@ class Board:
         # Add the piece to the end position
         self.board_state[end_position].append((piece_size,player))
         return self
+        
+    def undo_last_move(self):
+        if not self.move_track:
+            # No moves to undo
+            return
+        last_move = self.move_track.pop()
+        if last_move.start_position in self.board_positions:
+            self.undo_internal_move(last_move)
+        else:
+            self.undo_external_move(last_move)
 
+    def undo_internal_move(self, move):
+        start_position, end_position, piece_size = move.start_position, move.end_position, move.piece_size
+        # Remove the piece from the end position
+        self.board_state[end_position].pop()
+        # Add the piece back to the start position
+        self.board_state[start_position].append((piece_size, self.current_player))
+
+    def undo_external_move(self, move):
+        start_position, end_position, piece_size = move.start_position, move.end_position, move.piece_size
+        # Remove the piece from the end position
+        self.board_state[end_position].pop()
+    
     def switchPlayer(self):
         self.current_player = 3 - self.current_player  # Toggle between 1 and 2
         #print("player: ",self.current_player)
