@@ -3,6 +3,7 @@ import os
 from trialmove import Move
 from trialmove import Board
 import random               #random module for AI random moves 
+from Algo_HVC import Algos
 
 class GobbletPiece(pygame.sprite.Sprite):
     def __init__(self, color, size, piece_id, position):
@@ -32,8 +33,7 @@ class ViewHVC():
         #empty dictionary to associate f kol position 3l board w 3l sides fee anhy pieces?
         self.pieces = {pos: [] for pos in self.piece_positions + self.board_positions}
         self.piecesBoard = {pos: [] for pos in  self.board_positions}
-        
-    
+            
         self.Gobblet_pieces = pygame.sprite.Group()  # Group to store all Gobblet pieces
         self.create_pieces()
         
@@ -41,6 +41,7 @@ class ViewHVC():
         self.dragged_piece = None
         self.drag_offset = (0, 0)
         self.board = Board(self.board_positions, self.piece_positions)
+        self.algo=Algos()
 
         #timer
         self.game.paused_flag=0
