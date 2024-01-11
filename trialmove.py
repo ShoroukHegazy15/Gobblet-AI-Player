@@ -83,7 +83,8 @@ class Board:
         if(start_position in self.board_positions and end_position in self.board_positions):
             self.make_move(Move(start_position,end_position,piece_size),player)
         else:
-            self.board_state[start_position].pop()
+            if(self.board_state[start_position]):
+                self.board_state[start_position].pop()
         
 
 

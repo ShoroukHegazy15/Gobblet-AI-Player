@@ -47,7 +47,10 @@ class Algos:
             playerColor="black"
         for i in range(len(self.view.get_valid_moves_for_pieces(playerColor))):
             #hna al valid moves btt3ml azai 
-            move=self.view.get_valid_moves_for_pieces(playerColor)[i]
+            if(i<len(self.view.get_valid_moves_for_pieces(playerColor))):
+                move=self.view.get_valid_moves_for_pieces(playerColor)[i]
+            else:
+                return bestScore,bestMove
             newBoard = self.view.board.make_move(move, player)
             #al moshkla an al lazam tat3ml m3 al board ali complicated awi homa mfrod tat3ml m3 code ali board w tal3i al state
             #al board state lo fiha color yab2a al modo3 at7l al code sha8l tmm
@@ -82,22 +85,67 @@ class Algos:
 
         return bestScore, bestMove
 
-    def alphaBeta(self, board, maxDepth, currentDepth, alpha, beta):
+    def getBestMoveAlphaBeta(self, board, pieces, player, maxDepth):
+        if(player==2 and self.view.board.currentPlayer()==1):
+            self.view.board.switchPlayer()
+        elif(player==1 and self.view.board.currentPlayer()==2):
+            self.view.board.switchPlayer()
+        self.view.board=board
+        self.view.pieces=pieces
+        # Get best move for alpha beta algo
+        score, move = self.alphaBeta(board, self.view.board.currentPlayer(), maxDepth, 0, -INFINITY, INFINITY)
+        # return move
+        return move
+
+    def getBestMoveAlphaBetaID(self, board, pieces, player, maxDepth):
+        if(player==2 and self.view.board.currentPlayer()==1):
+            self.view.board.switchPlayer()
+        elif(player==1 and self.view.board.currentPlayer()==2):
+            self.view.board.switchPlayer()
+        self.view.board=board
+        self.view.pieces=pieces
+        # Get best move for Alpha Beta Iterative Deepening algo
+        bestMove = None
+        for depth in range(1, maxDepth + 1):
+            score, move = self.alphaBeta(board, self.view.board.currentPlayer(), depth, -float('inf'), float('inf'))
+            bestMove = move
+        return bestMove
+
+    def alphaBeta(self, board, player, maxDepth, currentDepth, alpha, beta):
         # Check if we’re done recursing
-        if board.game_is_over() or currentDepth == maxDepth:
+        if self.view.game_is_over() or currentDepth == maxDepth:
             # check if player is same as current_player attribute of board
-            player = board.currentPlayer()
-            return Evaluation.evaluate(board), None
+            return Evaluation.evaluate(self.view, board), None
 
         # Otherwise get values from below
         bestMove = None
         bestScore = -INFINITY
 
         # Go through each move
-        for move in View.get_valid_moves_for_black_pieces():
-            newBoard = board.make_move(move, player)
+        if(player==1):
+            playerColor="white"
+        elif(player==2):
+            playerColor="black"
+        for i in range(len(self.view.get_valid_moves_for_pieces(playerColor))):
+            #hna al valid moves btt3ml azai 
+            if(i<len(self.view.get_valid_moves_for_pieces(playerColor))):
+                move=self.view.get_valid_moves_for_pieces(playerColor)[i]
+            else:
+                return bestScore,bestMove
+            newBoard = self.view.board.make_move(move, player)
+
+            if move.start_position in self.view.pieces and self.view.pieces[move.start_position]:  # Check if the list is not empty
+                moved_piece = self.view.pieces[move.start_position].pop()
+                self.view.pieces[move.end_position].append(moved_piece)
+
+            nowPlayer=0
+            if(player==1):
+                nowPlayer=2
+            else:
+                nowPlayer=1
+            
             # Recurse
-            recursedScore, _ = self.alphaBeta(newBoard, maxDepth, currentDepth + 1, -beta, -max(alpha, bestScore))
+            recursedScore, _ = self.alphaBeta(newBoard, nowPlayer, maxDepth, currentDepth + 1, -beta, -max(alpha, bestScore))
             currentScore = -recursedScore
 
             # Update the best score
@@ -111,20 +159,12 @@ class Algos:
             # If we’re outside the bounds, then prune: exit immediately
             if bestScore >= beta:
                 return bestScore, bestMove
+            
+            if move.end_position in self.view.pieces and self.view.pieces[move.end_position]:  # Check if the list is not empty
+                undoedPiece = self.view.pieces[move.end_position].pop()
+                self.view.pieces[move.start_position].append(undoedPiece)
+                
+            undoedMove=Move(move.end_position,move.start_position,move.piece_size)
+            self.view.board.undo_moves(undoedMove,player)
 
         return bestScore, bestMove
-
-    def getBestMoveAlphaBeta(self, board, maxDepth):
-        # Get best move for alpha beta algo
-        score, move = self.alphaBeta(board, maxDepth, 0, -INFINITY, INFINITY)
-        # return move
-        return move
-
-    def getBestMoveAlphaBetaID(self, board, maxDepth):
-        # Get best move for Alpha Beta Iterative Deepening algo
-        bestMove = None
-        for depth in range(1, maxDepth + 1):
-            score, move = self.alphaBeta(board, depth, -float('inf'), float('inf'))
-            bestMove = move
-
-        return bestMove
