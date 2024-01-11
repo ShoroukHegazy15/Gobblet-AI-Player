@@ -152,6 +152,20 @@ class ViewHVC():
             if top_piece.color == "black":
                 return True
         return False 
+
+    def check_win(self):
+        if(self.board.current_player==1 and self.game_is_over()):
+            print("White winSSSSSSSSSSSSSSSSSSSSSSSSSs")
+            self.game.curr_menu=self.game.win_screen
+            self.game.curr_menu.setMsg("White Wins")
+            self.run_display=False
+            return 1
+        elif(self.board.current_player==2 and self.game_is_over()):
+            print("Black winsSSSSSSSSSSS")
+            self.game.curr_menu=self.game.win_screen
+            self.game.curr_menu.setMsg("Black Wins")
+            self.run_display=False
+            return 2     
         
     def handle_dropped_piece(self): #this function must take arguments of which play random ai or hard ai or what
         old_position = self.dragged_piece.original_position
@@ -175,22 +189,13 @@ class ViewHVC():
                         self.Gobblet_pieces.remove(self.dragged_piece)  
                         self.Gobblet_pieces.add(self.dragged_piece)   #bn7otaha on top of stack 3l board
                                                     
+                        self.check_win() 
                         self.board.switchPlayer()
                         #self.random_ai_player() 
                         self.MediumLevelAI()
-                        if(self.board.current_player==1 and self.game_is_over()):
-                            print("White winSSSSSSSSSSSSSSSSSSSSSSSSSs")
-                            self.game.curr_menu=self.game.win_screen
-                            self.game.curr_menu.setMsg("White Wins")
-                            self.run_display=False
-                            return 1
-                        elif(self.board.current_player==2 and self.game_is_over()):
-                            print("Black winsSSSSSSSSSSS")
-                            self.game.curr_menu=self.game.win_screen
-                            self.game.curr_menu.setMsg("Black Wins")
-                            self.run_display=False
-                            return 2
+                        self.check_win() 
                         self.board.switchPlayer()
+                        
                 else:
                     # If the move is invalid, revert the position of the dragged piece
                     self.dragged_piece.rect.center = old_position
@@ -223,7 +228,6 @@ class ViewHVC():
         board= self.getSimplifiedBoard()
         for row in board:
             print(row)
-
             
     def is_close_to_position(self, pos1, pos2, threshold=100):
         # """Check if two positions are close within a given threshold."""
@@ -241,12 +245,7 @@ class ViewHVC():
         # Simulate the computer making a random move
         if self.board.currentPlayer() == 2 :  # Player 1 is human, Player 2 is the computer
             print("this is player: ", self.board.current_player, " turn")
-
             valid_moves = self.get_valid_moves_for_pieces("black")   #can be called b2a anywhere with the color parameter
-            
-             #computer yl3b bel black bsss
-            #valid_moves = self.get_valid_moves_for_black_pieces()
-             
             if valid_moves:
                 move = random.choice(valid_moves)
                 old_position = move.start_position
