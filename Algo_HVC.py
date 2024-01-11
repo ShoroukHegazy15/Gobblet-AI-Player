@@ -38,7 +38,7 @@ class Algos:
             if newBoard is not None:
                 nowPlayer = 3 - player  # Switch players
                 currentScore, _ = self.minimax(ViewHVC, newBoard, nowPlayer, maxDepth, currentDepth + 1)
-                board.undo_last_move() 
+                board.undo_last_move(player) 
 
                 if board.currentPlayer() == player:
                     if currentScore > bestScore:
