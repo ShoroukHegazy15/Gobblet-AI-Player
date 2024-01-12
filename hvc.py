@@ -83,8 +83,11 @@ class ViewHVC():
         self.game.window.blit(self.game.display, (0, 0))
         pygame.display.update()
         self.game.reset_keys()
-
-    def display_menu(self):
+        
+    def startGame(self,level):
+        self.display_menu(level)
+        
+    def display_menu(self,level):
         self.run_display = True
         self.clock = pygame.time.Clock()
         if self.game.paused_flag == 0:
@@ -99,7 +102,7 @@ class ViewHVC():
             self.game.display.blit(self.bg, (0, 0))
             # Draw Gobblet pieces
             self.Gobblet_pieces.draw(self.game.display)
-            self.handle_drag_and_drop()#end of program 
+            self.handle_drag_and_drop(level)      #end of program 
             self.game.paused=False
             self.timer()
             self.blit_screen()
@@ -110,7 +113,7 @@ class ViewHVC():
             self.game.paused_flag =1
             self.run_display = False
 
-    def handle_drag_and_drop(self):
+    def handle_drag_and_drop(self,level):
         mouse_x, mouse_y = pygame.mouse.get_pos()
         mouse_pressed = pygame.mouse.get_pressed()[0]
 
@@ -136,7 +139,7 @@ class ViewHVC():
 
         # If the mouse button is released and a piece is being dragged
         elif self.dragged_piece and not mouse_pressed:
-            self.handle_dropped_piece()
+            self.handle_dropped_piece(level)
 
     def has_black_piece_on_top(self, piece):
         position = piece.rect.center
@@ -161,7 +164,7 @@ class ViewHVC():
             self.run_display=False
             return 2     
         
-    def handle_dropped_piece(self): #this function must take arguments of which play random ai or hard ai or what
+    def handle_dropped_piece(self,level):   #takes an argumenet of what gameLevel is chosen
         old_position = self.dragged_piece.original_position
         new_position = None    # Initialize new_position to None
         # Check if the piece is close to a board position, then create a move
@@ -183,26 +186,42 @@ class ViewHVC():
                         self.Gobblet_pieces.remove(self.dragged_piece)  
                         self.Gobblet_pieces.add(self.dragged_piece)   #bn7otaha on top of stack 3l board
                                                     
-                        self.check_win()
+                        self.check_win()    #dyman making sure hal el human ksb wla l2 34an howa awl wa7ed byl3b anyways
                         if self.check_win():   #lw el white ksb 5las
                             break
                         else:
                             self.board.switchPlayer()    #lw el white mksb4 5las switch w kml el l3ba
-                            self.random_ai_player() 
-                            #self.MediumLevelAI()
-                            self.check_win()
-                            if self.check_win():   #lw el black ksb 5las
-                                break
-                            else:   
-                                self.board.switchPlayer()   #lw el black mksb4 5las switch w kml el l3ba
+                            if(level=="Easy"):
+                                self.random_ai_player()
+                                self.check_win()
+                                if self.check_win():   #lw el black ksb 5las
+                                    break
+                                else:   
+                                    self.board.switchPlayer()   #lw el black mksb4 5las switch w kml el l3ba
+                            
+                            elif(level=="Medium"):
+                                self.MediumLevelAI()
+                                self.check_win()
+                                if self.check_win():   #lw el black ksb 5las
+                                    break
+                                else:   
+                                    self.board.switchPlayer()   #lw el black mksb4 5las switch w kml el l3ba
+                            
+                            elif(level=="Hard"):
+                                self.HardAI()
+                                self.check_win()
+                                if self.check_win():   #lw el black ksb 5las
+                                    break
+                                else:   
+                                    self.board.switchPlayer()   #lw el black mksb4 5las switch w kml el l3ba
                         
                 else:
                     # If the move is invalid, revert the position of the dragged piece
                     self.dragged_piece.rect.center = old_position
                     print("Move is invalid, reverting position.")
                     print("this is still player: ",self.board.current_player, " turn")
-                    
                 break
+                
         # If new_position is None, the piece was not dropped near any board position
         if new_position is None:
         # Snap the piece back to its original position
@@ -269,8 +288,8 @@ class ViewHVC():
             print("this is player: ", self.board.current_player, " turn")
 
             valid_moves = self.get_valid_moves_for_pieces(self.algo.player_colors[self.board.currentPlayer()])   #can be called b2a anywhere with the color parameter
-            for move in valid_moves:
-                print(f"Valid Move: Start Position={move.start_position}, End Position={move.end_position}, Piece Size={move.piece_size}")
+            #for move in valid_moves:
+                #print(f"Valid Move: Start Position={move.start_position}, End Position={move.end_position}, Piece Size={move.piece_size}")
        
             if valid_moves:
                 move = self.algo.getBestMoveMinimax(self, self.board, self.board.currentPlayer(),2)                
@@ -419,7 +438,6 @@ class ViewHVC():
                                     valid_moves.append(move)
                                 else:
                                     print("\ninternal move is invalid!!!!\n")
-    
         return valid_moves
          
     def game_is_over(self):
@@ -449,7 +467,6 @@ class ViewHVC():
         if(counterOfTruth==4):
             return True
         # return len(pieces) == 4 and all(piece == pieces[0] for piece in pieces)
-
 
     def _check_col_win(self,board, col):
         pieces = [board[row][col][-1] for row in range(4) if board[row][col] ]
@@ -506,7 +523,6 @@ class ViewHVC():
         else:
             print("\nana el moshkela el tanya\n")
             return None  # No piece at the position   
-        
 
     def draw_timer(self,m,s,size,x,y):
         font=pygame.font.Font(self.game.font_name,size)
