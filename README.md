@@ -1,31 +1,59 @@
 # Gobblet-AI-Player
-This repository contains an implementation of the classic board game Gobblet with an AI opponent that utilizes the Min-Max and Alpha-Beta Pruning algorithms. The AI is designed to provide challenging gameplay at easy, medium, and hard difficulty levels.
 
-## Game Overview
-Gobblet is a two-player abstract strategy game where players attempt to line up four of their own gobblets in a row. The game is played on a 4x4 board, and players can place their gobblets or move existing ones to achieve their goal.
+- [Overview](#overview)
+- [Features](#features)
+  - [Game Modes](#game-modes)
+  - [Interactive Gameplay](#interactive-gameplay)
+  - [AI Strategies](#ai-strategies)
+  - [Scalable Architecture](#scalable-architecture)
+- [GUI](#gui)
+- [How to Play](#how-to-play)
+- [Installation](#installation)
+- [Contribution](#contribution)
+- [License](#license)
+
+## Overview
+
+Gobblet is a two-player abstract strategy game...
 
 ## Features
-### Modes: there is 3 modes of playing, Human vs Human, Human vs Computer, Computer vs Computer.
+
+### Game Modes
+
+Enjoy three different game modes...
+
 ### Interactive Gameplay
-Play Computer against the Computer opponent at different difficulty levels.
-Easy, Medium, Hard Levels: Choose the level of difficulty that suits your skill level.
-Random Moves: are done at easy level.
-Alpha-Beta Pruning: The AI opponent at medium and hard levels incorporates Alpha-Beta Pruning to enhance efficiency.
-Scalable Architecture: Designed for easy integration and expansion for future improvements.
+
+Play against the computer opponent at varying difficulty levels...
+
+### AI Strategies
+
+- **Easy Level:** The AI uses random moves...
+- **Medium Level:** Incorporates Alpha-Beta Pruning...
+- **Hard Level:** Optimizes performance...
+
+### Scalable Architecture
+
+Designed for easy integration and expandability...
 
 ## GUI
-GUI of Gobblet Board during a Game. 
 
-![Screenshot 2024-01-10 215152](https://github.com/ShoroukHegazy15/Gobblet-AI-Player/assets/105671159/b34f27b7-1c2e-41a0-a547-be3cc88909e9)
+![Gobblet Board GUI](link-to-image)
 
-## Difficulty Levels
-### Easy
-The AI opponent at the easy level uses the random moves to make decisions. It explores the game tree up to a certain depth to find the best move.
+## How to Play
 
-### Medium
-The AI opponent at the medium level incorporates Alpha-Beta Pruning for more efficient decision-making. This allows for deeper exploration of the game tree compared to the easy level.
+Simply choose your desired game mode, select the difficulty level, and enjoy...
 
-### Hard
-At the hard level, the AI opponent further optimizes performance with Alpha-Beta Pruning. It aims to provide a more challenging and competitive experience by exploring the game tree even deeper.
+## Installation
 
-### Enjoy the game!
+Clone the repository to your local machine and run the game...
+
+## Contribution
+
+Feel free to contribute to the project...
+
+## License
+
+This project is licensed under the [MIT License](LICENSE)...
+
+Enjoy playing Gobblet!
