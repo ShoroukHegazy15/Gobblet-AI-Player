@@ -9,8 +9,6 @@
 - [GUI](#gui)
 - [How to Play](#how-to-play)
 - [Installation](#installation)
-- [Contribution](#contribution)
-- [License](#license)
 
 ## Overview
 
@@ -46,14 +44,6 @@ Simply choose your desired game mode, select the difficulty level, and enjoy...
 
 ## Installation
 
-Clone the repository to your local machine and run the game...
-
-## Contribution
-
-Feel free to contribute to the project...
-
-## License
-
-This project is licensed under the [MIT License](LICENSE)...
+Clone the repository to your local machine and run the game through exe...
 
 Enjoy playing Gobblet!
