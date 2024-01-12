@@ -340,6 +340,7 @@ class levelsMenu(Menu):
                     self.game.curr_menu.startGame("Easy")
                 elif(self.FromInput=="hvc"):
                     self.game.curr_menu=self.game.gameViewHVC
+                    self.game.curr_menu.startGame("Easy")
                 # self.game.curr_menu=self.game.gameView
                 # self.game.curr_menu=self.game.gameViewHVC
             elif self.state == "Medium":
@@ -349,6 +350,7 @@ class levelsMenu(Menu):
                     self.game.curr_menu.startGame("Medium")
                 elif(self.FromInput=="hvc"):
                     self.game.curr_menu=self.game.gameViewHVC
+                    self.game.curr_menu.startGame("Medium")
             elif self.state == "Hard":
                 # self.game.curr_menu = self.game.gameView
                 if(self.FromInput=="cvc"):
@@ -356,6 +358,7 @@ class levelsMenu(Menu):
                     self.game.curr_menu.startGame("Hard")
                 elif(self.FromInput=="hvc"):
                     self.game.curr_menu=self.game.gameViewHVC
+                    self.game.curr_menu.startGame("Hard")
             elif self.state == "Back":
                 self.game.curr_menu = self.game.main_menu
             self.run_display = False
