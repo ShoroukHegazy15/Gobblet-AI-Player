@@ -61,22 +61,22 @@ class Board:
         self.board_state[end_position].append((piece_size,player))
         return self
         
-    def undo_last_move(self):
+    def undo_last_move(self,player):
         if not self.move_track:
             # No moves to undo
             return
         last_move = self.move_track.pop()
         if last_move.start_position in self.board_positions:
-            self.undo_internal_move(last_move)
+            self.undo_internal_move(last_move,player)
         else:
             self.undo_external_move(last_move)
 
-    def undo_internal_move(self, move):
+    def undo_internal_move(self, move,player):
         start_position, end_position, piece_size = move.start_position, move.end_position, move.piece_size
         # Remove the piece from the end position
         self.board_state[end_position].pop()
         # Add the piece back to the start position
-        self.board_state[start_position].append((piece_size, self.current_player))
+        self.board_state[start_position].append((piece_size, player))
 
     def undo_external_move(self, move):
         start_position, end_position, piece_size = move.start_position, move.end_position, move.piece_size
