@@ -48,12 +48,6 @@ class ViewHVC():
         self.fixed_start_time=0
         self.elapsed_seconds = 0
         self.mins=0
-
-
-        if self.board.currentPlayer() == 1:  # Player 1's turn
-            self.handle_drag_and_drop()  # Allow the human player to make a move
-        elif self.board.currentPlayer() == 2:  # Player 2's turn
-            self.random_ai_player()
                 
     def create_pieces(self):
         sizes = ["XS", "S", "M", "L"]
@@ -155,7 +149,7 @@ class ViewHVC():
 
     def check_win(self):
         if(self.board.current_player==1 and self.game_is_over()):
-            print("White winSSSSSSSSSSSSSSSSSSSSSSSSSs")
+            print("White winSSSSSSSSSSSSSSSSSSS")
             self.game.curr_menu=self.game.win_screen
             self.game.curr_menu.setMsg("White Wins")
             self.run_display=False
@@ -189,12 +183,18 @@ class ViewHVC():
                         self.Gobblet_pieces.remove(self.dragged_piece)  
                         self.Gobblet_pieces.add(self.dragged_piece)   #bn7otaha on top of stack 3l board
                                                     
-                        self.check_win() 
-                        self.board.switchPlayer()
-                        #self.random_ai_player() 
-                        self.MediumLevelAI()
-                        self.check_win() 
-                        self.board.switchPlayer()
+                        self.check_win()
+                        if self.check_win():   #lw el white ksb 5las
+                            break
+                        else:
+                            self.board.switchPlayer()    #lw el white mksb4 5las switch w kml el l3ba
+                            self.random_ai_player() 
+                            #self.MediumLevelAI()
+                            self.check_win()
+                            if self.check_win():   #lw el black ksb 5las
+                                break
+                            else:   
+                                self.board.switchPlayer()   #lw el black mksb4 5las switch w kml el l3ba
                         
                 else:
                     # If the move is invalid, revert the position of the dragged piece
@@ -212,19 +212,6 @@ class ViewHVC():
         
         # Print the contents of the pieces dictionary after each move
         print("\n********Contents of the pieces dictionary:**********")
-        # for pos, pieces in self.pieces.items():
-        #     print(f"Position {pos} has pieces:")
-        #     # x,y=pos
-        #     # print(x,y)
-        #     # print("Top Piece: ",self.pieces.items()[pos][-1])
-        #     i=0
-        #     if(pos in self.board_positions):
-        #         for piece in pieces:
-        #             print(i)
-        #             i+=1
-        #             print(f"  - Color: {piece.color}, Size: {piece.size}, Piece ID: {piece.piece_id}")
-        #     # for piece in pieces:
-        #     #     print(f"  - Color: {piece.color}, Size: {piece.size}, Piece ID: {piece.piece_id}")
         board= self.getSimplifiedBoard()
         for row in board:
             print(row)
@@ -238,7 +225,6 @@ class ViewHVC():
         if position in self.pieces and self.pieces[position]:
             return self.pieces[position][-1]  # Get the top piece at the position
         else:
-            print("\nana el 3mla moshkela\n")
             return None  # No piece at the position                
     
     def random_ai_player(self):
@@ -292,7 +278,6 @@ class ViewHVC():
                 print(f"best Move: Start Position={move.start_position}, End Position={move.end_position}, Piece Size={move.piece_size}")
                 print("\n") """ 
                 if move and move.start_position is not None and move.end_position is not None:
-
                     old_position = move.start_position
                     new_position = move.end_position
                 
@@ -315,7 +300,7 @@ class ViewHVC():
                     if old_position in self.piecesBoard and self.pieces[old_position]:
                         self.piecesBoard[old_position].pop()
                         self.piecesBoard[new_position].append(moved_piece)
-                    print("\nfel medium\n")    
+                    #print("\nfel medium\n")    
                     for position, pieces in self.board.board_state.items():
                         print(f"Position {position} has pieces: {pieces}")
                         print("\n") 
@@ -364,7 +349,6 @@ class ViewHVC():
     
     def get_valid_moves_for_pieces(self,Color):
         valid_moves = []
-
         # Check if there is at least one black piece on the board
         piece_on_board = any(self.pieces[pos] and self.pieces[pos][-1].color == Color for pos in self.board_positions)
         if(Color=="black"):
@@ -438,51 +422,6 @@ class ViewHVC():
     
         return valid_moves
          
-    def get_valid_moves_for_black_pieces(self):
-        valid_moves = []
-
-        # Check if there is at least one black piece on the board
-        black_piece_on_board = any(self.pieces[pos] and self.pieces[pos][-1].color == "black" for pos in self.board_positions)
-
-        # Consider black pieces on the side for the first move
-        if not black_piece_on_board:
-            print("\nif\n")
-            for start_position in self.piece_positions[3:]:
-                if self.pieces[start_position]:  # Check if the list is not empty
-                    for end_position in self.board_positions:
-                        piece_size = self.get_piece_size_at_position(start_position)
-                        if piece_size is not None:  # Check if the piece size is not None
-                            move = Move(start_position, end_position, piece_size,)
-                            if self.board.is_valid_move(move):
-                                valid_moves.append(move)
-                            else:
-                                print("\nexternal move is invalid!!!!\n")
-        else:
-            print("\nelse\n")
-            # If there is at least one black piece on the board, consider internal moves as well
-            for start_position in self.piece_positions[3:]:
-                if self.pieces[start_position]:  # Check if the list is not empty
-                    for end_position in self.board_positions:
-                        piece_size = self.get_piece_size_at_position(start_position)
-                        if piece_size is not None:  # Check if the piece size is not None
-                            move = Move(start_position, end_position, piece_size)
-                            if self.board.is_valid_move(move):
-                                valid_moves.append(move)
-                                
-            for start_position in self.board_positions:
-                if self.pieces[start_position] and self.pieces[start_position][-1].color == "black":  # Check if the list is not empty and the piece is black
-                    for end_position in self.board_positions:
-                        piece_size = self.get_piece_size_at_position(start_position)
-                        if piece_size is not None:  # Check if the piece size is not None
-                            move = Move(start_position, end_position, piece_size)
-                            if self.board.is_valid_move(move):
-                                valid_moves.append(move)
-                            else:
-                                print("\ninternal move is invalid!!!!\n")
-
-        return valid_moves
-    
-
     def game_is_over(self):
         board=self.getSimplifiedBoard()
         # Check for a win horizontally, vertically, or diagonally
