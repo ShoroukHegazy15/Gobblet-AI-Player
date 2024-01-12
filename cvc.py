@@ -607,7 +607,7 @@ class ViewCVC():
         for row in range(4):
             if self._check_row_win(board,row):
                 print("Ana row")
-                Bool,winner=self._check_row_win(board,col)
+                Bool,winner=self._check_row_win(board,row)
                 return True,winner
 
         for col in range(4):
