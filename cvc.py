@@ -260,7 +260,7 @@ class ViewCVC():
                 
     def MediumLevelAI(self):
         if(self.game_is_over()):
-            time.sleep(2)
+            time.sleep(3)
             Bool,winner=self.game_is_over()
             self.game.curr_menu=self.game.win_screen
             self.game.curr_menu.setMsg(winner+" Wins")
@@ -393,6 +393,10 @@ class ViewCVC():
                     chosen_piece.original_position = new_position
                 
                 new_board = self.board.make_move(moveAlphaBeta, player=2)  # Pass the computer player as an argument
+                self.game.display.fill(self.BACK_COLOR)
+                self.game.display.blit(self.bg, (0, 0))
+                # Draw Gobblet pieces
+                self.Gobblet_pieces.draw(self.game.display)
                 
                 # Remove the piece from the list at old_position
                 if old_position in self.pieces and self.pieces[old_position]:  # Check if the list is not empty
