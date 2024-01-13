@@ -50,7 +50,8 @@ class Board:
     def make_internal_move(self, move,player):
         start_position, end_position, piece_size = move.start_position, move.end_position, move.piece_size
         # Remove the piece from the start position el heya wa7da mn el board_positions
-        self.board_state[start_position].pop()  
+        if(self.board_state[start_position]):
+            self.board_state[start_position].pop()  
         # Add the piece to the end position
         self.board_state[end_position].append((piece_size,player))
         return self  #Return the new board state after the internal move
