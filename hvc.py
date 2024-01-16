@@ -185,7 +185,12 @@ class ViewHVC():
                         self.Gobblet_pieces.add(self.dragged_piece)   #bn7otaha on top of stack 3l board
                                                     
                         self.check_win()    #dyman making sure hal el human ksb wla l2 34an howa awl wa7ed byl3b anyways
-                        if self.check_win():   #lw el white ksb 5las
+                        if self.check_win():
+                            self.game.display.fill(self.BACK_COLOR)
+                            self.game.display.blit(self.bg, (0, 0))
+                            # Draw Gobblet pieces
+                            self.Gobblet_pieces.draw(self.game.display)#lw el white ksb 5las
+                            time.sleep(3)
                             break
                         else:
                             self.board.switchPlayer()    #lw el white mksb4 5las switch w kml el l3ba
@@ -409,7 +414,12 @@ class ViewHVC():
                             
         self.board.switchPlayer()
         self.printBoard()
-
+        
+    
+    def printBoard(self):
+        board= self.getSimplifiedBoard()
+        for row in board:
+            print(row)  
 
     def get_valid_moves_for_pieces(self,Color):
         valid_moves = []

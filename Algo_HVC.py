@@ -90,8 +90,8 @@ class Algos:
     def getBestMoveAlphaBetaID(self, ViewHVC, board, player, maxDepth):
         # if(player==2 and self.view.board.currentPlayer()==1):
         #     self.view.board.switchPlayer()
-        # elif(player==1 and self.view.board.currentPlayer()==2):
         #     self.view.board.switchPlayer()
+        # elif(player==1 and self.view.board.currentPlayer()==2):
         # self.view.board=board
         # self.view.pieces=pieces
         # Get best move for Alpha Beta Iterative Deepening algo
