@@ -16,7 +16,7 @@ class Algos:
     def minimax(self,ViewHVC, board, player, maxDepth, currentDepth):
         # check if we're done recursing
         if ViewHVC.game_is_over() or currentDepth == maxDepth:
-            return Evaluation.evaluate(ViewHVC,board),None
+            return Evaluation.evaluate(ViewHVC),None
 
         # otherwise get values from below
         bestMove = None
@@ -74,7 +74,7 @@ class Algos:
     def alphaBeta(self, ViewHVC, board, player, maxDepth, currentDepth, alpha, beta):
         # Check if we’re done recursing
         if ViewHVC.game_is_over() or currentDepth == maxDepth:
-            return Evaluation.evaluate(ViewHVC, board), None
+            return Evaluation.evaluate(ViewHVC), None
     
         # Otherwise get values from below
         bestMove = None
