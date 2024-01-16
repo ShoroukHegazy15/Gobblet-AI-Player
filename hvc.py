@@ -335,86 +335,54 @@ class ViewHVC():
  """
 
     def HardAI(self): 
+
         if(self.game_is_over()):
             time.sleep(2)
             Bool,winner=self.game_is_over()
             self.game.curr_menu=self.game.win_screen
             self.game.curr_menu.setMsg(winner+" Wins")
             self.run_display=False
-
+        
+        print("in hard")
+        # minimax AI
         if self.board.currentPlayer() == 2 :  # Player 1 is human, Player 2 is the computer
             print("this is player: ", self.board.current_player, " turn")
-            from algos import Algos 
-            AlgosInstance=Algos(self.game)
-            moveAlphaBeta = AlgosInstance.getBestMoveAlphaBeta(self.board,self.pieces,self.board.current_player,2)
+            valid_moves = self.get_valid_moves_for_pieces(self.algo.player_colors[self.board.currentPlayer()])   #can be called b2a anywhere with the color parameter
+            
+            if valid_moves:
+                move = self.algo.getBestMoveAlphaBeta(self, self.board, self.board.currentPlayer(),3)                
+                """ print("\n")
+                print(f"best Move: Start Position={move.start_position}, End Position={move.end_position}, Piece Size={move.piece_size}")
+                print("\n") """ 
+                if move and move.start_position is not None and move.end_position is not None:
+                    old_position = move.start_position
+                    new_position = move.end_position
+                
+                # Update the position of the chosen piece as if it's being dragged by the computer
+                    chosen_piece = self.get_piece_at_position(old_position)
+                    if chosen_piece:
+                        chosen_piece.rect.center = new_position
+                        chosen_piece.original_position = new_position
+                    
+                    #hena el mafrood el move el best t7sl henaaa
+                    new_board = self.board.make_move(move, player=2)  # Pass the computer player as an argument
+                    if new_board is not None:
+                    # If the move was successful, update the current board
+                        self.board = new_board
                         
-            if moveAlphaBeta:
-                old_position = moveAlphaBeta.start_position
-                new_position = moveAlphaBeta.end_position
-                # Update the position of the chosen piece as if it's being dragged by the computer
-                chosen_piece = self.get_piece_at_position(old_position)
-                if chosen_piece:
-                    chosen_piece.rect.center = new_position
-                    chosen_piece.original_position = new_position
-                
-                new_board = self.board.make_move(moveAlphaBeta, player=2)  # Pass the computer player as an argument
-                self.game.display.fill(self.BACK_COLOR)
-                self.game.display.blit(self.bg, (0, 0))
-                 # Draw Gobblet pieces
-                self.Gobblet_pieces.draw(self.game.display)
-
-                # Remove the piece from the list at old_position
-                if old_position in self.pieces and self.pieces[old_position]:  # Check if the list is not empty
-                    moved_piece = self.pieces[old_position].pop()
-                    self.pieces[new_position].append(moved_piece)
-                    # Reorder the sprites to ensure the dragged piece is drawn last (on top)
-                    self.Gobblet_pieces.remove(moved_piece)
-                    self.Gobblet_pieces.add(moved_piece)
-
-                if old_position in self.piecesBoard and self.pieces[old_position]:
-                    self.piecesBoard[old_position].pop()
-                    self.piecesBoard[new_position].append(moved_piece)     
-            else:
-                print("\nno valid moves for BLACk!!!\n")
-            self.printBoard()
-
-        elif  self.board.currentPlayer()==1:
-            print("this is player: ", self.board.current_player, " turn")
-            from algos import Algos 
-            AlgosInstance=Algos(self.game)
-            moveAlphaBeta = AlgosInstance.getBestMoveAlphaBeta(self.board,self.pieces,self.board.current_player,3) 
-            if moveAlphaBeta:
-                old_position = moveAlphaBeta.start_position
-                new_position = moveAlphaBeta.end_position
-                
-                # Update the position of the chosen piece as if it's being dragged by the computer
-                chosen_piece = self.get_piece_at_position(old_position)
-                if chosen_piece:
-                    chosen_piece.rect.center = new_position
-                    chosen_piece.original_position = new_position
-                new_board = self.board.make_move(moveAlphaBeta, player=1)  # Pass the computer player as an argument
-
-                # Remove the piece from the list at old_position
-                if old_position in self.pieces and self.pieces[old_position]:  # Check if the list is not empty
-                    moved_piece = self.pieces[old_position].pop()
-                    self.pieces[new_position].append(moved_piece)
-                    # Reorder the sprites to ensure the dragged piece is drawn last (on top)
-                    self.Gobblet_pieces.remove(moved_piece)
-                    self.Gobblet_pieces.add(moved_piece)
-
-                if old_position in self.piecesBoard and self.pieces[old_position]:
-                    if(len(self.pieces[old_position])==0):
-                        self.pieces[old_position].clear()
-                    else:
-                        self.pieces[old_position].pop()
-                    self.pieces[new_position].append(moved_piece)
-                             
-            else:
-                print("\nno valid moves for White!!!\n")
-                            
-        self.board.switchPlayer()
-        self.printBoard()
-        
+                        if old_position in self.pieces and chosen_piece in self.pieces[old_position]:
+                            # Remove the dragged_piece from the list at old_position
+                            self.pieces[old_position].remove(chosen_piece)
+                        if new_position in self.pieces :
+                            # Append the dragged_piece to the list at new_position
+                            self.pieces[new_position].append(chosen_piece)
+                        
+                          # Reorder the sprites to ensure the dragged piece is drawn last (on top)
+                            self.Gobblet_pieces.remove(chosen_piece)
+                            self.Gobblet_pieces.add(chosen_piece)
+                            for position, pieces in self.board.board_state.items():
+                                print(f"Position {position} has pieces: {pieces}")
+                                print("\n")
     
     def printBoard(self):
         board= self.getSimplifiedBoard()
