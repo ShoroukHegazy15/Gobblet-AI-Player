@@ -369,7 +369,7 @@ class ViewHVC():
                     self.piecesBoard[new_position].append(moved_piece)     
             else:
                 print("\nno valid moves for BLACk!!!\n")
-            self.printBoard()
+            # self.printBoard()
 
         elif  self.board.currentPlayer()==1:
             print("this is player: ", self.board.current_player, " turn")
@@ -406,7 +406,7 @@ class ViewHVC():
                 print("\nno valid moves for White!!!\n")
                             
         self.board.switchPlayer()
-        self.printBoard()
+        # self.printBoard()
 
 
     def get_valid_moves_for_pieces(self,Color):

@@ -11,6 +11,14 @@ class Evaluation:
                 if pieces[-1]:
                     top_item = pieces[-1]
                     if top_item[1] == view.board.currentPlayer():
+                        if(pos==(215,110) or pos ==(725,110) ):
+                            current_player_pieces.append(5)
+                        elif(pos==(385,280) or pos==(555,280)):
+                            current_player_pieces.append(7)
+                        elif(pos==(555,450) or pos==(385,450)):
+                            current_player_pieces.append(8)
+                        elif(pos==(725,620) or pos==(215,620) ):
+                            current_player_pieces.append(5)
                         if top_item[0] == "L":
                             current_player_pieces.append(4)
                         elif top_item[0] == "M":
@@ -20,6 +28,14 @@ class Evaluation:
                         else:
                             current_player_pieces.append(1)
                     else:
+                        if(pos==(215,110) or pos ==(725,110) ):
+                            opponent_team_pieces.append(5)
+                        elif(pos==(385,280) or pos==(555,280)):
+                            opponent_team_pieces.append(7)
+                        elif(pos==(555,450) or pos==(385,450)):
+                            opponent_team_pieces.append(8)
+                        elif(pos==(725,620) or pos==(215,620) ):
+                            opponent_team_pieces.append(5)
                         if top_item[0] == "L":
                             opponent_team_pieces.append(4)
                         elif top_item[0] == "M":

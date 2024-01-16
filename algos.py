@@ -107,7 +107,8 @@ class Algos:
         # Get best move for Alpha Beta Iterative Deepening algo
         bestMove = None
         for depth in range(1, maxDepth + 1):
-            score, move = self.alphaBeta(board, self.view.board.currentPlayer(), depth, -float('inf'), float('inf'))
+            score, move = self.alphaBeta(board, self.view.board.currentPlayer(), depth,0, -float('inf'), float('inf'))
+            print("Depth: ",depth)
             bestMove = move
         return bestMove
 
