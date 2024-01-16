@@ -11,14 +11,9 @@ class Algos:
         # Get best move for minmax algo
         score, move = self.minimax(ViewHVC,board, player, maxDepth, 0)
         self.best_move = move
-
-        # return move
         return move
-    def minimax(self,ViewHVC, board, player, maxDepth, currentDepth):
-        self.i += 1  # Increment self.i
-        print("i= ", self.i)
-        print("\n")
         
+    def minimax(self,ViewHVC, board, player, maxDepth, currentDepth):
         # check if we're done recursing
         if ViewHVC.game_is_over() or currentDepth == maxDepth:
             return Evaluation.evaluate(ViewHVC,board),None
@@ -33,12 +28,27 @@ class Algos:
         valid_moves = ViewHVC.get_valid_moves_for_pieces(self.player_colors[player])
         for i in range(len(valid_moves)):
             move = valid_moves[i]
+            if move and move.start_position is not None and move.end_position is not None:
+                old_position = move.start_position
+                new_position = move.end_position
+                
+            # Update the position of the chosen piece as if it's being dragged by the computer
+                chosen_piece = ViewHVC.get_piece_at_position(old_position)
+                
             newBoard = board.make_move(move, player)
-          
             if newBoard is not None:
+            # If the move was successful, update the current board
+                               
+                if old_position in ViewHVC.pieces and chosen_piece in ViewHVC.pieces[old_position]:
+                    # Remove the dragged_piece from the list at old_position
+                    ViewHVC.pieces[old_position].remove(chosen_piece)
+                if new_position in ViewHVC.pieces :
+                    # Append the dragged_piece to the list at new_position
+                    ViewHVC.pieces[new_position].append(chosen_piece)
+                    
+            #if newBoard is not None:
                 nowPlayer = 3 - player  # Switch players
                 currentScore, _ = self.minimax(ViewHVC, newBoard, nowPlayer, maxDepth, currentDepth + 1)
-                board.undo_last_move(player) 
 
                 if board.currentPlayer() == player:
                     if currentScore > bestScore:
@@ -48,8 +58,20 @@ class Algos:
                     if currentScore < bestScore:
                         bestScore = currentScore
                         bestMove = move
+                board.undo_last_move(player)    #4elt mn boardstate
+                #3yzeen n update el pieces kman
+                #if new_position in ViewHVC.pieces :
+                    # Remove the dragged_piece from the list at old_position
+                ViewHVC.pieces[new_position].remove(chosen_piece)
+                #if old_position in ViewHVC.pieces and chosen_piece in ViewHVC.pieces[old_position]:
+                    # Append the dragged_piece to the list at new_position
+                ViewHVC.pieces[old_position].append(chosen_piece)
+                
+                #if old_position in ViewHVC.pieces and ViewHVC.pieces[old_position]:  # Check if the list is not empty
+                #moved_piece = ViewHVC.pieces[move.old_position].pop()
+                #ViewHVC.pieces[move.start_position].append(move.piece_size)
 
-        print("bestscore",{bestScore})
+        #print("bestscore",{bestScore})
         return bestScore, bestMove
 
     def getBestMoveAlphaBeta(self, ViewHVC, board, player, maxDepth):
