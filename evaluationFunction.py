@@ -16,7 +16,7 @@ class Evaluation:
                         elif(pos==(385,280) or pos==(555,280)):
                             current_player_pieces.append(7)
                         elif(pos==(555,450) or pos==(385,450)):
-                            current_player_pieces.append(8)
+                            current_player_pieces.append(7)
                         elif(pos==(725,620) or pos==(215,620) ):
                             current_player_pieces.append(5)
                         if top_item[0] == "L":
@@ -33,7 +33,7 @@ class Evaluation:
                         elif(pos==(385,280) or pos==(555,280)):
                             opponent_team_pieces.append(7)
                         elif(pos==(555,450) or pos==(385,450)):
-                            opponent_team_pieces.append(8)
+                            opponent_team_pieces.append(7)
                         elif(pos==(725,620) or pos==(215,620) ):
                             opponent_team_pieces.append(5)
                         if top_item[0] == "L":
@@ -66,76 +66,96 @@ class Evaluation:
         rescueChance=0
         lossChance=0
         boardTemp=view.getSimplifiedBoard()
+        print("sssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
+        for row in boardTemp:
+            print(row)    
+        print("sssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
         for row in range(4):
             if ((check_row_Score(boardTemp,row)==4 or check_row_Score(boardTemp,row)==3)and view.board.currentPlayer()==1 ):
-                winChance=1000
-            elif((check_row_Score(boardTemp,row)==9 or check_row_Score(boardTemp,row)==12) and view.board.currentPlayer()==1 ):
-                lossChance=-1000
-            elif((check_row_Score(boardTemp,row)==10)and view.board.currentPlayer()==1 ):
-                rescueChance=500
-            elif((check_row_Score(boardTemp,row)==9 or check_row_Score(boardTemp,row)==12)and view.board.currentPlayer()==2):
-                winChance=1000
+                winChance=winChance+1000
+            elif((check_row_Score(boardTemp,row)==30 or check_row_Score(boardTemp,row)==40) and view.board.currentPlayer()==1 ):
+                lossChance=lossChance-1000
+            elif((check_row_Score(boardTemp,row)==31)and view.board.currentPlayer()==1 ):
+                rescueChance=rescueChance+1000
+            elif((check_row_Score(boardTemp,row)==30 or check_row_Score(boardTemp,row)==40)and view.board.currentPlayer()==2):
+                winChance=winChance+1000
             elif((check_row_Score(boardTemp,row)==4 or check_row_Score(boardTemp,row)==3) and view.board.currentPlayer()==2 ):
-                lossChance=-1000
-            elif(check_row_Score(boardTemp,row)==6  and view.board.currentPlayer()==2 ):
-                rescueChance=500
-            elif(check_row_Score(boardTemp,row)==6 and view.board.currentPlayer()==1):
+                lossChance=lossChance-1000
+            elif(check_row_Score(boardTemp,row)==13  and view.board.currentPlayer()==2 ):
+                rescueChance=rescueChance+1000
+            elif(check_row_Score(boardTemp,row)==20 and view.board.currentPlayer()==1):
                 lossChance=lossChance-250
             elif(check_row_Score(boardTemp,row)==2 and view.board.currentPlayer()==2):
                 lossChance=lossChance-250
+            elif(check_row_Score(boardTemp,row)==2 and view.board.currentPlayer()==1):
+                winChance=winChance+500
+            elif(check_row_Score(boardTemp,row)==20 and view.board.currentPlayer()==2):
+                winChance=winChance+500
             
         for col in range(4):
             if ((check_col_Scores(boardTemp,col)==4 or check_row_Score(boardTemp,col)==3)and view.board.currentPlayer()==1 ):
                 winChance=winChance+1000
-            elif((check_col_Scores(boardTemp,col)==9 or check_row_Score(boardTemp,col)==12) and view.board.currentPlayer()==1 ):
+            elif((check_col_Scores(boardTemp,col)==30 or check_row_Score(boardTemp,col)==40) and view.board.currentPlayer()==1 ):
                 lossChance=lossChance-1000
-            elif((check_col_Scores(boardTemp,col)==10)and view.board.currentPlayer()==1 ):
-                rescueChance=rescueChance+500
-            elif((check_col_Scores(boardTemp,col)==9 or check_row_Score(boardTemp,col)==12)and view.board.currentPlayer()==2):
+            elif((check_col_Scores(boardTemp,col)==31)and view.board.currentPlayer()==1 ):
+                rescueChance=rescueChance+1000
+            elif((check_col_Scores(boardTemp,col)==30 or check_row_Score(boardTemp,col)==40)and view.board.currentPlayer()==2):
                 winChance=winChance+ 1000
             elif((check_col_Scores(boardTemp,col)==4 or check_row_Score(boardTemp,col)==3) and view.board.currentPlayer()==2 ):
                 lossChance=lossChance-1000
-            elif(check_col_Scores(boardTemp,col)==6  and view.board.currentPlayer()==2 ):
-                rescueChance=rescueChance+500
-            elif(check_col_Scores(boardTemp,row)==6 and view.board.currentPlayer()==1):
+            elif(check_col_Scores(boardTemp,col)==13  and view.board.currentPlayer()==2 ):
+                rescueChance=rescueChance+1000
+            elif(check_col_Scores(boardTemp,col)==20 and view.board.currentPlayer()==1):
                 lossChance=lossChance-250
-            elif(check_col_Scores(boardTemp,row)==2 and view.board.currentPlayer()==2):
+            elif(check_col_Scores(boardTemp,col)==2 and view.board.currentPlayer()==2):
                 lossChance=lossChance-250
+            elif(check_col_Scores(boardTemp,col)==2 and view.board.currentPlayer()==1):
+                winChance=winChance+500
+            elif(check_row_Score(boardTemp,col)==20 and view.board.currentPlayer()==2):
+                winChance=winChance+500
         if ((check_diag_ScoresLeft(boardTemp)==4 or check_diag_ScoresLeft(boardTemp)==3)and view.board.currentPlayer()==1 ):
                 winChance=winChance+1000
-        elif((check_diag_ScoresLeft(boardTemp)==9 or check_diag_ScoresLeft(boardTemp)==12) and view.board.currentPlayer()==1 ):
+        elif((check_diag_ScoresLeft(boardTemp)==30 or check_diag_ScoresLeft(boardTemp)==40) and view.board.currentPlayer()==1 ):
                 lossChance=lossChance-1000
-        elif((check_diag_ScoresLeft(boardTemp)==10)and view.board.currentPlayer()==1 ):
-                rescueChance=rescueChance+500
-        elif((check_diag_ScoresLeft(boardTemp)==9 or check_diag_ScoresLeft(boardTemp)==12)and view.board.currentPlayer()==2):
+        elif((check_diag_ScoresLeft(boardTemp)==31)and view.board.currentPlayer()==1 ):
+                rescueChance=rescueChance+1000
+        elif((check_diag_ScoresLeft(boardTemp)==30 or check_diag_ScoresLeft(boardTemp)==40)and view.board.currentPlayer()==2):
                 winChance=winChance+ 1000
         elif((check_diag_ScoresLeft(boardTemp)==4 or check_diag_ScoresLeft(boardTemp)==3) and view.board.currentPlayer()==2 ):
                 lossChance=lossChance-1000
-        elif(check_diag_ScoresLeft(boardTemp)==6  and view.board.currentPlayer()==2 ):
-                rescueChance=rescueChance+500
-        elif(check_diag_ScoresLeft(boardTemp)==6 and view.board.currentPlayer()==1):
+        elif(check_diag_ScoresLeft(boardTemp)==13  and view.board.currentPlayer()==2 ):
+                rescueChance=rescueChance+1000
+        elif(check_diag_ScoresLeft(boardTemp)==20 and view.board.currentPlayer()==1):
                 lossChance=lossChance-250
         elif(check_diag_ScoresLeft(boardTemp)==2 and view.board.currentPlayer()==2):
                 lossChance=lossChance-250
+        elif(check_diag_ScoresLeft(boardTemp)==2 and view.board.currentPlayer()==1):
+            winChance=winChance+500
+        elif(check_diag_ScoresLeft(boardTemp)==20 and view.board.currentPlayer()==2):
+            winChance=winChance+500
                 
                 
         
         if ((check_diag_Scoresright(boardTemp)==4 or check_diag_Scoresright(boardTemp)==3)and view.board.currentPlayer()==1 ):
                 winChance=winChance+1000
-        elif((check_diag_Scoresright(boardTemp)==9 or check_diag_Scoresright(boardTemp)==12) and view.board.currentPlayer()==1 ):
+        elif((check_diag_Scoresright(boardTemp)==30 or check_diag_Scoresright(boardTemp)==40) and view.board.currentPlayer()==1 ):
                 lossChance=lossChance-1000
-        elif((check_diag_Scoresright(boardTemp)==10)and view.board.currentPlayer()==1 ):
-                rescueChance=rescueChance+500
-        elif((check_diag_Scoresright(boardTemp)==9 or check_diag_Scoresright(boardTemp)==12)and view.board.currentPlayer()==2):
+        elif((check_diag_Scoresright(boardTemp)==31)and view.board.currentPlayer()==1 ):
+                rescueChance=rescueChance+1000
+        elif((check_diag_Scoresright(boardTemp)==30 or check_diag_Scoresright(boardTemp)==40)and view.board.currentPlayer()==2):
                 winChance=winChance+ 1000
         elif((check_diag_Scoresright(boardTemp)==4 or check_diag_Scoresright(boardTemp)==3) and view.board.currentPlayer()==2 ):
                 lossChance=lossChance-1000
-        elif(check_diag_Scoresright(boardTemp)==6  and view.board.currentPlayer()==2 ):
-                rescueChance=rescueChance+500
-        elif(check_diag_Scoresright(boardTemp)==6 and view.board.currentPlayer()==1):
+        elif(check_diag_Scoresright(boardTemp)==13  and view.board.currentPlayer()==2 ):
+                rescueChance=rescueChance+1000
+        elif(check_diag_Scoresright(boardTemp)==20 and view.board.currentPlayer()==1):
             lossChance=lossChance-250
         elif(check_diag_Scoresright(boardTemp)==2 and view.board.currentPlayer()==2):
             lossChance=lossChance-250
+        elif(check_diag_Scoresright(boardTemp)==2 and view.board.currentPlayer()==1):
+                winChance=winChance+500
+        elif(check_diag_Scoresright(boardTemp)==20 and view.board.currentPlayer()==2):
+                winChance=winChance+500
         
                 
         for pos, pieces in view.board.board_state.items():
@@ -152,7 +172,7 @@ def check_row_Score(board,row):
         if(piece[0]=='white'):
             counterOfTruth+=1
         else:
-            counterOfTruth+=3
+            counterOfTruth+=10
     return counterOfTruth
 def check_col_Scores(board, col):
     pieces = [board[row][col][-1] for row in range(4) if board[row][col] ]
@@ -161,7 +181,7 @@ def check_col_Scores(board, col):
         if(piece[0]=='white'):
             counterOfTruth+=1
         else:
-            counterOfTruth+=3
+            counterOfTruth+=10
     return counterOfTruth
 def check_diag_ScoresLeft(board):
     pieces = [board[i][i][-1] for i in range(4) if board[i][i]]
@@ -170,7 +190,7 @@ def check_diag_ScoresLeft(board):
         if(piece[0]=='white'):
             counterOfTruth+=1
         else:
-            counterOfTruth+=3
+            counterOfTruth+=10
     return counterOfTruth
 def check_diag_Scoresright(board):
     pieces=[]
@@ -187,5 +207,5 @@ def check_diag_Scoresright(board):
         if(piece[0]=='white'):
             counterOfTruth+=1
         else:
-            counterOfTruth+=3
+            counterOfTruth+=10
     return counterOfTruth

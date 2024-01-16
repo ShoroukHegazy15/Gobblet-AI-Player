@@ -273,7 +273,7 @@ class ViewCVC():
             from algos import Algos 
             AlgosInstance=Algos(self.game)
             # moveMinMax = self.AlgosInstance.getBestMoveMinimax(self.board,self.board.current_player,3)  #can be called b2a anywhere with the color parameter
-            moveMinMax = AlgosInstance.getBestMoveAlphaBetaID(self.board,self.pieces,self.board.current_player,4)  #can be called b2a anywhere with the color parameter
+            moveMinMax = AlgosInstance.getBestMoveAlphaBeta(self.board,self.pieces,self.board.current_player,2)  #can be called b2a anywhere with the color parameter
             
             #computer yl3b bel black bsss
             #valid_moves = self.get_valid_moves_for_black_pieces()
@@ -388,7 +388,7 @@ class ViewCVC():
             print("this is player: ", self.board.current_player, " turn")
             
             # moveMinMax = self.AlgosInstance.getBestMoveMinimax(self.board,self.board.current_player,3)  #can be called b2a anywhere with the color parameter
-            moveAlphaBeta = AlgosInstance.getBestMoveAlphaBetaID(self.board,self.pieces,self.board.current_player,4)  #can be called b2a anywhere with the color parameter
+            moveAlphaBeta = AlgosInstance.getBestMoveAlphaBeta(self.board,self.pieces,self.board.current_player,3)  #can be called b2a anywhere with the color parameter
             
             #computer yl3b bel black bsss
             #valid_moves = self.get_valid_moves_for_black_pieces()
@@ -417,9 +417,9 @@ class ViewCVC():
                     # Reorder the sprites to ensure the dragged piece is drawn last (on top)
                     self.Gobblet_pieces.remove(moved_piece)
                     self.Gobblet_pieces.add(moved_piece)
-                if old_position in self.piecesBoard and self.pieces[old_position]:
-                    self.piecesBoard[old_position].pop()
-                    self.piecesBoard[new_position].append(moved_piece)
+                # if old_position in self.piecesBoard and self.pieces[old_position]:
+                #     self.piecesBoard[old_position].pop()
+                #     self.piecesBoard[new_position].append(moved_piece)
                     
                 # for position, pieces in self.board.board_state.items():
                 #     print(f"Position {position} has pieces: {pieces}")
@@ -430,7 +430,7 @@ class ViewCVC():
         elif  self.board.currentPlayer()==1:
             print("this is player: ", self.board.current_player, " turn")
 
-            moveAlphaBeta = AlgosInstance.getBestMoveAlphaBetaID(self.board,self.pieces,self.board.current_player,1) #can be called b2a anywhere with the color parameter
+            moveAlphaBeta = AlgosInstance.getBestMoveAlphaBeta(self.board,self.pieces,self.board.current_player,3) #can be called b2a anywhere with the color parameter
             #Computer momken yl3b white w black
             #valid_moves = self.get_valid_moves_for_black_pieces()
             
