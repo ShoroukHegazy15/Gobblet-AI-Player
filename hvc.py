@@ -1,3 +1,4 @@
+import time
 import pygame
 import os
 from trialmove import Move
@@ -533,7 +534,16 @@ class ViewHVC():
         if(counterOfTruth==4):
             return True
         counterOfTruth=0
-        for piece in reversed(pieces):
+        pieces=[]
+        if(board[0][3]):
+            pieces.append(board[0][3][-1])
+        if(board[1][2]):
+            pieces.append(board[1][2][-1])
+        if(board[2][1]):
+            pieces.append(board[2][1][-1])
+        if(board[3][0]):
+            pieces.append(board[3][0][-1])
+        for piece in pieces:
             if(piece[0]==pieces[0][0]):
                 counterOfTruth+=1
             else:

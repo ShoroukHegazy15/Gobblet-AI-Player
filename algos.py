@@ -9,6 +9,7 @@ INFINITY = float('inf')
 class Algos:
     
     def __init__(self,game):
+        self.scores=[]
         from cvc import ViewCVC
         self.view=ViewCVC(game)
         
@@ -115,8 +116,9 @@ class Algos:
     def alphaBeta(self, board, player, maxDepth, currentDepth, alpha, beta):
         # Check if we’re done recursing
         if self.view.game_is_over() or currentDepth == maxDepth:
+            # self.scores.append((Evaluation.evaluate(self.view, board),currentDepth))
             # check if player is same as current_player attribute of board
-            return Evaluation.evaluate(self.view, board), None
+            return Evaluation.evaluate(self.view), None
 
         # Otherwise get values from below
         bestMove = None
