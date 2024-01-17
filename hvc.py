@@ -85,6 +85,24 @@ class ViewHVC():
     def startGame(self,level):
         self.display_menu(level)
         
+        
+        
+    def check_win(self):
+        if(self.board.currentPlayer()==1 and self.game_is_over()):
+            print("White winSSSSSSSSSSSSSSSSSSS")
+            self.game.curr_menu=self.game.win_screen
+            self.game.curr_menu.setMsg("White Wins")
+            self.run_display=False
+            return 1
+        
+        elif(self.board.currentPlayer()==2 and self.game_is_over()):
+            print("Black winsSSSSSSSSSSS")
+            #time.sleep(2)
+            """ self.game.curr_menu=self.game.win_screen
+            self.game.curr_menu.setMsg("Black Wins") """
+            #self.run_display=False
+            return 2     
+            
     def display_menu(self,level):
         self.run_display = True
         self.clock = pygame.time.Clock()
@@ -101,10 +119,20 @@ class ViewHVC():
             # Draw Gobblet pieces
             self.Gobblet_pieces.draw(self.game.display)
             self.handle_drag_and_drop(level)      #end of program 
+            
             self.game.paused=False
             self.timer()
             self.blit_screen()
-    
+            if (self.check_win()==2):
+                self.game.display.blit(self.bg, (0, 0))
+                self.Gobblet_pieces.draw(self.game.display)
+                self.Gobblet_pieces.draw(self.game.display)
+                self.blit_screen()
+                pygame.time.wait(300)
+                self.game.curr_menu=self.game.win_screen
+                self.game.curr_menu.setMsg("Black Wins")
+                self.run_display=False
+                
     def check_input(self):
         if self.game.BACK_KEY:
             self.game.curr_menu = self.game.pause_menu
@@ -148,20 +176,6 @@ class ViewHVC():
                 return True
         return False 
 
-    def check_win(self):
-        if(self.board.current_player==1 and self.game_is_over()):
-            print("White winSSSSSSSSSSSSSSSSSSS")
-            self.game.curr_menu=self.game.win_screen
-            self.game.curr_menu.setMsg("White Wins")
-            self.run_display=False
-            return 1
-        elif(self.board.current_player==2 and self.game_is_over()):
-            print("Black winsSSSSSSSSSSS")
-            self.game.curr_menu=self.game.win_screen
-            self.game.curr_menu.setMsg("Black Wins")
-            self.run_display=False
-            return 2     
-        
     def handle_dropped_piece(self,level):   #takes an argumenet of what gameLevel is chosen
         old_position = self.dragged_piece.original_position
         new_position = None    # Initialize new_position to None
@@ -183,37 +197,30 @@ class ViewHVC():
                         # Reorder the sprites to ensure the dragged piece is drawn last; on top y3ny
                         self.Gobblet_pieces.remove(self.dragged_piece)  
                         self.Gobblet_pieces.add(self.dragged_piece)   #bn7otaha on top of stack 3l board
-                                                    
-                        self.check_win()    #dyman making sure hal el human ksb wla l2 34an howa awl wa7ed byl3b anyways
-                        if self.check_win():
-                            self.game.display.fill(self.BACK_COLOR)
-                            self.game.display.blit(self.bg, (0, 0))
-                            # Draw Gobblet pieces
-                            self.Gobblet_pieces.draw(self.game.display)#lw el white ksb 5las
-                            time.sleep(3)
+                                                                         
+                        if(self.check_win()):    #dyman making sure hal el human ksb wla l2 34an howa awl wa7ed byl3b anyways
                             break
                         else:
                             self.board.switchPlayer()    #lw el white mksb4 5las switch w kml el l3ba
                             if(level=="Easy"):
                                 self.random_ai_player()
-                                self.check_win()
-                                if self.check_win():   #lw el black ksb 5las
+                                #self.check_win()
+                                if (self.check_win()):   #lw el black ksb 5las
                                     break
                                 else:   
                                     self.board.switchPlayer()   #lw el black mksb4 5las switch w kml el l3ba
                             
                             elif(level=="Medium"):
                                 self.MediumLevelAI()
-                                self.check_win()
-                                if self.check_win():   #lw el black ksb 5las
+                                #self.check_win()
+                                if (self.check_win()):   #lw el black ksb 5las
                                     break
                                 else:   
                                     self.board.switchPlayer()   #lw el black mksb4 5las switch w kml el l3ba
                             
                             elif(level=="Hard"):
                                 self.HardAI()
-                                self.check_win()
-                                if self.check_win():   #lw el black ksb 5las
+                                if (self.check_win()):   #lw el black ksb 5las
                                     break
                                 else:   
                                     self.board.switchPlayer()   #lw el black mksb4 5las switch w kml el l3ba
@@ -233,10 +240,11 @@ class ViewHVC():
         self.dragged_piece = None
         
         # Print the contents of the pieces dictionary after each move
-        print("\n********Contents of the pieces dictionary:**********")
+        """ print("\n********Contents of the pieces dictionary:**********")
         board= self.getSimplifiedBoard()
         for row in board:
-            print(row)
+            print(row) """
+            
             
     def is_close_to_position(self, pos1, pos2, threshold=100):
         # """Check if two positions are close within a given threshold."""
@@ -298,15 +306,15 @@ class ViewHVC():
                 if move and move.start_position is not None and move.end_position is not None:
                     old_position = move.start_position
                     new_position = move.end_position
-                
-                # Update the position of the chosen piece as if it's being dragged by the computer
-                    chosen_piece = self.get_piece_at_position(old_position)
-                    if chosen_piece:
-                        chosen_piece.rect.center = new_position
-                        chosen_piece.original_position = new_position
                     
                     #hena el mafrood el move el best t7sl henaaa
                     new_board = self.board.make_move(move, player=2)  # Pass the computer player as an argument
+                    chosen_piece = self.get_piece_at_position(old_position)
+                    
+                    if chosen_piece:
+                        chosen_piece.rect.center = new_position
+                        chosen_piece.original_position = new_position
+                        
                     if new_board is not None:
                     # If the move was successful, update the current board
                         self.board = new_board
@@ -335,14 +343,6 @@ class ViewHVC():
  """
 
     def HardAI(self): 
-
-        if(self.game_is_over()):
-            time.sleep(2)
-            Bool,winner=self.game_is_over()
-            self.game.curr_menu=self.game.win_screen
-            self.game.curr_menu.setMsg(winner+" Wins")
-            self.run_display=False
-        
         print("in hard")
         # minimax AI
         if self.board.currentPlayer() == 2 :  # Player 1 is human, Player 2 is the computer
@@ -358,14 +358,14 @@ class ViewHVC():
                     old_position = move.start_position
                     new_position = move.end_position
                 
-                # Update the position of the chosen piece as if it's being dragged by the computer
+                    #hena el mafrood el move el best t7sl henaaa
+                    new_board = self.board.make_move(move, player=2)  # Pass the computer player as an argument
+                    # Update the position of the chosen piece as if it's being dragged by the computer
                     chosen_piece = self.get_piece_at_position(old_position)
                     if chosen_piece:
                         chosen_piece.rect.center = new_position
                         chosen_piece.original_position = new_position
-                    
-                    #hena el mafrood el move el best t7sl henaaa
-                    new_board = self.board.make_move(move, player=2)  # Pass the computer player as an argument
+   
                     if new_board is not None:
                     # If the move was successful, update the current board
                         self.board = new_board
@@ -380,6 +380,14 @@ class ViewHVC():
                           # Reorder the sprites to ensure the dragged piece is drawn last (on top)
                             self.Gobblet_pieces.remove(chosen_piece)
                             self.Gobblet_pieces.add(chosen_piece)
+                            
+                            """ self.game.check_events()
+                            self.check_input()
+                            self.game.display.fill(self.BACK_COLOR)
+                            self.game.display.blit(self.bg, (0, 0))
+                            # Draw Gobblet pieces
+                            self.Gobblet_pieces.draw(self.game.display)
+                            self.blit_screen() """
                             for position, pieces in self.board.board_state.items():
                                 print(f"Position {position} has pieces: {pieces}")
                                 print("\n")
