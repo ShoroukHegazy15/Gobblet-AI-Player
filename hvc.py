@@ -75,7 +75,6 @@ class ViewHVC():
         if new_position in self.pieces :
             # Append the dragged_piece to the list at new_position
             self.pieces[new_position].append(self.dragged_piece)
-            
 
     def blit_screen(self):
         self.game.window.blit(self.game.display, (0, 0))
@@ -85,22 +84,16 @@ class ViewHVC():
     def startGame(self,level):
         self.display_menu(level)
         
-        
-        
     def check_win(self):
         if(self.board.currentPlayer()==1 and self.game_is_over()):
-            print("White winSSSSSSSSSSSSSSSSSSS")
+            print("White winSSSSSSSSS")
             self.game.curr_menu=self.game.win_screen
             self.game.curr_menu.setMsg("White Wins")
             self.run_display=False
             return 1
         
         elif(self.board.currentPlayer()==2 and self.game_is_over()):
-            print("Black winsSSSSSSSSSSS")
-            #time.sleep(2)
-            """ self.game.curr_menu=self.game.win_screen
-            self.game.curr_menu.setMsg("Black Wins") """
-            #self.run_display=False
+            print("Black winsSSSSSSS")
             return 2     
             
     def display_menu(self,level):
@@ -119,7 +112,6 @@ class ViewHVC():
             # Draw Gobblet pieces
             self.Gobblet_pieces.draw(self.game.display)
             self.handle_drag_and_drop(level)      #end of program 
-            
             self.game.paused=False
             self.timer()
             self.blit_screen()
@@ -128,7 +120,7 @@ class ViewHVC():
                 self.Gobblet_pieces.draw(self.game.display)
                 self.Gobblet_pieces.draw(self.game.display)
                 self.blit_screen()
-                pygame.time.wait(300)
+                pygame.time.wait(300)   # 300 msec introduce delays without blocking the event loop, allowing other events to be processed during the wait
                 self.game.curr_menu=self.game.win_screen
                 self.game.curr_menu.setMsg("Black Wins")
                 self.run_display=False
