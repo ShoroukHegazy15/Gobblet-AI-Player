@@ -70,7 +70,15 @@ class Algos:
         self.best_move = move
         return move
 
-        
+    def getBestMoveAlphaBetaID(self, ViewHVC, board, player, maxDepth):
+            # Get best move for Alpha Beta Iterative Deepening algo
+            bestMove = None
+            for depth in range(1, maxDepth + 1):
+                _ , move = self.alphaBeta(ViewHVC, board, player, depth, 0, -INFINITY, INFINITY)
+                print("Depth: ",depth)
+                bestMove = move
+            return bestMove
+
     def alphaBeta(self, ViewHVC, board, player, maxDepth, currentDepth, alpha, beta):
         # Check if we’re done recursing
         if ViewHVC.game_is_over() or currentDepth == maxDepth:
