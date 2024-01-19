@@ -126,6 +126,8 @@ class ViewCVC():
             self.game.display.blit(self.bg, (0, 0))
             # Draw Gobblet pieces
             self.Gobblet_pieces.draw(self.game.display)
+            time.sleep(1)
+            # time.sleep(2)
             # self.handle_drag_and_drop()#end of program 
             # time.sleep(5)
             if(levelP1=="Easy"):
@@ -137,22 +139,26 @@ class ViewCVC():
             elif(levelP1=="Hard"):
                 print("HARD")
                 self.HardAI()
-
+            time.sleep(1)
+            self.game.display.fill(self.BACK_COLOR)
+            self.game.display.blit(self.bg, (0, 0))
+            # Draw Gobblet pieces
+            self.Gobblet_pieces.draw(self.game.display)
+            time.sleep(1)
+            # time.sleep(2)
+            # time.sleep(2)
             if(levelP2=="Easy"):
                 self.random_ai_player()
             elif(levelP2=="Medium"):
                 self.MediumLevelAI()
             elif(levelP2=="Hard"):
                 self.HardAI()
-            
             self.game.display.fill(self.BACK_COLOR)
             self.game.display.blit(self.bg, (0, 0))
             # Draw Gobblet pieces
             self.Gobblet_pieces.draw(self.game.display)
-                
-            # self.random_ai_player()
+            time.sleep(1)
             self.game.paused=False
-            #self.timer()
             self.blit_screen()
 
     '''
@@ -208,7 +214,7 @@ class ViewCVC():
             return None  # No piece at the position                
     
     def random_ai_player(self):
-        time.sleep(1)
+
         
         if(self.game_is_over()):
             time.sleep(2)
