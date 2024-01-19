@@ -30,7 +30,7 @@ class Algos:
     def minimax(self, board, player, maxDepth, currentDepth):
         # check if we're done recursing
         if self.view.game_is_over() or currentDepth == maxDepth:
-            return Evaluation.evaluate(self.view,board), None
+            return Evaluation.evaluate(self.view), None
 
         # otherwise get values from below
         bestMove = None
