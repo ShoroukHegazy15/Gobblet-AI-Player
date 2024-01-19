@@ -20,6 +20,7 @@ class ViewHVC():
     def __init__(self, game):
         self.game = game
         self.run_display = True
+        self.level=""
         self.bg = pygame.image.load(os.path.join("Assets/board.png")).convert()
         self.BACK_COLOR = (30, 54, 45)
         self.board_positions = [#8irt hna shwit arkam 386->385,724->725
@@ -82,6 +83,7 @@ class ViewHVC():
         self.game.reset_keys()
         
     def startGame(self,level):
+        self.level=level
         self.display_menu(level)
         
     def check_win(self):
@@ -129,6 +131,7 @@ class ViewHVC():
         if self.game.BACK_KEY:
             self.game.curr_menu = self.game.pause_menu
             self.game.paused_flag =1
+            self.game.game_mood="hvc"+self.level
             self.run_display = False
 
     def handle_drag_and_drop(self,level):

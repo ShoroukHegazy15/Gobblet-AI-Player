@@ -258,8 +258,7 @@ class MoodsMenu(Menu):
                 self.game.curr_menu.setInput("hvc")
             elif self.state == "mood3":
                 # self.game.curr_menu=self.game.gameViewCVC
-                self.game.curr_menu=self.game.levels
-                self.game.curr_menu.setInput("cvc")
+                self.game.curr_menu=self.game.p1levels
                 #self.game.playing = True
             elif(self.state=="back"):
                 self.game.curr_menu=self.game.main_menu
@@ -275,7 +274,7 @@ class levelsMenu(Menu):
         self.hardx, self.hardy = self.mid_w, self.mid_h + 80
 
         self.cursor_rect.midtop = (self.easx + self.offset, self.easy)
-        self.backx, self.backy = self.mid_w, self.mid_h + 60  # Add back button
+        self.backx, self.backy = self.mid_w, self.mid_h + 130  # Add back button
     def setInput(self,FromInput):
         self.FromInput=FromInput
     def display_menu(self):
@@ -288,7 +287,7 @@ class levelsMenu(Menu):
             self.game.draw_text('Easy', 20, self.easx, self.easy)
             self.game.draw_text('Medium',20, self.medx, self.medy)
             self.game.draw_text('Hard', 20, self.hardx, self.hardy)
-            self.game.draw_text('Back', 20, self.backx, self.backy + 70)  # Back button
+            self.game.draw_text('Back', 20, self.backx, self.backy)  # Back button
             self.draw_cursor()
             self.blit_screen()
 
@@ -304,14 +303,14 @@ class levelsMenu(Menu):
                 self.cursor_rect.midtop = (self.hardx + self.offset, self.hardy)
                 self.state = "Hard"
             elif self.state == "Hard":
-                self.cursor_rect.midtop = (self.backx + self.offset, self.backy+70)  # Move to Back
+                self.cursor_rect.midtop = (self.backx + self.offset, self.backy)  # Move to Back
                 self.state = "Back"
             elif self.state == "Back":
                 self.cursor_rect.midtop = (self.easx + self.offset, self.easy)  # Move to Easy
                 self.state = "Easy"
         elif self.game.UP_KEY:
             if self.state == "Easy":
-                self.cursor_rect.midtop = (self.backx + self.offset, self.backy+70)  # Move to Back
+                self.cursor_rect.midtop = (self.backx + self.offset, self.backy)  # Move to Back
                 self.state = "Back"
             elif self.state == "Back":
                 self.cursor_rect.midtop = (self.hardx + self.offset, self.hardy)  # Move to Hard
@@ -322,15 +321,41 @@ class levelsMenu(Menu):
             elif self.state == "Medium":
                 self.cursor_rect.midtop = (self.easx + self.offset, self.easy)  # Move to Easy
                 self.state = "Easy"
-            
-        elif pygame.mouse.get_pressed()[1]:  # Middle mouse button is clicked
-            mouse_x, mouse_y = pygame.mouse.get_pos()
-            if self.backx < mouse_x < self.backx + 100 and self.backy < mouse_y < self.backy + 20:
-                self.state = "Back"
+        
 
 
     #Here we can add the level of hardness to know what level of hardness
     def check_input(self):
+        if pygame.mouse.get_pressed()[0]:  # Left mouse button is clicked
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+            print(mouse_x,mouse_y,self.easx,self.easy)
+            if self.easx-100 < mouse_x < self.easx + 100 and self.easy-10 < mouse_y < self.easy+10 :
+                if(self.FromInput=="cvc"):
+                    self.game.curr_menu=self.game.gameViewCVC
+                    self.game.curr_menu.startGame("Easy")
+                elif(self.FromInput=="hvc"):
+                    self.game.curr_menu=self.game.gameViewHVC
+                    self.game.curr_menu.startGame("Easy")
+                self.run_display = False
+            elif self.medx-100 < mouse_x < self.medx + 100 and self.medy-10 < mouse_y < self.medy + 10:
+                if(self.FromInput=="cvc"):
+                    self.game.curr_menu=self.game.gameViewCVC
+                    self.game.curr_menu.startGame("Medium")
+                elif(self.FromInput=="hvc"):
+                    self.game.curr_menu=self.game.gameViewHVC
+                    self.game.curr_menu.startGame("Medium")
+                self.run_display = False
+            elif self.hardx -100 < mouse_x < self.hardx + 100 and self.hardy-10 < mouse_y < self.hardy + 10:
+                if(self.FromInput=="cvc"):
+                    self.game.curr_menu=self.game.gameViewCVC
+                    self.game.curr_menu.startGame("Hard")
+                elif(self.FromInput=="hvc"):
+                    self.game.curr_menu=self.game.gameViewHVC
+                    self.game.curr_menu.startGame("Hard")
+                self.run_display = False
+            elif self.backx -100 < mouse_x < self.backx + 100 and self.backy-10 < mouse_y < self.backy + 10:
+                self.game.curr_menu = self.game.moods
+
         self.move_cursor()
         if self.game.START_KEY :  # Left mouse button is clicked
             if self.state == "Easy":
@@ -341,10 +366,7 @@ class levelsMenu(Menu):
                 elif(self.FromInput=="hvc"):
                     self.game.curr_menu=self.game.gameViewHVC
                     self.game.curr_menu.startGame("Easy")
-                # self.game.curr_menu=self.game.gameView
-                # self.game.curr_menu=self.game.gameViewHVC
             elif self.state == "Medium":
-                # self.game.curr_menu = self.game.gameView
                 if(self.FromInput=="cvc"):
                     self.game.curr_menu=self.game.gameViewCVC
                     self.game.curr_menu.startGame("Medium")
@@ -352,7 +374,6 @@ class levelsMenu(Menu):
                     self.game.curr_menu=self.game.gameViewHVC
                     self.game.curr_menu.startGame("Medium")
             elif self.state == "Hard":
-                # self.game.curr_menu = self.game.gameView
                 if(self.FromInput=="cvc"):
                     self.game.curr_menu=self.game.gameViewCVC
                     self.game.curr_menu.startGame("Hard")
@@ -360,7 +381,7 @@ class levelsMenu(Menu):
                     self.game.curr_menu=self.game.gameViewHVC
                     self.game.curr_menu.startGame("Hard")
             elif self.state == "Back":
-                self.game.curr_menu = self.game.main_menu
+                self.game.curr_menu = self.game.moods
             self.run_display = False
 
 class WinScreen(Menu):
@@ -474,7 +495,15 @@ class PauseMenu(Menu): #enherite menu
                     self.game.curr_menu = self.game.gameViewHVH
                 elif self.game.game_mood == "v":
                     self.game.curr_menu = self.game.gameView
-                    
+                elif self.game.game_mood == "hvcEasy":
+                    self.game.curr_menu = self.game.gameViewHVC
+                    self.game.curr_menu.startGame("Easy")
+                elif self.game.game_mood == "hvcMedium":
+                    self.game.curr_menu = self.game.gameViewHVC
+                    self.game.curr_menu.startGame("Medium")
+                elif self.game.game_mood == "hvcHard":
+                    self.game.curr_menu = self.game.gameViewHVC
+                    self.game.curr_menu.startGame("Hard")
             elif self.state == "Options":
                 self.game.curr_menu = self.game.options
             elif self.state == "Main menu":
@@ -674,7 +703,6 @@ class playerTwoLevelsMenu(Menu):
             elif self.state == "Back":
                 self.game.curr_menu=self.game.p1levels
             self.run_display = False
-    
 
 ##el molahza elwahida,, eni lama basib el cursor 3and hard w dost backspace w rege3t tani d5lt lel level byfdal 3ala hard idk why         
 ##el molahza elwahida,, eni lama basib el cursor 3and hard w dost backspace w rege3t tani d5lt lel level byfdal 3ala hard idk why 
