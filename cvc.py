@@ -61,7 +61,10 @@ class ViewCVC():
         # player_one = True  # if a human is playing white, then this will be True, else False
         # player_two = False
         # human_turn = (self.board.current_player and player_one) or (not self.board.current_player and player_two)
-        
+    def startGame(self,levelP1,levelP2):
+        self.display_menu(levelP1,levelP2)
+    
+    """
     def startGame(self,level):
         self.display_menu(level)
         # # time.sleep(5)
@@ -71,6 +74,7 @@ class ViewCVC():
         #     self.MediumLevelAI()
         # elif(level=="Hard"):
         #     self.HardAI()
+    """
 
     def create_pieces(self):
         sizes = ["XS", "S", "M", "L"]
@@ -107,6 +111,51 @@ class ViewCVC():
         pygame.display.update()
         self.game.reset_keys()
 
+    def display_menu(self,levelP1,levelP2):
+        self.run_display = True
+        self.clock = pygame.time.Clock()
+        if self.game.paused_flag == 0:
+            self.start_time = pygame.time.get_ticks()
+            self.fixed_start_time=self.start_time
+        else:
+            self.start_time = self.fixed_start_time
+        while self.run_display:
+            self.game.check_events()
+            self.check_input()
+            self.game.display.fill(self.BACK_COLOR)
+            self.game.display.blit(self.bg, (0, 0))
+            # Draw Gobblet pieces
+            self.Gobblet_pieces.draw(self.game.display)
+            # self.handle_drag_and_drop()#end of program 
+            # time.sleep(5)
+            if(levelP1=="Easy"):
+                print("EASY")
+                self.random_ai_player()
+            elif(levelP1=="Medium"):
+                print("MEDIUM")
+                self.MediumLevelAI()
+            elif(levelP1=="Hard"):
+                print("HARD")
+                self.HardAI()
+
+            if(levelP2=="Easy"):
+                self.random_ai_player()
+            elif(levelP2=="Medium"):
+                self.MediumLevelAI()
+            elif(levelP2=="Hard"):
+                self.HardAI()
+            
+            self.game.display.fill(self.BACK_COLOR)
+            self.game.display.blit(self.bg, (0, 0))
+            # Draw Gobblet pieces
+            self.Gobblet_pieces.draw(self.game.display)
+                
+            # self.random_ai_player()
+            self.game.paused=False
+            #self.timer()
+            self.blit_screen()
+
+    '''
     def display_menu(self,level):
         self.run_display = True
         self.clock = pygame.time.Clock()
@@ -139,7 +188,7 @@ class ViewCVC():
             self.game.paused=False
             self.timer()
             self.blit_screen()
-    
+    '''
     def check_input(self):
         if self.game.BACK_KEY:
             self.game.curr_menu = self.game.pause_menu

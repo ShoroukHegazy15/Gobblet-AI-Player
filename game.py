@@ -21,6 +21,8 @@ class Game():
         self.main_menu = MainMenu(self)
         self.moods= MoodsMenu(self)
         self.levels= levelsMenu(self,"Nothing")
+        self.p1levels= playerOneLevelsMenu(self)
+        self.p2levels= playerTwoLevelsMenu(self)
         self.options = OptionsMenu(self)
         self.rules = RulesMenu(self)
         self.win_screen = WinScreen(self,"Nothing")
@@ -35,6 +37,7 @@ class Game():
         self.total_paused_mseconds=0
         self.paused_flag = 0
         self.game_mood=""
+        self.levelP1=""
         
         self.bck_music()
 

@@ -258,8 +258,7 @@ class MoodsMenu(Menu):
                 self.game.curr_menu.setInput("hvc")
             elif self.state == "mood3":
                 # self.game.curr_menu=self.game.gameViewCVC
-                self.game.curr_menu=self.game.levels
-                self.game.curr_menu.setInput("cvc")
+                self.game.curr_menu=self.game.p1levels
                 #self.game.playing = True
             elif(self.state=="back"):
                 self.game.curr_menu=self.game.main_menu
@@ -518,12 +517,11 @@ class PauseMenu(Menu): #enherite menu
         self.paused_mseconds = self.current_time - self.start_pause_time
         self.paused_seconds = self.paused_mseconds // 1000
         self.clock.tick(60)
-        print("pasued seconds",self.paused_seconds) 
+        #print("pasued seconds",self.paused_seconds) 
 
 class playerOneLevelsMenu(Menu):
-    def __init__(self, game,FromInput):
+    def __init__(self, game):
         Menu.__init__(self, game)
-        self.FromInput=FromInput
         self.state = "Easy"
         self.easx, self.easy = self.mid_w, self.mid_h + 20
         self.medx,self.medy = self.mid_w, self.mid_h + 50
@@ -531,15 +529,13 @@ class playerOneLevelsMenu(Menu):
 
         self.cursor_rect.midtop = (self.easx + self.offset, self.easy)
         self.backx, self.backy = self.mid_w, self.mid_h + 130  # Add back button
-    def setInput(self,FromInput):
-        self.FromInput=FromInput
     def display_menu(self):
         self.run_display = True
         while self.run_display:
             self.game.check_events()
             self.check_input()
             self.game.display.fill(self.game.BACK_COLOR)
-            self.game.draw_text('Choose difficulty:', 20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 - 20)
+            self.game.draw_text('Choose Player 1 difficulty:', 20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 - 20)
             self.game.draw_text('Easy', 20, self.easx, self.easy)
             self.game.draw_text('Medium',20, self.medx, self.medy)
             self.game.draw_text('Hard', 20, self.hardx, self.hardy)
@@ -584,19 +580,16 @@ class playerOneLevelsMenu(Menu):
             mouse_x, mouse_y = pygame.mouse.get_pos()
             print(mouse_x,mouse_y,self.easx,self.easy)
             if self.easx-100 < mouse_x < self.easx + 100 and self.easy-10 < mouse_y < self.easy+10 :
-                if(self.FromInput=="cvc"):
-                    self.game.curr_menu=self.game.gameViewCVC
-                    self.game.curr_menu.startGame("Easy")
+                self.game.levelP1="Easy"
+                self.game.curr_menu=self.game.p2levels
                 self.run_display = False
             elif self.medx-100 < mouse_x < self.medx + 100 and self.medy-10 < mouse_y < self.medy + 10:
-                if(self.FromInput=="cvc"):
-                    self.game.curr_menu=self.game.gameViewCVC
-                    self.game.curr_menu.startGame("Medium")
+                self.game.levelP1="Medium"
+                self.game.curr_menu=self.game.p2levels
                 self.run_display = False
             elif self.hardx -100 < mouse_x < self.hardx + 100 and self.hardy-10 < mouse_y < self.hardy + 10:
-                if(self.FromInput=="cvc"):
-                    self.game.curr_menu=self.game.gameViewCVC
-                    self.game.curr_menu.startGame("Hard")
+                self.game.levelP1="Hard"
+                self.game.curr_menu=self.game.p2levels
                 self.run_display = False
             elif self.backx -100 < mouse_x < self.backx + 100 and self.backy-10 < mouse_y < self.backy + 10:
                 self.game.curr_menu = self.game.moods
@@ -605,34 +598,21 @@ class playerOneLevelsMenu(Menu):
         if self.game.START_KEY :  # Left mouse button is clicked
             if self.state == "Easy":
                 # self.game.playing = True
-                if(self.FromInput=="cvc"):
-                    self.game.curr_menu=self.game.gameViewCVC
-                    self.game.curr_menu.startGame("Easy")
-                elif(self.FromInput=="hvc"):
-                    self.game.curr_menu=self.game.gameViewHVC
-                    self.game.curr_menu.startGame("Easy")
+                self.game.levelP1="Easy"
+                self.game.curr_menu=self.game.p2levels
             elif self.state == "Medium":
-                if(self.FromInput=="cvc"):
-                    self.game.curr_menu=self.game.gameViewCVC
-                    self.game.curr_menu.startGame("Medium")
-                elif(self.FromInput=="hvc"):
-                    self.game.curr_menu=self.game.gameViewHVC
-                    self.game.curr_menu.startGame("Medium")
+                self.game.levelP1="Medium"
+                self.game.curr_menu=self.game.p2levels
             elif self.state == "Hard":
-                if(self.FromInput=="cvc"):
-                    self.game.curr_menu=self.game.gameViewCVC
-                    self.game.curr_menu.startGame("Hard")
-                elif(self.FromInput=="hvc"):
-                    self.game.curr_menu=self.game.gameViewHVC
-                    self.game.curr_menu.startGame("Hard")
+                self.game.levelP1="Hard"
+                self.game.curr_menu=self.game.p2levels
             elif self.state == "Back":
                 self.game.curr_menu = self.game.moods
             self.run_display = False
 
 class playerTwoLevelsMenu(Menu):
-    def __init__(self, game,FromInput):
+    def __init__(self, game):
         Menu.__init__(self, game)
-        self.FromInput=FromInput
         self.state = "Easy"
         self.easx, self.easy = self.mid_w, self.mid_h + 20
         self.medx,self.medy = self.mid_w, self.mid_h + 50
@@ -640,15 +620,14 @@ class playerTwoLevelsMenu(Menu):
 
         self.cursor_rect.midtop = (self.easx + self.offset, self.easy)
         self.backx, self.backy = self.mid_w, self.mid_h + 130  # Add back button
-    def setInput(self,FromInput):
-        self.FromInput=FromInput
+    
     def display_menu(self):
         self.run_display = True
         while self.run_display:
             self.game.check_events()
             self.check_input()
             self.game.display.fill(self.game.BACK_COLOR)
-            self.game.draw_text('Choose difficulty:', 20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 - 20)
+            self.game.draw_text('Choose Player 2 difficulty:', 20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 - 20)
             self.game.draw_text('Easy', 20, self.easx, self.easy)
             self.game.draw_text('Medium',20, self.medx, self.medy)
             self.game.draw_text('Hard', 20, self.hardx, self.hardy)
@@ -695,19 +674,16 @@ class playerTwoLevelsMenu(Menu):
             mouse_x, mouse_y = pygame.mouse.get_pos()
             print(mouse_x,mouse_y,self.easx,self.easy)
             if self.easx-100 < mouse_x < self.easx + 100 and self.easy-10 < mouse_y < self.easy+10 :
-                if(self.FromInput=="cvc"):
-                    self.game.curr_menu=self.game.gameViewCVC
-                    self.game.curr_menu.startGame("Easy")
+                self.game.curr_menu=self.game.gameViewCVC
+                self.game.curr_menu.startGame(self.game.levelP1,"Easy")
                 self.run_display = False
             elif self.medx-100 < mouse_x < self.medx + 100 and self.medy-10 < mouse_y < self.medy + 10:
-                if(self.FromInput=="cvc"):
-                    self.game.curr_menu=self.game.gameViewCVC
-                    self.game.curr_menu.startGame("Medium")
+                self.game.curr_menu=self.game.gameViewCVC
+                self.game.curr_menu.startGame(self.game.levelP1,"Medium")
                 self.run_display = False
             elif self.hardx -100 < mouse_x < self.hardx + 100 and self.hardy-10 < mouse_y < self.hardy + 10:
-                if(self.FromInput=="cvc"):
-                    self.game.curr_menu=self.game.gameViewCVC
-                    self.game.curr_menu.startGame("Hard")
+                self.game.curr_menu=self.game.gameViewCVC
+                self.game.curr_menu.startGame(self.game.levelP1,"Hard")
                 self.run_display = False
             elif self.backx -100 < mouse_x < self.backx + 100 and self.backy-10 < mouse_y < self.backy + 10:
                 self.game.curr_menu = self.game.playerTwo
@@ -716,28 +692,16 @@ class playerTwoLevelsMenu(Menu):
         if self.game.START_KEY :  # Left mouse button is clicked
             if self.state == "Easy":
                 # self.game.playing = True
-                if(self.FromInput=="cvc"):
-                    self.game.curr_menu=self.game.gameViewCVC
-                    self.game.curr_menu.startGame("Easy")
-                elif(self.FromInput=="hvc"):
-                    self.game.curr_menu=self.game.gameViewHVC
-                    self.game.curr_menu.startGame("Easy")
+                self.game.curr_menu=self.game.gameViewCVC
+                self.game.curr_menu.startGame(self.game.levelP1,"Easy")
             elif self.state == "Medium":
-                if(self.FromInput=="cvc"):
-                    self.game.curr_menu=self.game.gameViewCVC
-                    self.game.curr_menu.startGame("Medium")
-                elif(self.FromInput=="hvc"):
-                    self.game.curr_menu=self.game.gameViewHVC
-                    self.game.curr_menu.startGame("Medium")
+                self.game.curr_menu=self.game.gameViewCVC
+                self.game.curr_menu.startGame(self.game.levelP1,"Medium")
             elif self.state == "Hard":
-                if(self.FromInput=="cvc"):
-                    self.game.curr_menu=self.game.gameViewCVC
-                    self.game.curr_menu.startGame("Hard")
-                elif(self.FromInput=="hvc"):
-                    self.game.curr_menu=self.game.gameViewHVC
-                    self.game.curr_menu.startGame("Hard")
+                self.game.curr_menu=self.game.gameViewCVC
+                self.game.curr_menu.startGame(self.game.levelP1,"Hard")
             elif self.state == "Back":
-                self.game.curr_menu = self.game.moods
+                self.game.curr_menu=self.game.p1levels
             self.run_display = False
 
 ##el molahza elwahida,, eni lama basib el cursor 3and hard w dost backspace w rege3t tani d5lt lel level byfdal 3ala hard idk why         
