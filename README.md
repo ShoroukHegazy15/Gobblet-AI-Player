@@ -45,6 +45,7 @@ Board during a game.
 
 ## Documentations
 Drive : https://drive.google.com/drive/folders/1o9YVDDyIAewnrC_A7EZDmHQW1g18WI2d?usp=drive_link
+2-minute YouTube Video: https://youtu.be/yjKlmaexdHM?si=npPMHwni9eOpt18L
 
 
 ## How to Play
