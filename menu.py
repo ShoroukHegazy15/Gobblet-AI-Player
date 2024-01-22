@@ -339,18 +339,18 @@ class levelsMenu(Menu):
                 self.run_display = False
             elif self.medx-100 < mouse_x < self.medx + 100 and self.medy-10 < mouse_y < self.medy + 10:
                 if(self.FromInput=="cvc"):
-                    self.game.curr_menu=self.game.gameViewCVC
+                    self.game.curr_menu=self.game.gameViewCVC2
                     self.game.curr_menu.startGame("Medium")
                 elif(self.FromInput=="hvc"):
-                    self.game.curr_menu=self.game.gameViewHVC
+                    self.game.curr_menu=self.game.gameViewHVC2
                     self.game.curr_menu.startGame("Medium")
                 self.run_display = False
             elif self.hardx -100 < mouse_x < self.hardx + 100 and self.hardy-10 < mouse_y < self.hardy + 10:
                 if(self.FromInput=="cvc"):
-                    self.game.curr_menu=self.game.gameViewCVC
+                    self.game.curr_menu=self.game.gameViewCVC3
                     self.game.curr_menu.startGame("Hard")
                 elif(self.FromInput=="hvc"):
-                    self.game.curr_menu=self.game.gameViewHVC
+                    self.game.curr_menu=self.game.gameViewHVC3
                     self.game.curr_menu.startGame("Hard")
                 self.run_display = False
             elif self.backx -100 < mouse_x < self.backx + 100 and self.backy-10 < mouse_y < self.backy + 10:
@@ -368,17 +368,17 @@ class levelsMenu(Menu):
                     self.game.curr_menu.startGame("Easy")
             elif self.state == "Medium":
                 if(self.FromInput=="cvc"):
-                    self.game.curr_menu=self.game.gameViewCVC
+                    self.game.curr_menu=self.game.gameViewCVC2
                     self.game.curr_menu.startGame("Medium")
                 elif(self.FromInput=="hvc"):
-                    self.game.curr_menu=self.game.gameViewHVC
+                    self.game.curr_menu=self.game.gameViewHVC2
                     self.game.curr_menu.startGame("Medium")
             elif self.state == "Hard":
                 if(self.FromInput=="cvc"):
-                    self.game.curr_menu=self.game.gameViewCVC
+                    self.game.curr_menu=self.game.gameViewCVC3
                     self.game.curr_menu.startGame("Hard")
                 elif(self.FromInput=="hvc"):
-                    self.game.curr_menu=self.game.gameViewHVC
+                    self.game.curr_menu=self.game.gameViewHVC3
                     self.game.curr_menu.startGame("Hard")
             elif self.state == "Back":
                 self.game.curr_menu = self.game.moods
@@ -678,11 +678,11 @@ class playerTwoLevelsMenu(Menu):
                 self.game.curr_menu.startGame(self.game.levelP1,"Easy")
                 self.run_display = False
             elif self.medx-100 < mouse_x < self.medx + 100 and self.medy-10 < mouse_y < self.medy + 10:
-                self.game.curr_menu=self.game.gameViewCVC
+                self.game.curr_menu=self.game.gameViewCVC2
                 self.game.curr_menu.startGame(self.game.levelP1,"Medium")
                 self.run_display = False
             elif self.hardx -100 < mouse_x < self.hardx + 100 and self.hardy-10 < mouse_y < self.hardy + 10:
-                self.game.curr_menu=self.game.gameViewCVC
+                self.game.curr_menu=self.game.gameViewCVC3
                 self.game.curr_menu.startGame(self.game.levelP1,"Hard")
                 self.run_display = False
             elif self.backx -100 < mouse_x < self.backx + 100 and self.backy-10 < mouse_y < self.backy + 10:
@@ -695,10 +695,10 @@ class playerTwoLevelsMenu(Menu):
                 self.game.curr_menu=self.game.gameViewCVC
                 self.game.curr_menu.startGame(self.game.levelP1,"Easy")
             elif self.state == "Medium":
-                self.game.curr_menu=self.game.gameViewCVC
+                self.game.curr_menu=self.game.gameViewCVC2
                 self.game.curr_menu.startGame(self.game.levelP1,"Medium")
             elif self.state == "Hard":
-                self.game.curr_menu=self.game.gameViewCVC
+                self.game.curr_menu=self.game.gameViewCVC3
                 self.game.curr_menu.startGame(self.game.levelP1,"Hard")
             elif self.state == "Back":
                 self.game.curr_menu=self.game.p1levels

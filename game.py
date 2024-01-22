@@ -30,7 +30,11 @@ class Game():
         self.gameView = View(self)
         self.gameViewHVH = ViewHVH(self)   #human vs human view
         self.gameViewCVC = ViewCVC(self)   #computer vs computer view
+        self.gameViewCVC2 = ViewCVC(self)
+        self.gameViewCVC3 = ViewCVC(self)
         self.gameViewHVC=ViewHVC(self)
+        self.gameViewHVC2=ViewHVC(self)
+        self.gameViewHVC3=ViewHVC(self)
         self.slide = Slider(self)
         self.pause_menu = PauseMenu(self)
         self.curr_menu= self.main_menu
@@ -38,8 +42,14 @@ class Game():
         self.paused_flag = 0
         self.game_mood=""
         self.levelP1=""
-        
         self.bck_music()
+        #self.x = ViewHVC.__init__(self)
+
+    def restart(self):
+        with open("main.py") as f:
+            exec(f.read())
+        
+        
 
     def bck_music(self):
         mixer.music.load("Assets/background music.mp3")
