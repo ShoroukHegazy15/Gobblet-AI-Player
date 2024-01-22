@@ -44,17 +44,19 @@ Board during a game.
 ![Screenshot 2024-01-17 163431](https://github.com/ShoroukHegazy15/Gobblet-AI-Player/assets/105671159/34f6af19-afd5-4928-9edd-c0dce69effeb)
 
 ## Documentations
-Drive : https://drive.google.com/drive/folders/1o9YVDDyIAewnrC_A7EZDmHQW1g18WI2d?usp=drive_link
+Drive: https://drive.google.com/drive/folders/1o9YVDDyIAewnrC_A7EZDmHQW1g18WI2d?usp=drive_link
 
 2-minute YouTube Video: https://youtu.be/yjKlmaexdHM?si=npPMHwni9eOpt18L
 
 
 ## How to Play
 
-Simply choose your desired game mode, select the difficulty level, and enjoy...
+Simply, choose your desired game mode, select the difficulty level, and enjoy...
 
 ## Installation
 
-Clone the repository to your local machine and run the game through exe...
+1- download 'dist' folder from the drive link: https://drive.google.com/drive/folders/1r6g3oKf3mwQ7Ux6GmiEP19oQXFs-G_03?usp=drive_link .
+2- unzip the folder.
+3- run the executable file.
 
 Enjoy playing Gobblet!
