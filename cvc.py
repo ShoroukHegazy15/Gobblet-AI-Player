@@ -52,29 +52,10 @@ class ViewCVC():
         self.elapsed_seconds = 0
         self.mins=0
 
-
-        # if self.board.currentPlayer() == 1:  # Player 1's turn
-        #     self.random_ai_player()  # Allow the human player to make a move
-        # elif self.board.currentPlayer() == 2:  # Player 2's turn
-        #     self.random_ai_player()
-        
-        # player_one = True  # if a human is playing white, then this will be True, else False
-        # player_two = False
-        # human_turn = (self.board.current_player and player_one) or (not self.board.current_player and player_two)
     def startGame(self,levelP1,levelP2):
         self.display_menu(levelP1,levelP2)
     
-    """
-    def startGame(self,level):
-        self.display_menu(level)
-        # # time.sleep(5)
-        # if(level=="Easy"):
-        #     self.random_ai_player()
-        # elif(level=="Meduim"):
-        #     self.MediumLevelAI()
-        # elif(level=="Hard"):
-        #     self.HardAI()
-    """
+
 
     def create_pieces(self):
         sizes = ["XS", "S", "M", "L"]
@@ -127,9 +108,6 @@ class ViewCVC():
             # Draw Gobblet pieces
             self.Gobblet_pieces.draw(self.game.display)
             time.sleep(1)
-            # time.sleep(2)
-            # self.handle_drag_and_drop()#end of program 
-            # time.sleep(5)
             if(levelP1=="Easy"):
                 print("EASY")
                 self.random_ai_player()
@@ -145,8 +123,6 @@ class ViewCVC():
             # Draw Gobblet pieces
             self.Gobblet_pieces.draw(self.game.display)
             time.sleep(1)
-            # time.sleep(2)
-            # time.sleep(2)
             if(levelP2=="Easy"):
                 self.random_ai_player()
             elif(levelP2=="Medium"):
@@ -161,40 +137,6 @@ class ViewCVC():
             self.game.paused=False
             self.blit_screen()
 
-    '''
-    def display_menu(self,level):
-        self.run_display = True
-        self.clock = pygame.time.Clock()
-        if self.game.paused_flag == 0:
-            self.start_time = pygame.time.get_ticks()
-            self.fixed_start_time=self.start_time
-        else:
-            self.start_time = self.fixed_start_time
-        while self.run_display:
-            self.game.check_events()
-            self.check_input()
-            self.game.display.fill(self.BACK_COLOR)
-            self.game.display.blit(self.bg, (0, 0))
-            # Draw Gobblet pieces
-            self.Gobblet_pieces.draw(self.game.display)
-            # self.handle_drag_and_drop()#end of program 
-            # time.sleep(5)
-            if(level=="Easy"):
-                self.random_ai_player()
-            elif(level=="Medium"):
-                self.MediumLevelAI()
-            elif(level=="Hard"):
-                self.HardAI()
-            self.game.display.fill(self.BACK_COLOR)
-            self.game.display.blit(self.bg, (0, 0))
-            # Draw Gobblet pieces
-            self.Gobblet_pieces.draw(self.game.display)
-                
-            # self.random_ai_player()
-            self.game.paused=False
-            self.timer()
-            self.blit_screen()
-    '''
     def check_input(self):
         if self.game.BACK_KEY:
             self.game.curr_menu = self.game.pause_menu
@@ -229,8 +171,7 @@ class ViewCVC():
             valid_moves = self.get_valid_moves_for_pieces("black")   #can be called b2a anywhere with the color parameter
             
             #computer yl3b bel black bsss
-            #valid_moves = self.get_valid_moves_for_black_pieces()
-            
+
             if valid_moves:
                 move = random.choice(valid_moves)
                 old_position = move.start_position
@@ -264,14 +205,12 @@ class ViewCVC():
                     print("\n")            
             else:
                 print("\nno valid moves for BLACk!!!\n")
-            # self.board.switchPlayer()
         elif  self.board.currentPlayer()==1:
             print("this is player: ", self.board.current_player, " turn")
 
             valid_moves = self.get_valid_moves_for_pieces("white")   #can be called b2a anywhere with the color parameter
             
             #Computer momken yl3b white w black
-            #valid_moves = self.get_valid_moves_for_black_pieces()
             
             if valid_moves:
                 move = random.choice(valid_moves)
@@ -295,20 +234,17 @@ class ViewCVC():
                     self.Gobblet_pieces.remove(moved_piece)
                     self.Gobblet_pieces.add(moved_piece)
                 if old_position in self.piecesBoard and self.pieces[old_position]:
-                    # self.piecesBoard[old_position].pop()
-                    # self.piecesBoard[new_position].append(moved_piece)
+
                     if(len(self.piecesBoard[old_position])==0):
                         self.piecesBoard[old_position].clear()
                     else:
                         self.piecesBoard[old_position].pop()
                     self.piecesBoard[new_position].append(moved_piece)
                     
-                # for position, pieces in self.board.board_state.items():
-                #     print(f"Position {position} has pieces: {pieces}")
-                #     print("\n")            
+         
             else:
                 print("\nno valid moves for White!!!\n")
-            # self.board.switchPlayer()
+          
          
         self.board.switchPlayer()
         self.printBoard()
@@ -320,18 +256,17 @@ class ViewCVC():
             self.game.curr_menu=self.game.win_screen
             self.game.curr_menu.setMsg(winner+" Wins")
             self.run_display=False
-        # from algos import Algos 
-        # AlgosInstance=Algos(self.game)
+
         # Simulate the computer making a random move
         if self.board.currentPlayer() == 2 :  # Player 1 is human, Player 2 is the computer
             print("this is player: ", self.board.current_player, " turn")
             from algos import Algos 
             AlgosInstance=Algos(self.game)
-            # moveMinMax = self.AlgosInstance.getBestMoveMinimax(self.board,self.board.current_player,3)  #can be called b2a anywhere with the color parameter
+            #can be called b2a anywhere with the color parameter
             moveMinMax = AlgosInstance.getBestMoveAlphaBeta(self.board,self.pieces,self.board.current_player,2)  #can be called b2a anywhere with the color parameter
             
             #computer yl3b bel black bsss
-            #valid_moves = self.get_valid_moves_for_black_pieces()
+         
             
             if moveMinMax:
                 old_position = moveMinMax.start_position
@@ -356,13 +291,7 @@ class ViewCVC():
                     # Reorder the sprites to ensure the dragged piece is drawn last (on top)
                     self.Gobblet_pieces.remove(moved_piece)
                     self.Gobblet_pieces.add(moved_piece)
-                # if old_position in self.piecesBoard and self.pieces[old_position]:
-                #     self.piecesBoard[old_position].pop()
-                #     self.piecesBoard[new_position].append(moved_piece)
-                    
-                # for position, pieces in self.board.board_state.items():
-                #     print(f"Position {position} has pieces: {pieces}")
-                #     print("\n")            
+      
             else:
                 print("\nno valid moves for BLACk!!!\n")
             self.printBoard()
@@ -386,11 +315,7 @@ class ViewCVC():
                     chosen_piece.rect.center = new_position
                     chosen_piece.original_position = new_position
                     
-                # time.sleep(3)
-                # self.game.display.fill(self.BACK_COLOR)
-                # self.game.display.blit(self.bg, (0, 0))
-                # # Draw Gobblet pieces
-                # self.Gobblet_pieces.draw(self.game.display)
+
                 new_board = self.board.make_move(moveMinMax, player=1)  # Pass the computer player as an argument
                 
                 # Remove the piece from the list at old_position
@@ -402,17 +327,14 @@ class ViewCVC():
                     self.Gobblet_pieces.remove(moved_piece)
                     self.Gobblet_pieces.add(moved_piece)
                 if old_position in self.piecesBoard and self.pieces[old_position]:
-                    # self.piecesBoard[old_position].pop()
-                    # self.piecesBoard[new_position].append(moved_piece)
+ 
                     if(len(self.pieces[old_position])==0):
                         self.pieces[old_position].clear()
                     else:
                         self.pieces[old_position].pop()
                     self.pieces[new_position].append(moved_piece)
                     
-                # for position, pieces in self.board.board_state.items():
-                #     print(f"Position {position} has pieces: {pieces}")
-                #     print("\n")            
+       
             else:
                 print("\nno valid moves for White!!!\n")
             # self.board.switchPlayer()     
@@ -442,11 +364,11 @@ class ViewCVC():
         if self.board.currentPlayer() == 2 :  # Player 1 is human, Player 2 is the computer
             print("this is player: ", self.board.current_player, " turn")
             
-            # moveMinMax = self.AlgosInstance.getBestMoveMinimax(self.board,self.board.current_player,3)  #can be called b2a anywhere with the color parameter
+            #can be called b2a anywhere with the color parameter
             moveAlphaBeta = AlgosInstance.getBestMoveMinimax(self.board,self.pieces,self.board.current_player,2)  #can be called b2a anywhere with the color parameter
             
             #computer yl3b bel black bsss
-            #valid_moves = self.get_valid_moves_for_black_pieces()
+         
             
             if moveAlphaBeta:
                 old_position = moveAlphaBeta.start_position
@@ -472,22 +394,16 @@ class ViewCVC():
                     # Reorder the sprites to ensure the dragged piece is drawn last (on top)
                     self.Gobblet_pieces.remove(moved_piece)
                     self.Gobblet_pieces.add(moved_piece)
-                # if old_position in self.piecesBoard and self.pieces[old_position]:
-                #     self.piecesBoard[old_position].pop()
-                #     self.piecesBoard[new_position].append(moved_piece)
-                    
-                # for position, pieces in self.board.board_state.items():
-                #     print(f"Position {position} has pieces: {pieces}")
-                #     print("\n")            
+       
             else:
                 print("\nno valid moves for BLACk!!!\n")
-            # self.board.switchPlayer()
+           
         elif  self.board.currentPlayer()==1:
             print("this is player: ", self.board.current_player, " turn")
 
             moveAlphaBeta = AlgosInstance.getBestMoveMinimax(self.board,self.pieces,self.board.current_player,2) #can be called b2a anywhere with the color parameter
             #Computer momken yl3b white w black
-            #valid_moves = self.get_valid_moves_for_black_pieces()
+          
             
             if moveAlphaBeta:
                 old_position = moveAlphaBeta.start_position
@@ -510,20 +426,17 @@ class ViewCVC():
                     self.Gobblet_pieces.remove(moved_piece)
                     self.Gobblet_pieces.add(moved_piece)
                 if old_position in self.piecesBoard and self.pieces[old_position]:
-                    # self.piecesBoard[old_position].pop()
-                    # self.piecesBoard[new_position].append(moved_piece)
+                  
                     if(len(self.pieces[old_position])==0):
                         self.pieces[old_position].clear()
                     else:
                         self.pieces[old_position].pop()
                     self.pieces[new_position].append(moved_piece)
                     
-                # for position, pieces in self.board.board_state.items():
-                #     print(f"Position {position} has pieces: {pieces}")
-                #     print("\n")            
+                
             else:
                 print("\nno valid moves for White!!!\n")
-            # self.board.switchPlayer()
+
         
                             
         self.board.switchPlayer()
@@ -567,8 +480,7 @@ class ViewCVC():
                                 move = Move(start_position, end_position, piece_size)
                                 if self.board.is_valid_move(move):
                                     valid_moves.append(move)
-                                # else:
-                                    # print("\ninternal move is invalid!!!!\n")
+                              
         elif(Color=="white"):
             # Consider white pieces on the side for the first move
             if not piece_on_board:
@@ -580,8 +492,7 @@ class ViewCVC():
                                 move = Move(start_position, end_position, piece_size)
                                 if self.board.is_valid_move(move):
                                     valid_moves.append(move)
-                                # else:
-                                #     print("\nexternal move is invalid!!!!\n")
+                             
             else:
                 # If there is at least one black piece on the board, consider internal moves as well
                 for start_position in self.piece_positions[:3]:
@@ -601,9 +512,7 @@ class ViewCVC():
                                 move = Move(start_position, end_position, piece_size)
                                 if self.board.is_valid_move(move):
                                     valid_moves.append(move)
-                                # else:
-                                #     print("\ninternal move is invalid!!!!\n")
-    
+                               
         return valid_moves
     
     def get_valid_moves_for_black_pieces(self):
@@ -623,8 +532,7 @@ class ViewCVC():
                             move = Move(start_position, end_position, piece_size,)
                             if self.board.is_valid_move(move):
                                 valid_moves.append(move)
-                            # else:
-                            #     print("\nexternal move is invalid!!!!\n")
+                   
         else:
             print("\nelse\n")
             # If there is at least one black piece on the board, consider internal moves as well
@@ -645,8 +553,7 @@ class ViewCVC():
                             move = Move(start_position, end_position, piece_size)
                             if self.board.is_valid_move(move):
                                 valid_moves.append(move)
-                            # else:
-                            #     print("\ninternal move is invalid!!!!\n")
+                   
 
         return valid_moves
     
@@ -683,7 +590,7 @@ class ViewCVC():
                 return False
         if(counterOfTruth==4):
             return True,pieces[0][0]
-        # return len(pieces) == 4 and all(piece == pieces[0] for piece in pieces)
+
 
 
     def _check_col_win(self,board, col):
@@ -781,5 +688,4 @@ class ViewCVC():
         else :
             str_sec =str(self.elapsed_seconds)
             str_mins= str(self.mins)
-        #print("start:",self.start_time,"current:",self.current_time,"at pause:",self.elapsed_seconds,"hvh")
         self.draw_timer(str_mins,str_sec,24,877,40)

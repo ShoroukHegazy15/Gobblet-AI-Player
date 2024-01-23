@@ -175,13 +175,13 @@ class ViewHVH():
                         self.Gobblet_pieces.remove(self.dragged_piece)  
                         self.Gobblet_pieces.add(self.dragged_piece)   #bn7otaha on top of stack 3l board
                         if(self.board.current_player==1 and self.game_is_over()):
-                            # print("White winSSSSSSSSSSSSSSSSSSSSSSSSSs")
+                            
                             self.game.curr_menu=self.game.win_screen
                             self.game.curr_menu.setMsg("White Wins")
                             self.run_display=False
                             return 1
                         elif(self.board.current_player==2 and self.game_is_over()):
-                            # print("Black winsSSSSSSSSSSS")
+                           
                             self.game.curr_menu=self.game.win_screen
                             self.game.curr_menu.setMsg("Black Wins")
                             self.run_display=False
@@ -204,19 +204,7 @@ class ViewHVH():
         
         # Print the contents of the pieces dictionary after each move
         print("\n********Contents of the pieces dictionary:**********")
-        # for pos, pieces in self.pieces.items():
-        #     print(f"Position {pos} has pieces:")
-        #     # x,y=pos
-        #     # print(x,y)
-        #     # print("Top Piece: ",self.pieces.items()[pos][-1])
-        #     i=0
-        #     if(pos in self.board_positions):
-        #         for piece in pieces:
-        #             print(i)
-        #             i+=1
-        #             print(f"  - Color: {piece.color}, Size: {piece.size}, Piece ID: {piece.piece_id}")
-        #     # for piece in pieces:
-        #     #     print(f"  - Color: {piece.color}, Size: {piece.size}, Piece ID: {piece.piece_id}")
+ 
         board= self.getSimplifiedBoard()
         for row in board:
             print(row)

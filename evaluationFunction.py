@@ -222,50 +222,50 @@ class Evaluation:
         evaluation_score = material_advantage + stacking_advantage + threat_prevention+winChance+lossChance+rescueChance
         return evaluation_score
     
-    def check_row_Score(board,row):
-        pieces = [board[row][col][-1] for col in range(4) if board[row][col]]
-        counterOfTruth=0
-        for piece in pieces:
-            if(piece[0]=='white'):
-                counterOfTruth+=1
-            else:
-                counterOfTruth+=10
-        return counterOfTruth
+def check_row_Score(board,row):
+    pieces = [board[row][col][-1] for col in range(4) if board[row][col]]
+    counterOfTruth=0
+    for piece in pieces:
+        if(piece[0]=='white'):
+            counterOfTruth+=1
+        else:
+            counterOfTruth+=10
+    return counterOfTruth
     
-    def check_col_Scores(board, col):
-        pieces = [board[row][col][-1] for row in range(4) if board[row][col] ]
-        counterOfTruth=0
-        for piece in pieces:
-            if(piece[0]=='white'):
-                counterOfTruth+=1
-            else:
-                counterOfTruth+=10
-        return counterOfTruth
+def check_col_Scores(board, col):
+    pieces = [board[row][col][-1] for row in range(4) if board[row][col] ]
+    counterOfTruth=0
+    for piece in pieces:
+        if(piece[0]=='white'):
+            counterOfTruth+=1
+        else:
+            counterOfTruth+=10
+    return counterOfTruth
     
-    def check_diag_ScoresLeft(board):
-        pieces = [board[i][i][-1] for i in range(4) if board[i][i]]
-        counterOfTruth=0
-        for piece in pieces:
-            if(piece[0]=='white'):
-                counterOfTruth+=1
-            else:
-                counterOfTruth+=10
-        return counterOfTruth
+def check_diag_ScoresLeft(board):
+    pieces = [board[i][i][-1] for i in range(4) if board[i][i]]
+    counterOfTruth=0
+    for piece in pieces:
+        if(piece[0]=='white'):
+            counterOfTruth+=1
+        else:
+            counterOfTruth+=10
+    return counterOfTruth
     
-    def check_diag_Scoresright(board):
-        pieces=[]
-        counterOfTruth=0
-        if(board[0][3]):
-            pieces.append(board[0][3][-1])
-        if(board[1][2]):
-            pieces.append(board[1][2][-1])
-        if(board[2][1]):
-            pieces.append(board[2][1][-1])
-        if(board[3][0]):
-            pieces.append(board[3][0][-1])
-        for piece in pieces:
-            if(piece[0]=='white'):
-                counterOfTruth+=1
-            else:
-                counterOfTruth+=10
-        return counterOfTruth
+def check_diag_Scoresright(board):
+    pieces=[]
+    counterOfTruth=0
+    if(board[0][3]):
+        pieces.append(board[0][3][-1])
+    if(board[1][2]):
+        pieces.append(board[1][2][-1])
+    if(board[2][1]):
+        pieces.append(board[2][1][-1])
+    if(board[3][0]):
+        pieces.append(board[3][0][-1])
+    for piece in pieces:
+        if(piece[0]=='white'):
+            counterOfTruth+=1
+        else:
+            counterOfTruth+=10
+    return counterOfTruth

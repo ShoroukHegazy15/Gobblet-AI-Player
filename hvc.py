@@ -280,12 +280,6 @@ class ViewHVC():
                     self.Gobblet_pieces.add(moved_piece)
                 
                     
-                # for position, pieces in self.board.board_state.items():
-                #     print(f"Position {position} has pieces: {pieces}")
-                #     print("\n")            
-            """ else:
-                print("\nno valid moves for BLACk!!!\n") """
-                
     def MediumLevelAI(self):
         print("in medium")
         # minimax AI
@@ -321,11 +315,6 @@ class ViewHVC():
                             # Append the dragged_piece to the list at new_position
                             self.pieces[new_position].append(chosen_piece)
                         
-                        #if old_position in self.pieces and self.pieces[old_position]:  # Check if the list is not empty
-                         #   moved_piece = self.pieces[old_position].pop()
-                          #  self.pieces[new_position].append(moved_piece)
-                          
-                          # Reorder the sprites to ensure the dragged piece is drawn last (on top)
                             self.Gobblet_pieces.remove(chosen_piece)
                             self.Gobblet_pieces.add(chosen_piece)
                         
@@ -333,9 +322,6 @@ class ViewHVC():
                         for position, pieces in self.board.board_state.items():
                             print(f"Position {position} has pieces: {pieces}")
                             print("\n") 
-                    """ else:
-                    print("\nno valid moves for BLACk!!!\n")
- """
 
     def HardAI(self): 
         print("in hard")
@@ -346,9 +332,6 @@ class ViewHVC():
             
             if valid_moves:
                 move = self.algo.getBestMoveAlphaBeta(self, self.board, self.board.currentPlayer(),2)                
-                """ print("\n")
-                print(f"best Move: Start Position={move.start_position}, End Position={move.end_position}, Piece Size={move.piece_size}")
-                print("\n") """ 
                 if move and move.start_position is not None and move.end_position is not None:
                     old_position = move.start_position
                     new_position = move.end_position
@@ -375,14 +358,7 @@ class ViewHVC():
                           # Reorder the sprites to ensure the dragged piece is drawn last (on top)
                             self.Gobblet_pieces.remove(chosen_piece)
                             self.Gobblet_pieces.add(chosen_piece)
-                            
-                            """ self.game.check_events()
-                            self.check_input()
-                            self.game.display.fill(self.BACK_COLOR)
-                            self.game.display.blit(self.bg, (0, 0))
-                            # Draw Gobblet pieces
-                            self.Gobblet_pieces.draw(self.game.display)
-                            self.blit_screen() """
+
                             for position, pieces in self.board.board_state.items():
                                 print(f"Position {position} has pieces: {pieces}")
                                 print("\n")
@@ -407,8 +383,7 @@ class ViewHVC():
                                 move = Move(start_position, end_position, piece_size)
                                 if self.board.is_valid_move(move):
                                     valid_moves.append(move)
-                                """ else:
-                                    print("\nexternal move is invalid!!!!\n") """
+                      
             else:
                 # If there is at least one black piece on the board, consider internal moves as well
                 for start_position in self.piece_positions[3:]:
@@ -428,8 +403,7 @@ class ViewHVC():
                                 move = Move(start_position, end_position, piece_size)
                                 if self.board.is_valid_move(move):
                                     valid_moves.append(move)
-                                """ else:
-                                    print("\ninternal move is invalid!!!!\n") """
+                               
         else:
             # Consider white pieces on the side for the first move
             if not piece_on_board:
@@ -441,8 +415,7 @@ class ViewHVC():
                                 move = Move(start_position, end_position, piece_size)
                                 if self.board.is_valid_move(move):
                                     valid_moves.append(move)
-                                """ else:
-                                    print("\nexternal move is invalid!!!!\n") """
+                  
             else:
                 # If there is at least one black piece on the board, consider internal moves as well
                 for start_position in self.piece_positions[:3]:
@@ -462,8 +435,7 @@ class ViewHVC():
                                 move = Move(start_position, end_position, piece_size)
                                 if self.board.is_valid_move(move):
                                     valid_moves.append(move)
-                                """ else:
-                                    print("\ninternal move is invalid!!!!\n") """
+                            
         return valid_moves
          
     def game_is_over(self):
@@ -588,5 +560,5 @@ class ViewHVC():
         else :
             str_sec =str(self.elapsed_seconds)
             str_mins= str(self.mins)
-        #print("start:",self.start_time,"current:",self.current_time,"at pause:",self.elapsed_seconds,"hvh")
+        
         self.draw_timer(str_mins,str_sec,24,877,40)
