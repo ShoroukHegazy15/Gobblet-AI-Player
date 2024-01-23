@@ -68,24 +68,33 @@ class Evaluation:
         boardTemp=view.getSimplifiedBoard()
         
         for row in range(4):
+            # Check for a winning situation in the row for Player 1
             if ((check_row_Score(boardTemp,row)==4 )and view.board.currentPlayer()==1 ):
                 winChance=winChance+1000
                 return 10000000000
+            # Check for a rescue chance in the row for Player 1
             elif((check_row_Score(boardTemp,row)==31)and view.board.currentPlayer()==1 ):
                 rescueChance=rescueChance+1000
+            # Check for a potential winning situation in the row for Player 1
             elif (( check_row_Score(boardTemp,row)==3)and view.board.currentPlayer()==1 ):
                 winChance=winChance+1000
+            # Check for potential losses or blocked situations in the row for Player 1
             elif((check_row_Score(boardTemp,row)==30 or check_row_Score(boardTemp,row)==40) and view.board.currentPlayer()==1 ):
                 lossChance=lossChance-1000
+            # Check for a winning situation in the row for Player 2
             elif((check_row_Score(boardTemp,row)==40)and view.board.currentPlayer()==2):
                 winChance=winChance+1000
                 return 10000000000
+            # Check for a rescue chance in the row for Player 2
             elif(check_row_Score(boardTemp,row)==13  and view.board.currentPlayer()==2 ):
                 rescueChance=rescueChance+1000
+            # Check for a potential winning situation in the row for Player 2
             elif((check_row_Score(boardTemp,row)==30)and view.board.currentPlayer()==2):
                 winChance=winChance+1000
+            # Check for potential losses or blocked situations in the row for Player 2
             elif((check_row_Score(boardTemp,row)==4 or check_row_Score(boardTemp,row)==3) and view.board.currentPlayer()==2 ):
                 lossChance=lossChance-1000
+            # Adjust chances for specific situations in the row
             elif(check_row_Score(boardTemp,row)==20 and view.board.currentPlayer()==1):
                 lossChance=lossChance-250
             elif(check_row_Score(boardTemp,row)==2 and view.board.currentPlayer()==2):
@@ -96,24 +105,33 @@ class Evaluation:
                 winChance=winChance+500
             
         for col in range(4):
+            # Check for a winning situation in the column for Player 1
             if ((check_col_Scores(boardTemp,col)==4)and view.board.currentPlayer()==1 ):
                 winChance=winChance+1000
                 return 10000000000
+            # Check for a rescue chance in the column for Player 1
             elif((check_col_Scores(boardTemp,col)==31)and view.board.currentPlayer()==1 ):
                 rescueChance=rescueChance+1000
+            # Check for a potential winning situation in the column for Player 1
             elif((check_col_Scores(boardTemp,col)==3)and view.board.currentPlayer()==1 ):
                 rescueChance=rescueChance+1000
+            # Check for potential losses or blocked situations in the column for Player 1
             elif((check_col_Scores(boardTemp,col)==30 or check_col_Scores(boardTemp,col)==40) and view.board.currentPlayer()==1 ):
                 lossChance=lossChance-1000
+            # Check for a winning situation in the column for Player 2
             elif((check_col_Scores(boardTemp,col)==40)and view.board.currentPlayer()==2):
                 winChance=winChance+ 1000
                 return 10000000000
+            # Check for a rescue chance in the column for Player 2
             elif(check_col_Scores(boardTemp,col)==13  and view.board.currentPlayer()==2 ):
                 rescueChance=rescueChance+1000
+            # Check for a potential winning situation in the column for Player 2
             elif((check_col_Scores(boardTemp,col)==30)and view.board.currentPlayer()==2):
                 winChance=winChance+ 1000
+            # Check for potential losses or blocked situations in the column for Player 2
             elif((check_col_Scores(boardTemp,col)==4 or check_col_Scores(boardTemp,col)==3) and view.board.currentPlayer()==2 ):
                 lossChance=lossChance-1000
+            # Adjust chances for specific situations in the column
             elif(check_col_Scores(boardTemp,col)==20 and view.board.currentPlayer()==1):
                 lossChance=lossChance-250
             elif(check_col_Scores(boardTemp,col)==2 and view.board.currentPlayer()==2):
@@ -122,25 +140,34 @@ class Evaluation:
                 winChance=winChance+500
             elif(check_col_Scores(boardTemp,col)==20 and view.board.currentPlayer()==2):
                 winChance=winChance+500
-                
+
+        # Check for a winning situation in the left diagonal for Player 1
         if ((check_diag_ScoresLeft(boardTemp)==4 )and view.board.currentPlayer()==1 ):
                 winChance=winChance+1000
                 return 10000000000
+        # Check for a rescue chance in the left diagonal for Player 1
         elif((check_diag_ScoresLeft(boardTemp)==31)and view.board.currentPlayer()==1 ):
                 rescueChance=rescueChance+1000
+        # Check for a potential winning situation in the left diagonal for Player 1
         elif((check_diag_ScoresLeft(boardTemp)==3)and view.board.currentPlayer()==1 ):
                 winChance=winChance+ 1000
+        # Check for potential losses or blocked situations in the left diagonal for Player 1
         elif((check_diag_ScoresLeft(boardTemp)==30 or check_diag_ScoresLeft(boardTemp)==40) and view.board.currentPlayer()==1 ):
                 lossChance=lossChance-1000
+        # Check for a winning situation in the left diagonal for Player 2
         elif((check_diag_ScoresLeft(boardTemp)==40)and view.board.currentPlayer()==2):
                 winChance=winChance+ 1000
                 return 10000000000
+        # Check for a rescue chance in the left diagonal for Player 2
         elif(check_diag_ScoresLeft(boardTemp)==13  and view.board.currentPlayer()==2 ):
                 rescueChance=rescueChance+1000
+        # Check for a potential winning situation in the left diagonal for Player 2
         elif(check_diag_ScoresLeft(boardTemp)==30  and view.board.currentPlayer()==2 ):
                 winChance=winChance+ 1000
+        # Check for potential losses or blocked situations in the left diagonal for Player 2
         elif((check_diag_ScoresLeft(boardTemp)==4 or check_diag_ScoresLeft(boardTemp)==3) and view.board.currentPlayer()==2 ):
                 lossChance=lossChance-1000
+        # Adjust chances for specific situations in the left diagonal
         elif(check_diag_ScoresLeft(boardTemp)==20 and view.board.currentPlayer()==1):
                 lossChance=lossChance-250
         elif(check_diag_ScoresLeft(boardTemp)==2 and view.board.currentPlayer()==2):
@@ -150,24 +177,33 @@ class Evaluation:
         elif(check_diag_ScoresLeft(boardTemp)==20 and view.board.currentPlayer()==2):
             winChance=winChance+500
 
+        # Check for a winning situation in the right diagonal for Player 1
         if ((check_diag_Scoresright(boardTemp)==4 )and view.board.currentPlayer()==1 ):
                 winChance=winChance+1000
                 return 10000000000
+        # Check for a rescue chance in the right diagonal for Player 1
         elif((check_diag_Scoresright(boardTemp)==31)and view.board.currentPlayer()==1 ):
                 rescueChance=rescueChance+1000
+        # Check for a potential winning situation in the right diagonal for Player 1
         elif (( check_diag_Scoresright(boardTemp)==3)and view.board.currentPlayer()==1 ):
                 winChance=winChance+1000
+        # Check for potential losses or blocked situations in the right diagonal for Player 1
         elif((check_diag_Scoresright(boardTemp)==30 or check_diag_Scoresright(boardTemp)==40) and view.board.currentPlayer()==1 ):
                 lossChance=lossChance-1000
+        # Check for a winning situation in the right diagonal for Player 2
         elif(( check_diag_Scoresright(boardTemp)==40)and view.board.currentPlayer()==2):
                 winChance=winChance+ 1000
                 return 10000000000
+        # Check for a rescue chance in the right diagonal for Player 2
         elif(check_diag_Scoresright(boardTemp)==13  and view.board.currentPlayer()==2 ):
                 rescueChance=rescueChance+1000
+        # Check for a potential winning situation in the right diagonal for Player 2
         elif(( check_diag_Scoresright(boardTemp)==30)and view.board.currentPlayer()==2):
                 winChance=winChance+ 1000
+        # Check for potential losses or blocked situations in the right diagonal for Player 2
         elif((check_diag_Scoresright(boardTemp)==4 or check_diag_Scoresright(boardTemp)==3) and view.board.currentPlayer()==2 ):
                 lossChance=lossChance-1000
+        # Adjust chances for specific situations in the right diagonal
         elif(check_diag_Scoresright(boardTemp)==20 and view.board.currentPlayer()==1):
             lossChance=lossChance-250
         elif(check_diag_Scoresright(boardTemp)==2 and view.board.currentPlayer()==2):
@@ -178,6 +214,7 @@ class Evaluation:
                 winChance=winChance+500
     
         for pos, pieces in view.board.board_state.items():
+            # Check for multiple pieces at the same position controlled by the opponent
             if len(pieces) > 1 and pieces[-1][1] != view.board.currentPlayer():
                 threat_prevention += len(pieces)
 
@@ -185,50 +222,50 @@ class Evaluation:
         evaluation_score = material_advantage + stacking_advantage + threat_prevention+winChance+lossChance+rescueChance
         return evaluation_score
     
-def check_row_Score(board,row):
-    pieces = [board[row][col][-1] for col in range(4) if board[row][col]]
-    counterOfTruth=0
-    for piece in pieces:
-        if(piece[0]=='white'):
-            counterOfTruth+=1
-        else:
-            counterOfTruth+=10
-    return counterOfTruth
-
-def check_col_Scores(board, col):
-    pieces = [board[row][col][-1] for row in range(4) if board[row][col] ]
-    counterOfTruth=0
-    for piece in pieces:
-        if(piece[0]=='white'):
-            counterOfTruth+=1
-        else:
-            counterOfTruth+=10
-    return counterOfTruth
-
-def check_diag_ScoresLeft(board):
-    pieces = [board[i][i][-1] for i in range(4) if board[i][i]]
-    counterOfTruth=0
-    for piece in pieces:
-        if(piece[0]=='white'):
-            counterOfTruth+=1
-        else:
-            counterOfTruth+=10
-    return counterOfTruth
-
-def check_diag_Scoresright(board):
-    pieces=[]
-    counterOfTruth=0
-    if(board[0][3]):
-        pieces.append(board[0][3][-1])
-    if(board[1][2]):
-        pieces.append(board[1][2][-1])
-    if(board[2][1]):
-        pieces.append(board[2][1][-1])
-    if(board[3][0]):
-        pieces.append(board[3][0][-1])
-    for piece in pieces:
-        if(piece[0]=='white'):
-            counterOfTruth+=1
-        else:
-            counterOfTruth+=10
-    return counterOfTruth
+    def check_row_Score(board,row):
+        pieces = [board[row][col][-1] for col in range(4) if board[row][col]]
+        counterOfTruth=0
+        for piece in pieces:
+            if(piece[0]=='white'):
+                counterOfTruth+=1
+            else:
+                counterOfTruth+=10
+        return counterOfTruth
+    
+    def check_col_Scores(board, col):
+        pieces = [board[row][col][-1] for row in range(4) if board[row][col] ]
+        counterOfTruth=0
+        for piece in pieces:
+            if(piece[0]=='white'):
+                counterOfTruth+=1
+            else:
+                counterOfTruth+=10
+        return counterOfTruth
+    
+    def check_diag_ScoresLeft(board):
+        pieces = [board[i][i][-1] for i in range(4) if board[i][i]]
+        counterOfTruth=0
+        for piece in pieces:
+            if(piece[0]=='white'):
+                counterOfTruth+=1
+            else:
+                counterOfTruth+=10
+        return counterOfTruth
+    
+    def check_diag_Scoresright(board):
+        pieces=[]
+        counterOfTruth=0
+        if(board[0][3]):
+            pieces.append(board[0][3][-1])
+        if(board[1][2]):
+            pieces.append(board[1][2][-1])
+        if(board[2][1]):
+            pieces.append(board[2][1][-1])
+        if(board[3][0]):
+            pieces.append(board[3][0][-1])
+        for piece in pieces:
+            if(piece[0]=='white'):
+                counterOfTruth+=1
+            else:
+                counterOfTruth+=10
+        return counterOfTruth
