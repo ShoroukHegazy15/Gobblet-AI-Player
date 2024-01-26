@@ -1,6 +1,7 @@
 import pygame, os
 import sys
 from menu import*
+from view import View
 from hvh import ViewHVH
 from cvc import ViewCVC
 from slider import Slider
@@ -26,6 +27,7 @@ class Game():
         self.rules = RulesMenu(self)
         self.win_screen = WinScreen(self,"Nothing")
         self.lose_screen = LoseScreen(self)
+        self.gameView = View(self)
         self.gameViewHVH = ViewHVH(self)   #human vs human view
         self.gameViewCVC = ViewCVC(self)   #computer vs computer view
         self.gameViewCVC2 = ViewCVC(self)
