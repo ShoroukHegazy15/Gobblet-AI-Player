@@ -1,8 +1,7 @@
 import time
 import pygame
 import os
-from trialmove import Move
-from trialmove import Board
+from trialmove import Move , Board
 import random               #random module for AI random moves 
 from Algo_HVC import Algos
 
@@ -23,13 +22,12 @@ class ViewHVC():
         self.level=""
         self.bg = pygame.image.load(os.path.join("Assets/board.png")).convert()
         self.BACK_COLOR = (30, 54, 45)
-        self.board_positions = [#8irt hna shwit arkam 386->385,724->725
+        self.board_positions = [
             (215, 110), (385, 110), (555, 110), (725, 110),
             (215, 280), (385, 280), (555, 280), (725, 280),
             (215, 450), (385, 450), (555, 450), (725, 450),
             (215, 620), (385, 620), (555, 620), (725, 620),
         ]
-        #self.pieces = {pos: [] for pos in self.board_centers}
         self.piece_positions = [(57, 107), (57, 274), (57, 447),
                                 (898, 274), (898, 447), (898, 617)]
         #empty dictionary to associate f kol position 3l board w 3l sides fee anhy pieces?
@@ -191,34 +189,32 @@ class ViewHVC():
                         self.update_pieces_dictionary(old_position, new_position)
                         # Reorder the sprites to ensure the dragged piece is drawn last; on top y3ny
                         self.Gobblet_pieces.remove(self.dragged_piece)  
-                        self.Gobblet_pieces.add(self.dragged_piece)   #bn7otaha on top of stack 3l board
+                        self.Gobblet_pieces.add(self.dragged_piece)   #put on top of stack on board
                                                                          
-                        if(self.check_win()):    #dyman making sure hal el human ksb wla l2 34an howa awl wa7ed byl3b anyways
+                        if(self.check_win()):    #making sure if human won or not as he plays first anyways
                             break
                         else:
-                            self.board.switchPlayer()    #lw el white mksb4 5las switch w kml el l3ba
+                            self.board.switchPlayer()    #if human didnt win then switch players and continue the game
                             if(level=="Easy"):
                                 self.random_ai_player()
-                                #self.check_win()
-                                if (self.check_win()):   #lw el black ksb 5las
+                                if (self.check_win()):   #if black won then end
                                     break
                                 else:   
-                                    self.board.switchPlayer()   #lw el black mksb4 5las switch w kml el l3ba
+                                    self.board.switchPlayer()   #if computer didnt win then switch players and continue the game
                             
                             elif(level=="Medium"):
                                 self.MediumLevelAI()
-                                #self.check_win()
-                                if (self.check_win()):   #lw el black ksb 5las
+                                if (self.check_win()):   
                                     break
                                 else:   
-                                    self.board.switchPlayer()   #lw el black mksb4 5las switch w kml el l3ba
+                                    self.board.switchPlayer()   
                             
                             elif(level=="Hard"):
                                 self.HardAI()
-                                if (self.check_win()):   #lw el black ksb 5las
+                                if (self.check_win()):  
                                     break
                                 else:   
-                                    self.board.switchPlayer()   #lw el black mksb4 5las switch w kml el l3ba
+                                    self.board.switchPlayer()   
                         
                 else:
                     # If the move is invalid, revert the position of the dragged piece
@@ -256,7 +252,7 @@ class ViewHVC():
         # Simulate the computer making a random move
         if self.board.currentPlayer() == 2 :  # Player 1 is human, Player 2 is the computer
             print("this is player: ", self.board.current_player, " turn")
-            valid_moves = self.get_valid_moves_for_pieces("black")   #can be called b2a anywhere with the color parameter
+            valid_moves = self.get_valid_moves_for_pieces("black")   
             if valid_moves:
                 move = random.choice(valid_moves)
                 old_position = move.start_position
@@ -281,14 +277,13 @@ class ViewHVC():
                 
                     
     def MediumLevelAI(self):
-        print("in medium")
         # minimax AI
         if self.board.currentPlayer() == 2 :  # Player 1 is human, Player 2 is the computer
             print("this is player: ", self.board.current_player, " turn")
-            valid_moves = self.get_valid_moves_for_pieces(self.algo.player_colors[self.board.currentPlayer()])   #can be called b2a anywhere with the color parameter
+            valid_moves = self.get_valid_moves_for_pieces(self.algo.player_colors[self.board.currentPlayer()])  
             
             if valid_moves:
-                move = self.algo.getBestMoveMinimax(self, self.board, self.board.currentPlayer(),3)                
+                move = self.algo.getBestMoveMinimax(self, self.board, self.board.currentPlayer(),2)                
                 """ print("\n")
                 print(f"best Move: Start Position={move.start_position}, End Position={move.end_position}, Piece Size={move.piece_size}")
                 print("\n") """ 
@@ -296,7 +291,7 @@ class ViewHVC():
                     old_position = move.start_position
                     new_position = move.end_position
                     
-                    #hena el mafrood el move el best t7sl henaaa
+                   
                     new_board = self.board.make_move(move, player=2)  # Pass the computer player as an argument
                     chosen_piece = self.get_piece_at_position(old_position)
                     
@@ -318,25 +313,22 @@ class ViewHVC():
                             self.Gobblet_pieces.remove(chosen_piece)
                             self.Gobblet_pieces.add(chosen_piece)
                         
-                        #print("\nfel medium\n")    
-                        for position, pieces in self.board.board_state.items():
+                        """ for position, pieces in self.board.board_state.items():
                             print(f"Position {position} has pieces: {pieces}")
-                            print("\n") 
+                            print("\n")  """
 
     def HardAI(self): 
-        print("in hard")
-        # minimax AI
+        # alphabeta AI
         if self.board.currentPlayer() == 2 :  # Player 1 is human, Player 2 is the computer
             print("this is player: ", self.board.current_player, " turn")
             valid_moves = self.get_valid_moves_for_pieces(self.algo.player_colors[self.board.currentPlayer()])   #can be called b2a anywhere with the color parameter
             
             if valid_moves:
-                move = self.algo.getBestMoveAlphaBeta(self, self.board, self.board.currentPlayer(),2)                
+                move = self.algo.getBestMoveAlphaBeta(self, self.board, self.board.currentPlayer(),3)                
                 if move and move.start_position is not None and move.end_position is not None:
                     old_position = move.start_position
                     new_position = move.end_position
                 
-                    #hena el mafrood el move el best t7sl henaaa
                     new_board = self.board.make_move(move, player=2)  # Pass the computer player as an argument
                     # Update the position of the chosen piece as if it's being dragged by the computer
                     chosen_piece = self.get_piece_at_position(old_position)
@@ -359,9 +351,9 @@ class ViewHVC():
                             self.Gobblet_pieces.remove(chosen_piece)
                             self.Gobblet_pieces.add(chosen_piece)
 
-                            for position, pieces in self.board.board_state.items():
+                            """ for position, pieces in self.board.board_state.items():
                                 print(f"Position {position} has pieces: {pieces}")
-                                print("\n")
+                                print("\n") """
     
     def printBoard(self):
         board= self.getSimplifiedBoard()
@@ -528,7 +520,6 @@ class ViewHVC():
         if position in self.pieces and self.pieces[position]:
             return self.pieces[position][-1].size  # Get the size of the top piece
         else:
-            print("\nana el moshkela el tanya\n")
             return None  # No piece at the position   
 
     def draw_timer(self,m,s,size,x,y):
