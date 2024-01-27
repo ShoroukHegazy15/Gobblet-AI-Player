@@ -257,9 +257,7 @@ class MoodsMenu(Menu):
                 self.game.curr_menu=self.game.levels
                 self.game.curr_menu.setInput("hvc")
             elif self.state == "mood3":
-                # self.game.curr_menu=self.game.gameViewCVC
                 self.game.curr_menu=self.game.p1levels
-                #self.game.playing = True
             elif(self.state=="back"):
                 self.game.curr_menu=self.game.main_menu
             self.run_display = False
@@ -359,7 +357,6 @@ class levelsMenu(Menu):
         self.move_cursor()
         if self.game.START_KEY :  # Left mouse button is clicked
             if self.state == "Easy":
-                # self.game.playing = True
                 if(self.FromInput=="cvc"):
                     self.game.curr_menu=self.game.gameViewCVC
                     self.game.curr_menu.startGame("Easy")
@@ -691,7 +688,6 @@ class playerTwoLevelsMenu(Menu):
         self.move_cursor()
         if self.game.START_KEY :  # Left mouse button is clicked
             if self.state == "Easy":
-                # self.game.playing = True
                 self.game.curr_menu=self.game.gameViewCVC
                 self.game.curr_menu.startGame(self.game.levelP1,"Easy")
             elif self.state == "Medium":
