@@ -703,6 +703,3 @@ class playerTwoLevelsMenu(Menu):
             elif self.state == "Back":
                 self.game.curr_menu=self.game.p1levels
             self.run_display = False
-
-##el molahza elwahida,, eni lama basib el cursor 3and hard w dost backspace w rege3t tani d5lt lel level byfdal 3ala hard idk why         
-##el molahza elwahida,, eni lama basib el cursor 3and hard w dost backspace w rege3t tani d5lt lel level byfdal 3ala hard idk why 
