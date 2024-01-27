@@ -288,7 +288,7 @@ class ViewHVC():
             valid_moves = self.get_valid_moves_for_pieces(self.algo.player_colors[self.board.currentPlayer()])   #can be called b2a anywhere with the color parameter
             
             if valid_moves:
-                move = self.algo.getBestMoveMinimax(self, self.board, self.board.currentPlayer(),3)                
+                move = self.algo.getBestMoveAlphaBeta(self, self.board, self.board.currentPlayer(),1)                
                 """ print("\n")
                 print(f"best Move: Start Position={move.start_position}, End Position={move.end_position}, Piece Size={move.piece_size}")
                 print("\n") """ 
