@@ -57,7 +57,7 @@ class Algos:
                     if currentScore < bestScore:
                         bestScore = currentScore
                         bestMove = move
-                board.undo_last_move(player)    #4elt mn boardstate
+                board.undo_last_move(player)    #backtrack
                 
                 ViewHVC.pieces[new_position].remove(chosen_piece)
                 ViewHVC.pieces[old_position].append(chosen_piece)
@@ -90,13 +90,11 @@ class Algos:
     
         valid_moves = ViewHVC.get_valid_moves_for_pieces(self.player_colors[player])
         for i in range(len(valid_moves)):
-            #hna al valid moves btt3ml azai 
             move=valid_moves[i]
             if move and move.start_position is not None and move.end_position is not None:
                 old_position = move.start_position
                 new_position = move.end_position
                 
-            # Update the position of the chosen piece as if it's being dragged by the computer
                 chosen_piece = ViewHVC.get_piece_at_position(old_position)
                 
             newBoard = board.make_move(move, player)
@@ -112,15 +110,6 @@ class Algos:
                 nowPlayer = 3 - player  # Switch players
                 currentScore, _ = self.alphaBeta(ViewHVC, newBoard, nowPlayer, maxDepth, currentDepth + 1, alpha, beta)
                 
-                """ # Update the best score
-                if board.currentPlayer() == player:    #maxi  black 2 AI
-                    if currentScore > bestScore:
-                        bestScore = currentScore
-                        bestMove = move
-                    else:
-                        if currentScore < bestScore:   #mini white 1 ana
-                            bestScore = currentScore
-                            bestMove = move """
                  # Update the best score
                 if player == 2:  # Maximizing player (black AI)
                     bestScore = max(bestScore, currentScore)
