@@ -34,10 +34,8 @@ class Slider:
             pygame.draw.rect(self.game.display,(250,250,250), self.slid_rect )
             pygame.draw.rect(self.game.display,(100, 100, 100), self.handle_rect )
             self.move_slider()
-            #pygame.draw.circle(self.game.display, (100, 100, 100), (self.mid_w,self.mid_h), 10)
             self.blit_screen()
-            #print(self.mouse_pos)
-            #print(self.get_value())
+            
             mixer.music.set_volume(self.get_value()/100)
 
     def check_input(self):
