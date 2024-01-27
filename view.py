@@ -208,19 +208,7 @@ class View():
         
         # Print the contents of the pieces dictionary after each move
         print("\n********Contents of the pieces dictionary:**********")
-        # for pos, pieces in self.pieces.items():
-        #     print(f"Position {pos} has pieces:")
-        #     # x,y=pos
-        #     # print(x,y)
-        #     # print("Top Piece: ",self.pieces.items()[pos][-1])
-        #     i=0
-        #     if(pos in self.board_positions):
-        #         for piece in pieces:
-        #             print(i)
-        #             i+=1
-        #             print(f"  - Color: {piece.color}, Size: {piece.size}, Piece ID: {piece.piece_id}")
-        #     # for piece in pieces:
-        #     #     print(f"  - Color: {piece.color}, Size: {piece.size}, Piece ID: {piece.piece_id}")
+       
         board= self.getSimplifiedBoard()
         for row in board:
             print(row)
@@ -245,7 +233,7 @@ class View():
 
             valid_moves = self.get_valid_moves_for_pieces("black")   #can be called b2a anywhere with the color parameter
             
-             #computer yl3b bel black bsss
+            
             #valid_moves = self.get_valid_moves_for_black_pieces()
              
             if valid_moves:
